@@ -7,6 +7,7 @@ from app.api.routes import router
 from app.api.events import router as event_router
 from app.api.compiler import router as compiler_router
 from app.api.upload import router as upload_router
+from app.api.timeline import router as timeline_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -26,3 +27,4 @@ app.include_router(router)
 app.include_router(event_router)
 app.include_router(compiler_router)
 app.include_router(upload_router)
+app.include_router(timeline_router)
