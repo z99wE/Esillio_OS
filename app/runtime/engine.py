@@ -24,7 +24,7 @@ class AIRuntime:
             model_path=str(MODEL_PATH)
         )
 
-        logger.info("Runtime Ready.")
+        logger.info("Clinical Intelligence Runtime Ready.")
 
     ########################################################
 
@@ -32,21 +32,27 @@ class AIRuntime:
         self,
         prompt: str,
     ) -> str:
+        """
+        Generate a response from the local Gemma model.
+        """
 
-        return self.provider._generate(
-            prompt
+        return self.provider.generate(
+            prompt=prompt
         )
 
     ########################################################
 
     def analyze_image(
         self,
-        image,
+        image_path: str,
         prompt: str,
     ) -> str:
+        """
+        Analyze a medical image using Gemma Vision.
+        """
 
-        return self.provider.vision(
-            image=image,
+        return self.provider.analyze_image(
+            image_path=image_path,
             prompt=prompt,
         )
 
@@ -54,6 +60,12 @@ class AIRuntime:
 ############################################################
 
 def get_runtime():
+    """
+    Singleton runtime.
+
+    Loads Gemma exactly once during the application's
+    lifetime.
+    """
 
     global _runtime
 

@@ -11,7 +11,7 @@ class VisionCapability:
     """
     Esillio Vision Intelligence
 
-    Supports
+    Supports:
 
     - Prescriptions
     - Lab Reports
@@ -42,15 +42,15 @@ class VisionCapability:
 
     def run(
         self,
-        image,
+        image_path: str,
     ) -> dict:
+        """
+        Analyze a medical image using the local Gemma Vision model.
+        """
 
         response = self.runtime.analyze_image(
-
-            image=image,
-
+            image_path=image_path,
             prompt=self.prompt,
-
         )
 
         return self._validate(response)

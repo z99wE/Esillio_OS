@@ -48,8 +48,8 @@ class WellnessCapability:
             ),
         )
 
-        response = self.runtime.provider._generate(
-            prompt
+        response = self.runtime.provider.generate(
+            prompt=prompt
         )
 
         return self._validate(response)
@@ -59,7 +59,7 @@ class WellnessCapability:
     def _validate(
         self,
         response: str,
-    ):
+    ) -> dict:
 
         try:
 

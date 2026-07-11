@@ -43,8 +43,8 @@ class MedicalExtractionCapability:
             document,
         )
 
-        response = self.runtime.provider._generate(
-            prompt
+        response = self.runtime.analyze_text(
+            prompt=prompt
         )
 
         return self._validate(response)
