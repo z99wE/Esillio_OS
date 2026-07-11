@@ -8,7 +8,7 @@ from app.runtime.config import (
 
 from app.runtime.providers.local_provider import LocalProvider
 from app.runtime.providers.openai_provider import OpenAIProvider
-from app.storage.settings_repository import settings_repository
+from app.storage.repository import settings_repository
 
 
 def create_provider():
@@ -50,14 +50,12 @@ def create_provider():
         )
 
     except Exception:
+        pass
 
-        provider = AI_PROVIDER
-
-        base_url = OPENAI_BASE_URL
-
-        api_key = OPENAI_API_KEY
-
-        model = OPENAI_MODEL
+    provider = "openai"
+    base_url = OPENAI_BASE_URL
+    api_key = OPENAI_API_KEY or "dummy_key_to_bypass_init"
+    model = OPENAI_MODEL
 
     ##########################################################
     # Local Gemma

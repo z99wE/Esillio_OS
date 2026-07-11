@@ -45,8 +45,9 @@ app.include_router(timeline_router)
 
 app.include_router(clinical_memory_router)
 
-app.include_router(settings_router)
+from app.esiwell.router import router as esiwell_router
 
+app.include_router(esiwell_router)
 
 ############################################################
 # Health Check

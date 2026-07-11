@@ -1,6 +1,3 @@
-cd /workspace/Esillio-Latest
-
-cat > app/esiwell/enricher.py <<'EOF'
 """
 EsiWell™
 

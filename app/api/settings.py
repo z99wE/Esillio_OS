@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from app.schemas.ai_settings import AISettings
-from app.storage.settings_repository import (
+from app.storage.repository import (
     settings_repository,
 )
 from app.runtime.engine import reload_runtime

@@ -1,0 +1,51 @@
+Medication
+Diagnosis
+Symptom
+Laboratory Result
+Vital Signs
+Exercise
+Nutrition
+Sleep
+Blood Pressure
+Heart Rate
+Blood Sugar
+Weight
+BMI
+Smoking
+Alcohol
+Allergy
+Vaccination
+Hospital Admission
+Hospital Discharge
+Emergency Visit
+Surgery
+Family History
+Pregnancy
+Menstrual Health
+Mental Health
+Stress
+Anxiety
+Depression
+Hydration
+Water Intake
+Protein Intake
+Carbohydrate Intake
+Fat Intake
+Walking
+Running
+Cycling
+Swimming
+Wearable Device
+Smartwatch
+Continuous Glucose Monitor
+Blood Test
+Urine Test
+MRI
+CT Scan
+X-Ray
+ECG
+Prescription
+Medication Adherence
+Medication Side Effect
+Doctor Visit
+Follow-up Visit

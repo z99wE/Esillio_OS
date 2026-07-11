@@ -13,3 +13,4 @@ export async function getTimeline(category = null) {
         );
 
     return response.data;
+}

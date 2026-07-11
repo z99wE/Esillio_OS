@@ -7,14 +7,9 @@ from app.runtime.engine import get_runtime
 logger = logging.getLogger(__name__)
 
 
-class WellnessCapability:
+class VisionCapability:
     """
-    Esillio Personal Wellness Intelligence
-
-    Generates educational wellness suggestions based on
-    structured medical information.
-
-    This module does NOT diagnose disease or prescribe treatment.
+    Esillio Vision Extraction Engine.
     """
 
     def __init__(self):
@@ -28,7 +23,7 @@ class WellnessCapability:
     def _load_prompt(self):
 
         prompt_path = Path(
-            "app/runtime/prompts/wellness.txt"
+            "app/runtime/prompts/vision_extract.txt"
         )
 
         return prompt_path.read_text()

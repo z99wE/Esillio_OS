@@ -8,21 +8,9 @@ from app.runtime.engine import get_runtime
 logger = logging.getLogger(__name__)
 
 
-class ClinicalGuardianCapability:
+class ClinicalReasoningCapability:
     """
-    Esillio Guardian™
-
-    High-level Clinical Intelligence Engine.
-
-    Responsibilities
-    ----------------
-    • Prioritize findings
-    • Explain biomarkers
-    • Review medications
-    • Generate lifestyle guidance
-    • Produce an executive summary
-
-    Educational only.
+    Esillio Clinical Reasoning Engine.
     """
 
     def __init__(self):
@@ -36,7 +24,7 @@ class ClinicalGuardianCapability:
     def _load_prompt(self):
 
         prompt_path = Path(
-            "app/runtime/prompts/clinical_guardian.txt"
+            "app/runtime/prompts/clinical_reasoning.txt"
         )
 
         return prompt_path.read_text()

@@ -97,3 +97,5 @@ class ClinicalMemory:
     def clear(self):
 
         self.__init__()
+
+clinical_memory = ClinicalMemory()

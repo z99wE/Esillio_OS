@@ -12,6 +12,20 @@ const client = axios.create({
     },
 });
 
+client.interceptors.request.use((config) => {
+    const openaiKey = localStorage.getItem("esillio_openai_key");
+    const anthropicKey = localStorage.getItem("esillio_anthropic_key");
+    const geminiKey = localStorage.getItem("esillio_gemini_key");
+    const localUrl = localStorage.getItem("esillio_local_url");
+
+    if (openaiKey) config.headers["X-OpenAI-Key"] = openaiKey;
+    if (anthropicKey) config.headers["X-Anthropic-Key"] = anthropicKey;
+    if (geminiKey) config.headers["X-Gemini-Key"] = geminiKey;
+    if (localUrl) config.headers["X-Local-URL"] = localUrl;
+
+    return config;
+});
+
 client.interceptors.response.use(
     (response) => response,
     (error) => {

@@ -2,15 +2,13 @@ import { Routes, Route } from "react-router-dom";
 
 import Landing from "./pages/Landing";
 import HealthIntelligence from "./pages/HealthIntelligence";
+import Esiwell from "./pages/Esiwell";
 import Upload from "./pages/Upload";
 import Timeline from "./pages/Timeline";
-import Guardian from "./pages/Guardian";
-import Profile from "./pages/Profile";
-import Settings from "./pages/Settings";
-import Privacy from "./pages/Privacy";
-import Disclaimer from "./pages/Disclaimer";
-import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import Settings from "./pages/Settings";
+import Connect from "./pages/Connect";
+import Subscription from "./pages/Subscription";
 
 export default function AppRoutes() {
     return (
@@ -21,6 +19,10 @@ export default function AppRoutes() {
                 element={<HealthIntelligence />}
             />
             <Route
+                path="/esiwell"
+                element={<Esiwell />}
+            />
+            <Route
                 path="/upload"
                 element={<Upload />}
             />
@@ -29,29 +31,18 @@ export default function AppRoutes() {
                 element={<Timeline />}
             />
             <Route
-                path="/guardian"
-                element={<Guardian />}
-            />
-            <Route
-                path="/profile"
-                element={<Profile />}
-            />
-            <Route
                 path="/settings"
                 element={<Settings />}
             />
             <Route
-                path="/privacy"
-                element={<Privacy />}
+                path="/connect"
+                element={<Connect />}
             />
             <Route
-                path="/disclaimer"
-                element={<Disclaimer />}
+                path="/subscription"
+                element={<Subscription />}
             />
-            <Route
-                path="/about"
-                element={<About />}
-            />
+
             <Route
                 path="*"
                 element={<NotFound />}
