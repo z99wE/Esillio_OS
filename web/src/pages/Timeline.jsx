@@ -6,8 +6,16 @@ import { dummyPatients } from "../utils/dummyData";
 export default function Timeline() {
     const { timeline, isLoading, error, currentPatientId, setCurrentPatientId } = useHealth();
 
-    // timeline might be an object containing events depending on backend format
-    const timelineEvents = Array.isArray(timeline) ? timeline : (timeline?.events || timeline?.timeline || []);
+    const isDemoPatient = currentPatientId.startsWith('usr-demo-');
+    const demoPatient = dummyPatients.find(p => p.id === currentPatientId) || dummyPatients[0];
+    
+    // Use demo timeline if a demo patient is selected, otherwise fallback to the real timeline from context
+    let timelineEvents = [];
+    if (isDemoPatient) {
+        timelineEvents = demoPatient.timeline || [];
+    } else {
+        timelineEvents = Array.isArray(timeline) ? timeline : (timeline?.events || timeline?.timeline || []);
+    }
 
     return (
         <div className="w-full max-w-4xl mx-auto py-16 px-4 relative z-10">
@@ -38,23 +46,23 @@ export default function Timeline() {
                                     setCurrentPatientId(p.id);
                                 }
                             }}
-                            className={`shrink-0 p-[1px] rounded-2xl group relative cursor-pointer snap-start transition-all duration-300 ${
+                            className={`shrink-0 p-[1px] bg-gradient-to-b from-white/10 to-white/0 rounded-2xl group relative cursor-pointer snap-start transition-all duration-300 ${
                                 isActive 
-                                    ? 'bg-gradient-to-b from-brand-primary/50 to-brand-primary/10 scale-105 z-10' 
-                                    : 'bg-gradient-to-b from-white/10 to-white/0 hover:-translate-y-1'
+                                    ? 'scale-105 z-10' 
+                                    : 'hover:-translate-y-1'
                             }`}
                         >
-                            {isActive && (
-                                <div className="absolute inset-0 bg-brand-primary/20 blur-xl rounded-2xl pointer-events-none transition-opacity duration-300"></div>
-                            )}
-                            <div className={`h-full rounded-2xl px-6 py-3 shadow-lg relative overflow-hidden transition-all duration-300 ${
+                            <div className={`absolute inset-0 blur-xl transition-opacity duration-500 pointer-events-none rounded-2xl ${
+                                isActive ? 'bg-brand-primary/20 opacity-100' : 'bg-brand-primary/10 opacity-0 group-hover:opacity-100'
+                            }`}></div>
+                            <div className={`h-full bg-background/40 backdrop-blur-xl rounded-2xl px-6 py-3 shadow-lg border relative overflow-hidden transition-all duration-300 ${
                                 isActive
-                                    ? 'bg-brand-primary/10 border border-brand-primary/50'
-                                    : 'bg-background/40 backdrop-blur-xl border border-white/5 group-hover:bg-white/5 group-hover:border-white/10 group-hover:shadow-[0_0_20px_rgba(255,69,51,0.15)]'
+                                    ? 'border-brand-primary/30 bg-white/5 shadow-[0_0_20px_rgba(255,69,51,0.2)] focus:outline-none focus:ring-2 focus:ring-brand-primary/50'
+                                    : 'border-white/5 group-hover:bg-white/5 group-hover:border-white/10 group-hover:shadow-[0_0_20px_rgba(255,69,51,0.15)] focus:outline-none focus:ring-2 focus:ring-brand-primary/50'
                             }`}>
                                 <p className="font-primary whitespace-nowrap">
-                                    <span className={`font-semibold ${isActive ? 'text-brand-primary' : 'text-text'}`}>{p.name}</span>
-                                    <span className={`text-xs ml-2 ${isActive ? 'text-brand-primary/70' : 'text-text/50'}`}>({p.subtitle.split(' ')[0]})</span>
+                                    <span className={`font-semibold transition-colors ${isActive ? 'text-text' : 'text-text/80 group-hover:text-text'}`}>{p.name}</span>
+                                    <span className={`text-xs ml-2 transition-colors ${isActive ? 'text-text/70' : 'text-text/50 group-hover:text-text/70'}`}>({p.subtitle.split(' ')[0]})</span>
                                 </p>
                             </div>
                         </div>
