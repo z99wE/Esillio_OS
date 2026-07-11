@@ -166,3 +166,37 @@ export const demoFiles = [
     { id: "file-2", name: "MRI_Brain_Scan_Report.pdf", type: "PDF", size: "8.1 MB" },
     { id: "file-3", name: "Cardiology_Consult_Summary.docx", type: "DOCX", size: "1.2 MB" }
 ];
+
+// Per-patient multi-agent wellness responses (for demo mode)
+export const esiwellAgentResponses = {
+    "usr-demo-1": {
+        // Alex Demo — Borderline Insulin Resistance, Metformin, Migraines
+        EsiDiet: "Given your borderline insulin resistance and Metformin use, I recommend a low-glycaemic diet rich in fibre: think lentils, leafy greens, and whole grains paired with small, frequent meals to keep your blood glucose stable.",
+        EsiActive: "Your last annual exam flagged dietary and sleep improvements as priorities — a 20-minute post-meal walk daily is one of the most effective evidence-based interventions for insulin sensitivity; start there before adding resistance training.",
+        EsiCalm: "Migraine frequency is closely linked to sleep quality and blood sugar swings; a consistent bedtime routine with no screens 30 minutes before sleep and a small protein-rich snack can help prevent late-night glucose dips that trigger your episodes."
+    },
+    "usr-demo-2": {
+        // Sarah Jenkins — Post-MI, Hypertension, Atorvastatin, Dyspnea on exertion
+        EsiDiet: "Post-MI recovery calls for a strict heart-healthy diet: the DASH or Mediterranean approach with minimal sodium (under 1,500 mg/day), plenty of omega-3s from fatty fish, and avoiding saturated fats to complement your Atorvastatin therapy.",
+        EsiActive: "Given your recent exertional dyspnea and improved LVEF of 45%, any new exercise must be cleared by your cardiologist first — until your stress test, stick to supervised cardiac rehabilitation sessions at low intensity.",
+        EsiCalm: "Cardiac recovery carries significant psychological weight; guided breathing or body-scan meditations for 10 minutes each morning can lower cortisol and systolic blood pressure, which is especially important given your hypertension."
+    },
+    "usr-demo-3": {
+        // Marcus Chen — Healthy, marathon training, excellent fitness
+        EsiDiet: "With your fasting glucose at a healthy 85 mg/dL and marathon training cleared, fuel your training with a 60% complex carbohydrate diet — prioritise carb-loading 24 hours before long runs and replenish with electrolytes post-workout.",
+        EsiActive: "Your sports physical gave you an all-clear — follow an 18-week periodised marathon plan that builds weekly mileage by no more than 10% and includes at least one full rest day to prevent overuse injuries.",
+        EsiCalm: "At peak training loads, mental recovery is as important as physical rest; incorporate one mindful active-rest day per week (yoga, hiking, gentle swimming) to keep motivation high and prevent burnout."
+    },
+    "usr-demo-4": {
+        // Elena Rodriguez — Breast Cancer Remission, Latex allergy
+        EsiDiet: "In cancer remission, an anti-inflammatory diet is essential: emphasise colourful vegetables, berries, turmeric, and cruciferous vegetables like broccoli, while minimising processed foods and alcohol which are known to elevate cancer recurrence risk.",
+        EsiActive: "Gentle, consistent movement is well-evidenced for reducing recurrence risk in breast cancer survivors — 150 minutes of moderate-intensity aerobic activity per week (walking, cycling, swimming) is the current oncology guideline.",
+        EsiCalm: "Survivorship anxiety is common and valid; structured mindfulness-based stress reduction (MBSR) programmes have the strongest evidence for improving quality of life in cancer survivors and may be available through your oncology centre."
+    },
+    "usr-demo-5": {
+        // David Kim — Osteoarthritis, Post-Op Rehab, Aspirin allergy
+        EsiDiet: "For osteoarthritis management, emphasise omega-3 fatty acids (salmon, walnuts, flaxseed), vitamin D and calcium-rich foods to support bone density, and avoid high-purine foods that can worsen joint inflammation.",
+        EsiActive: "Post-op knee rehabilitation should follow your physiotherapist's protocol strictly — prioritise range-of-motion exercises in the first 4 weeks, then progress to closed-chain exercises like mini-squats once cleared; avoid high-impact activity until 12 weeks post-surgery.",
+        EsiCalm: "Chronic pain from osteoarthritis significantly affects mood and sleep; a pain management mindfulness practice combined with heat therapy before bed can improve both sleep quality and your perception of pain levels."
+    }
+};
