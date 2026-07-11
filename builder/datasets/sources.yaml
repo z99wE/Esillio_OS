@@ -1,0 +1,33 @@
+version: 1
+
+sources:
+
+  - id: hpo
+    name: Human Phenotype Ontology
+    enabled: true
+    format: owl
+
+  - id: mondo
+    name: MONDO Disease Ontology
+    enabled: true
+    format: owl
+
+  - id: chebi
+    name: ChEBI
+    enabled: true
+    format: owl
+
+  - id: rxnorm
+    name: RxNorm
+    enabled: false
+    format: rrf
+
+  - id: loinc
+    name: LOINC
+    enabled: false
+    format: csv
+
+  - id: pubchem
+    name: PubChem
+    enabled: false
+    format: json

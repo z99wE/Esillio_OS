@@ -3,6 +3,8 @@ from typing import Any, Dict
 
 from app.memory import clinical_memory
 
+from app.esiwell.engine import get_esiwell
+
 from app.runtime.capabilities import (
     MedicalExtractionCapability,
     ClinicalReasoningCapability,
@@ -17,18 +19,17 @@ class ClinicalPipeline:
     """
     Esillio Clinical Intelligence Pipeline
 
-    Orchestrates the complete AI workflow while ensuring
-    failures in one capability do not stop the entire pipeline.
-
     Flow
 
         Medical Extraction
                 ↓
+             EsiWell
+                ↓
         Clinical Reasoning
                 ↓
-        Wellness
+            Wellness
                 ↓
-        Guardian
+            Guardian
                 ↓
         Clinical Memory
     """
@@ -36,6 +37,8 @@ class ClinicalPipeline:
     def __init__(self):
 
         self.medical_extractor = MedicalExtractionCapability()
+
+        self.esiwell = get_esiwell()
 
         self.reasoner = ClinicalReasoningCapability()
 
@@ -62,7 +65,9 @@ class ClinicalPipeline:
 
         try:
 
-            logger.info("Running Medical Extraction...")
+            logger.info(
+                "Running Medical Extraction..."
+            )
 
             extraction = self.medical_extractor.run(
                 document_text
@@ -83,6 +88,37 @@ class ClinicalPipeline:
             results["medical_extraction"] = {}
 
         ########################################################
+        # EsiWell Runtime
+        ########################################################
+
+        try:
+
+            logger.info(
+                "Running EsiWell..."
+            )
+
+            extraction = self.esiwell.enrich(
+                extraction
+            )
+
+            results["esiwell"] = extraction.get(
+                "esiwell",
+                {},
+            )
+
+        except Exception:
+
+            logger.exception(
+                "EsiWell failed."
+            )
+
+            errors.append(
+                "EsiWell failed."
+            )
+
+            results["esiwell"] = {}
+
+        ########################################################
         # Clinical Reasoning
         ########################################################
 
@@ -90,7 +126,9 @@ class ClinicalPipeline:
 
         try:
 
-            logger.info("Running Clinical Reasoning...")
+            logger.info(
+                "Running Clinical Reasoning..."
+            )
 
             reasoning = self.reasoner.run(
                 extraction
@@ -118,7 +156,9 @@ class ClinicalPipeline:
 
         try:
 
-            logger.info("Running Wellness...")
+            logger.info(
+                "Running Wellness..."
+            )
 
             wellness = self.wellness.run(
                 extraction
@@ -146,7 +186,9 @@ class ClinicalPipeline:
 
         try:
 
-            logger.info("Running Guardian...")
+            logger.info(
+                "Running Guardian..."
+            )
 
             guardian = self.guardian.run(
                 extraction
@@ -174,12 +216,18 @@ class ClinicalPipeline:
 
         try:
 
-            logger.info("Updating Clinical Memory...")
+            logger.info(
+                "Updating Clinical Memory..."
+            )
 
             memory = clinical_memory.update(
+
                 extraction=extraction,
+
                 reasoning=reasoning,
+
                 wellness=wellness,
+
             )
 
             results["clinical_memory"] = memory
@@ -199,9 +247,13 @@ class ClinicalPipeline:
         ########################################################
 
         results["pipeline_status"] = (
+
             "success"
+
             if not errors
+
             else "partial_success"
+
         )
 
         results["errors"] = errors
