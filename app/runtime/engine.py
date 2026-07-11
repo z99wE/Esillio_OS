@@ -1,7 +1,8 @@
 import logging
 
-from app.runtime.config import MODEL_PATH
-from app.runtime.providers.local_provider import LocalProvider
+from app.runtime.providers.provider_factory import (
+    create_provider,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -10,21 +11,28 @@ _runtime = None
 
 class AIRuntime:
     """
-    Esillio Clinical Intelligence Runtime
+    Esillio Runtime
 
-    Loads the local Gemma model once and exposes a
-    simple interface for all AI capabilities.
+    Dynamically loads the configured provider.
     """
 
     def __init__(self):
 
-        logger.info("Loading Clinical Intelligence Runtime...")
+        self.reload()
 
-        self.provider = LocalProvider(
-            model_path=str(MODEL_PATH)
+    ########################################################
+
+    def reload(self):
+
+        logger.info(
+            "Loading AI Provider..."
         )
 
-        logger.info("Clinical Intelligence Runtime Ready.")
+        self.provider = create_provider()
+
+        logger.info(
+            "AI Provider Ready."
+        )
 
     ########################################################
 
@@ -32,40 +40,29 @@ class AIRuntime:
         self,
         prompt: str,
     ) -> str:
-        """
-        Generate a response from the local Gemma model.
-        """
 
         return self.provider.generate(
-            prompt=prompt
+            prompt=prompt,
         )
 
     ########################################################
 
     def analyze_image(
         self,
-        image_path: str,
+        image,
         prompt: str,
     ) -> str:
-        """
-        Analyze a medical image using Gemma Vision.
-        """
 
         return self.provider.analyze_image(
-            image_path=image_path,
+            image_path=image,
             prompt=prompt,
         )
 
 
 ############################################################
 
-def get_runtime():
-    """
-    Singleton runtime.
 
-    Loads Gemma exactly once during the application's
-    lifetime.
-    """
+def get_runtime():
 
     global _runtime
 
@@ -74,3 +71,15 @@ def get_runtime():
         _runtime = AIRuntime()
 
     return _runtime
+
+
+############################################################
+
+
+def reload_runtime():
+
+    runtime = get_runtime()
+
+    runtime.reload()
+
+    return runtime

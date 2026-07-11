@@ -48,8 +48,8 @@ class WellnessCapability:
             ),
         )
 
-        response = self.runtime.provider.generate(
-            prompt=prompt
+        response = self.runtime.analyze_text(
+            prompt=prompt,
         )
 
         return self._validate(response)

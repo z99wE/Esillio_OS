@@ -7,19 +7,14 @@ from app.runtime.engine import get_runtime
 logger = logging.getLogger(__name__)
 
 
-class VisionCapability:
+class WellnessCapability:
     """
-    Esillio Vision Intelligence
+    Esillio Personal Wellness Intelligence
 
-    Supports:
+    Generates educational wellness suggestions based on
+    structured medical information.
 
-    - Prescriptions
-    - Lab Reports
-    - Blood Reports
-    - Hospital Summaries
-    - Medical Images
-
-    Returns structured JSON.
+    This module does NOT diagnose disease or prescribe treatment.
     """
 
     def __init__(self):
@@ -33,7 +28,7 @@ class VisionCapability:
     def _load_prompt(self):
 
         prompt_path = Path(
-            "app/runtime/prompts/vision_extract.txt"
+            "app/runtime/prompts/wellness.txt"
         )
 
         return prompt_path.read_text()
@@ -42,15 +37,19 @@ class VisionCapability:
 
     def run(
         self,
-        image_path: str,
+        medical_record: dict,
     ) -> dict:
-        """
-        Analyze a medical image using the local Gemma Vision model.
-        """
 
-        response = self.runtime.analyze_image(
-            image_path=image_path,
-            prompt=self.prompt,
+        prompt = self.prompt.replace(
+            "{{PATIENT_RECORD}}",
+            json.dumps(
+                medical_record,
+                indent=2,
+            ),
+        )
+
+        response = self.runtime.analyze_text(
+            prompt=prompt,
         )
 
         return self._validate(response)
@@ -73,36 +72,28 @@ class VisionCapability:
         except Exception:
 
             logger.exception(
-                "Vision JSON parsing failed."
+                "Wellness JSON parsing failed."
             )
 
             return {
 
                 "success": False,
 
-                "conditions": [],
+                "diet": {},
 
-                "medications": [],
+                "exercise": {},
 
-                "symptoms": [],
+                "sleep": {},
 
-                "biomarkers": [],
+                "hydration": {},
 
-                "procedures": [],
+                "stress": {},
 
-                "allergies": [],
+                "preventive": {},
 
-                "family_history": [],
+                "questions_for_clinician": [],
 
-                "nutrition": [],
-
-                "lifestyle": [],
-
-                "follow_up": [],
-
-                "red_flags": [],
-
-                "summary": "",
+                "wellness_summary": "",
 
                 "raw_response": response,
 

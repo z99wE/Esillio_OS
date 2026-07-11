@@ -1,54 +1,87 @@
 from app.storage.database import database
 
 
-class HealthRepository:
+class SettingsRepository:
+    """
+    Repository for AI Runtime settings.
 
-    def create_event(self, event):
+    Stores a single runtime configuration that can be
+    updated from the frontend.
+
+    Future:
+    This can easily be extended to support per-user settings.
+    """
+
+    ##########################################################
+
+    def get_settings(self):
 
         cursor = database.connection.cursor()
 
         cursor.execute(
             """
-            INSERT INTO health_events
-            (
-                id,
-                title,
-                category,
-                source,
-                description,
-                timestamp,
-                confidence
-            )
-            VALUES (?,?,?,?,?,?,?)
+            SELECT
+                provider,
+                base_url,
+                api_key,
+                model
+            FROM ai_settings
+            WHERE id = 1
+            """
+        )
+
+        row = cursor.fetchone()
+
+        if row is None:
+
+            return {
+                "provider": "local",
+                "base_url": "https://api.openai.com/v1",
+                "api_key": "",
+                "model": "gpt-4.1",
+            }
+
+        return dict(row)
+
+    ##########################################################
+
+    def save_settings(
+        self,
+        provider: str,
+        base_url: str,
+        api_key: str,
+        model: str,
+    ):
+
+        cursor = database.connection.cursor()
+
+        cursor.execute(
+            """
+            UPDATE ai_settings
+            SET
+                provider=?,
+                base_url=?,
+                api_key=?,
+                model=?
+            WHERE id=1
             """,
             (
-                event.id,
-                event.title,
-                event.category,
-                event.source,
-                event.description,
-                str(event.timestamp),
-                event.confidence,
+                provider,
+                base_url,
+                api_key,
+                model,
             ),
         )
 
         database.connection.commit()
 
-    def list_events(self):
-
-        cursor = database.connection.cursor()
-
-        cursor.execute(
-            """
-            SELECT *
-            FROM health_events
-            ORDER BY timestamp DESC
-            """
-        )
-
-        rows = cursor.fetchall()
-
-        return [dict(row) for row in rows]
+        return self.get_settings()
 
 
-repository = HealthRepository()
+############################################################
+
+settings_repository = SettingsRepository()
+
+
+
+

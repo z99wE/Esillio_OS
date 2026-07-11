@@ -1,5 +1,5 @@
-import sqlite3
 import os
+import sqlite3
 
 DB_PATH = "data/esillio.db"
 
@@ -7,39 +7,97 @@ DB_PATH = "data/esillio.db"
 class Database:
 
     def __init__(self):
-        os.makedirs("data", exist_ok=True)
+
+        os.makedirs(
+            "data",
+            exist_ok=True,
+        )
 
         self.connection = sqlite3.connect(
             DB_PATH,
-            check_same_thread=False
+            check_same_thread=False,
         )
 
         self.connection.row_factory = sqlite3.Row
 
         self.initialize()
 
+    ##########################################################
+
     def initialize(self):
 
         cursor = self.connection.cursor()
 
-        cursor.execute("""
-        CREATE TABLE IF NOT EXISTS health_events(
+        ######################################################
+        # Health Events
+        ######################################################
 
-            id TEXT PRIMARY KEY,
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS health_events(
 
-            title TEXT NOT NULL,
+                id TEXT PRIMARY KEY,
 
-            category TEXT,
+                title TEXT NOT NULL,
 
-            source TEXT,
+                category TEXT,
 
-            description TEXT,
+                source TEXT,
 
-            timestamp TEXT,
+                description TEXT,
 
-            confidence REAL
+                timestamp TEXT,
+
+                confidence REAL
+            )
+            """
         )
-        """)
+
+        ######################################################
+        # AI Settings
+        ######################################################
+
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS ai_settings(
+
+                id INTEGER PRIMARY KEY CHECK(id = 1),
+
+                provider TEXT NOT NULL,
+
+                base_url TEXT,
+
+                api_key TEXT,
+
+                model TEXT
+            )
+            """
+        )
+
+        ######################################################
+        # Insert Default Settings
+        ######################################################
+
+        cursor.execute(
+            """
+            INSERT OR IGNORE INTO ai_settings
+            (
+                id,
+                provider,
+                base_url,
+                api_key,
+                model
+            )
+            VALUES
+            (
+                1,
+                'local',
+                'https://api.openai.com/v1',
+                '',
+                'gpt-4.1'
+            )
+            """
+        )
 
         self.connection.commit()
 
