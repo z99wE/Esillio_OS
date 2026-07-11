@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Virtual environments
+venv/
+.env
+
+# SQLite
+*.db
+
+# Node
+web/node_modules/
+web/dist/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Python cache
+.pytest_cache/
