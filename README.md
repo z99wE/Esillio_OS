@@ -362,3 +362,24 @@ Esillio gives patients a continuously evolving, structured health memory that gr
 **Because your body remembers.**
 
 </div>
+
+---
+
+# ⚡ AMD Acceleration
+
+Esillio follows a **build once, run anywhere** philosophy.
+
+The platform separates **knowledge compilation** from **runtime execution**, allowing the application to remain lightweight while still benefiting from accelerated preprocessing.
+
+## EsiWell Forge
+
+The repository includes **EsiWell Forge**, an offline knowledge compiler that generates a compact SQLite knowledge layer consumed by the runtime.
+
+```text
+Curated Health Knowledge
+        ↓
+EsiWell Forge
+        ↓
+SQLite Knowledge Base
+        ↓
+CPU Runtime
