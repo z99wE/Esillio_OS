@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { useHealth } from "../context/HealthContext";
 import { uploadDocument } from "../api/upload";
@@ -7,10 +7,60 @@ import { demoFiles } from "../utils/dummyData";
 export default function Upload() {
     const { fetchTimeline } = useHealth();
     const [file, setFile] = useState(null);
+    const [textNote, setTextNote] = useState("");
+    const [isRecording, setIsRecording] = useState(false);
+    const recognitionRef = useRef(null);
     const [isUploading, setIsUploading] = useState(false);
     const [progressText, setProgressText] = useState("");
     const [success, setSuccess] = useState(false);
     const [localError, setLocalError] = useState(null);
+
+    const toggleRecording = () => {
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            setLocalError("Speech recognition is not supported in this browser. Please use Chrome or Safari.");
+            return;
+        }
+
+        if (isRecording) {
+            if (recognitionRef.current) {
+                recognitionRef.current.stop();
+            }
+            setIsRecording(false);
+            return;
+        }
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognitionRef.current = recognition;
+        
+        recognition.onstart = () => setIsRecording(true);
+        recognition.onresult = (event) => {
+            let finalTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    finalTranscript += event.results[i][0].transcript + ' ';
+                }
+            }
+            if (finalTranscript) {
+                setTextNote(prev => prev + finalTranscript);
+            }
+        };
+        recognition.onerror = (event) => {
+            if (event.error !== 'no-speech') {
+                setLocalError("Microphone error: " + event.error);
+                setIsRecording(false);
+            }
+        };
+        recognition.onend = () => setIsRecording(false);
+
+        try {
+            recognition.start();
+        } catch (err) {
+            console.error("Speech recognition error:", err);
+        }
+    };
 
     const onDrop = useCallback((acceptedFiles) => {
         if (acceptedFiles?.length > 0) {
@@ -39,20 +89,26 @@ export default function Upload() {
     });
 
     const handleUpload = async () => {
-        if (!file) return;
+        if (!file && !textNote.trim()) return;
 
         setIsUploading(true);
         setLocalError(null);
         setProgressText("Uploading to EsiCore...");
 
+        let uploadPayload = file;
+        if (!file && textNote.trim()) {
+            uploadPayload = new File([textNote], "VoiceNote.txt", { type: "text/plain" });
+        }
+
         try {
             // ALWAYS attempt the real API first
-            await uploadDocument(file);
+            await uploadDocument(uploadPayload);
             setProgressText("Processing clinical data...");
             await new Promise(resolve => setTimeout(resolve, 1500)); 
 
             setSuccess(true);
             setFile(null);
+            setTextNote("");
             await fetchTimeline();
         } catch (err) {
             // FALLBACK: If the real backend is offline, we simulate success for Demo Mode
@@ -63,6 +119,7 @@ export default function Upload() {
                 
                 setSuccess(true);
                 setFile(null);
+                setTextNote("");
             } else {
                 // If it's a real error (not just offline), display it
                 setLocalError(err.message || "Failed to upload document");
@@ -134,16 +191,40 @@ export default function Upload() {
                                     </div>
                                 </div>
 
-                                {file && (
+                                {/* TEXT NOTE & AUDIO DICTATION */}
+                                <div className="mt-8 pt-8 border-t border-white/10 w-full text-left">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <h4 className="text-sm font-semibold uppercase tracking-wider text-text/50 font-primary">Add a Clinical Note</h4>
+                                        <button 
+                                            onClick={toggleRecording}
+                                            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all shadow-md ${
+                                                isRecording 
+                                                    ? 'bg-red-500/20 text-red-400 border border-red-500/50 animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.3)]' 
+                                                    : 'bg-white/5 text-text/70 border border-white/10 hover:bg-white/10 hover:text-brand-primary'
+                                            }`}
+                                        >
+                                            <span className={`h-2 w-2 rounded-full ${isRecording ? 'bg-red-500' : 'bg-brand-primary'}`}></span>
+                                            {isRecording ? "Recording..." : "Dictate"}
+                                        </button>
+                                    </div>
+                                    <textarea
+                                        value={textNote}
+                                        onChange={(e) => setTextNote(e.target.value)}
+                                        placeholder="Type or dictate a clinical note here..."
+                                        className="w-full h-32 bg-background/50 border border-white/10 rounded-2xl p-4 text-text font-primary resize-none focus:outline-none focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 transition-all placeholder:text-text/30"
+                                    />
+                                </div>
+
+                                {(file || textNote.trim()) && (
                                     <div className="mt-8 relative z-10 bg-white/5 backdrop-blur-md border border-brand-primary/50 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_0_20px_rgba(255,69,51,0.15)] animate-fade-in">
                                         <div className="flex items-center gap-3 overflow-hidden w-full sm:w-auto">
                                             <div className="p-2.5 rounded-lg bg-accent/20 text-accent font-bold border border-accent/30 shadow-inner">
-                                                DOC
+                                                {file ? "DOC" : "TXT"}
                                             </div>
                                             <div className="flex flex-col overflow-hidden">
-                                                <span className="text-text font-primary font-medium truncate">{file.name}</span>
+                                                <span className="text-text font-primary font-medium truncate">{file ? file.name : "Voice / Text Note"}</span>
                                                 <span className="text-text/50 text-xs font-primary">
-                                                    {(file.size / 1024 / 1024).toFixed(2)} MB • Ready to Process
+                                                    {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB • ` : ""}Ready to Process
                                                 </span>
                                             </div>
                                         </div>
