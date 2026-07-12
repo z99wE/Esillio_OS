@@ -1,9 +1,11 @@
 from app.runtime.config import (
     AI_PROVIDER,
-    MODEL_PATH,
     OPENAI_API_KEY,
     OPENAI_BASE_URL,
     OPENAI_MODEL,
+    LOCAL_BASE_URL,
+    LOCAL_MODEL,
+    LOCAL_API_KEY,
 )
 
 from app.runtime.providers.local_provider import LocalProvider
@@ -73,12 +75,16 @@ def create_provider():
         )
 
     ##########################################################
-    # Local Gemma (on-device)
+    # Local Provider Proxy (e.g. Ollama/LM Studio)
     ##########################################################
 
     if provider.lower() == "local":
         try:
-            return LocalProvider(model_path=str(MODEL_PATH))
+            return LocalProvider(
+                base_url=LOCAL_BASE_URL,
+                model=LOCAL_MODEL,
+                api_key=LOCAL_API_KEY,
+            )
         except Exception:
             logger.exception(
                 "LocalProvider failed to load — falling back to stub."

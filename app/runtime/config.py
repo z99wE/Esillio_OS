@@ -1,15 +1,8 @@
-from pathlib import Path
-import torch
+import os
 
 # -------------------------------------------------------
-# Local Gemma Runtime Configuration
+# Runtime Configuration (Lightweight)
 # -------------------------------------------------------
-
-MODEL_PATH = Path("/workspace/models/gemma4")
-
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-
-DTYPE = torch.bfloat16
 
 MAX_NEW_TOKENS = 1024
 
@@ -19,7 +12,10 @@ TOP_P = 0.9
 
 DO_SAMPLE = False
 
-MODEL_NAME = "google/gemma-4-E4B-it"
+# Local proxy defaults
+LOCAL_BASE_URL = os.getenv("LOCAL_BASE_URL", "http://host.docker.internal:11434/v1")
+LOCAL_MODEL = os.getenv("LOCAL_MODEL", "gemma")
+LOCAL_API_KEY = os.getenv("LOCAL_API_KEY", "local")
 
 # Fallbacks if DB is missing
 AI_PROVIDER = "openai"

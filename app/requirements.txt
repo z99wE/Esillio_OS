@@ -4,8 +4,4 @@ sqlalchemy
 pydantic
 pydantic-settings
 python-multipart
-transformers
-torch
-accelerate
-safetensors
-sentencepiece
+openai
