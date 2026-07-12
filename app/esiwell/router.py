@@ -2,7 +2,8 @@ import logging
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from app.api.auth import get_current_user
 
 from .schemas import CompileRequest, ChatRequest
 
@@ -110,26 +111,58 @@ def _run_orchestration(request: CompileRequest) -> dict:
         local["ai_response"] = provider.generate("")
         return local
 
-    # Build the full prompt
-    parts = []
+    import concurrent.futures
 
-    if request.system_prompt:
-        parts.append(request.system_prompt)
+    def _call_agent(agent_name: str, role_desc: str) -> str:
+        parts = [
+            f"You are {agent_name}, an expert in {role_desc}. You are part of the Esillio Health orchestration team.",
+            "Rules:",
+            "1. Ground your response in the patient's medical timeline.",
+            "2. Write a substantial 3-4 paragraph response.",
+            "3. Never diagnose or prescribe. Be therapeutic and educational.",
+        ]
+        if request.system_prompt:
+            parts.append(f"\nUser System Prompt Override: {request.system_prompt}")
 
-    if request.patient_context:
-        parts.append(
-            f"\n\n--- PATIENT CONTEXT ---\n{request.patient_context}\n--- END CONTEXT ---\n"
-        )
+        if request.patient_context:
+            parts.append(f"\n\n--- PATIENT CONTEXT ---\n{request.patient_context}\n--- END CONTEXT ---\n")
 
-    parts.append(f"\nUser message: {request.text}")
+        parts.append(f"\nUser message: {request.text}")
+        full_prompt = "\n".join(parts)
+        
+        try:
+            return runtime.analyze_text(prompt=full_prompt)
+        except Exception as e:
+            logger.exception(f"{agent_name} failed.")
+            return f"Error connecting to {agent_name}: {str(e)}"
 
-    full_prompt = "\n".join(parts)
-
+    agent_configs = {
+        "EsiDiet": "Nutrition, diet planning, food choices, hydration",
+        "EsiActive": "Fitness, movement, exercise, mobility, rehabilitation",
+        "EsiCalm": "Mental wellness, stress management, sleep, emotional health",
+    }
+    
+    agent_responses = {}
     try:
-        response_text = runtime.analyze_text(prompt=full_prompt)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+            future_to_agent = {
+                executor.submit(_call_agent, name, desc): name
+                for name, desc in agent_configs.items()
+            }
+            for future in concurrent.futures.as_completed(future_to_agent):
+                agent_name = future_to_agent[future]
+                try:
+                    agent_responses[agent_name] = future.result()
+                except Exception as exc:
+                    agent_responses[agent_name] = f"Agent failed: {exc}"
+
+        # Build fallback ai_response string to not break old frontend versions
+        ai_response_str = "\n\n".join(f"{k}:\n{v}" for k, v in agent_responses.items())
+
         return {
             "source": "ai_runtime",
-            "ai_response": response_text,
+            "ai_response": ai_response_str,
+            "agent_responses": agent_responses,
             "patient_id": request.patient_id,
         }
     except Exception:
@@ -144,9 +177,11 @@ def _run_orchestration(request: CompileRequest) -> dict:
 ###############################################################
 
 @router.post("/compile")
-def compile_health_note(request: CompileRequest):
+def compile_health_note(request: CompileRequest, user_id: str = Depends(get_current_user)):
     """
     Primary multi-agent endpoint.
+    """
+    request.patient_id = user_id
 
     Routes through the configured AI provider (OpenAI, Gemini, Ollama, etc.)
     with the full system prompt + patient context. Falls back to the local
@@ -156,7 +191,7 @@ def compile_health_note(request: CompileRequest):
 
 
 @router.post("/chat")
-def chat_with_documents(request: ChatRequest):
+def chat_with_documents(request: ChatRequest, user_id: str = Depends(get_current_user)):
     """
     Free-form chat with the patient's compiled health documents.
 
@@ -176,7 +211,7 @@ def chat_with_documents(request: ChatRequest):
         text=request.message,
         system_prompt=system_prompt,
         patient_context=request.patient_context,
-        patient_id=request.patient_id,
+        patient_id=user_id,
     )
 
     return _run_orchestration(compile_req)

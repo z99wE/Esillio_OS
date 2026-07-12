@@ -11,6 +11,7 @@ from app.api.timeline import router as timeline_router
 from app.api.clinical_memory import router as clinical_memory_router
 from app.api.settings import router as settings_router
 from app.esiwell.router import router as esiwell_router
+from app.api.auth import auth_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -54,6 +55,7 @@ app.include_router(timeline_router)
 app.include_router(clinical_memory_router)
 app.include_router(settings_router)
 app.include_router(esiwell_router)
+app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
 
 ############################################################
 # Root Health Check

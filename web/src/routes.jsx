@@ -10,25 +10,29 @@ import Settings from "./pages/Settings";
 import Connect from "./pages/Connect";
 import Subscription from "./pages/Subscription";
 
+import Auth from "./pages/Auth";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 export default function AppRoutes() {
     return (
         <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/auth" element={<Auth />} />
             <Route
                 path="/health"
-                element={<HealthIntelligence />}
+                element={<ProtectedRoute><HealthIntelligence /></ProtectedRoute>}
             />
             <Route
                 path="/esiwell"
-                element={<Esiwell />}
+                element={<ProtectedRoute><Esiwell /></ProtectedRoute>}
             />
             <Route
                 path="/upload"
-                element={<Upload />}
+                element={<ProtectedRoute><Upload /></ProtectedRoute>}
             />
             <Route
                 path="/timeline"
-                element={<Timeline />}
+                element={<ProtectedRoute><Timeline /></ProtectedRoute>}
             />
             <Route
                 path="/settings"

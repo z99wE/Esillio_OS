@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 const API_BASE =
     import.meta.env.VITE_API_URL ||
     "http://localhost:8000";
@@ -12,7 +13,7 @@ const client = axios.create({
     },
 });
 
-client.interceptors.request.use((config) => {
+client.interceptors.request.use(async (config) => {
     const openaiKey = localStorage.getItem("esillio_openai_key");
     const anthropicKey = localStorage.getItem("esillio_anthropic_key");
     const geminiKey = localStorage.getItem("esillio_gemini_key");
@@ -22,6 +23,11 @@ client.interceptors.request.use((config) => {
     if (anthropicKey) config.headers["X-Anthropic-Key"] = anthropicKey;
     if (geminiKey) config.headers["X-Gemini-Key"] = geminiKey;
     if (localUrl) config.headers["X-Local-URL"] = localUrl;
+
+    const token = localStorage.getItem("esillio_token");
+    if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+    }
 
     return config;
 });

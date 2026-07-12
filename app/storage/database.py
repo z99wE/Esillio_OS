@@ -29,6 +29,25 @@ class Database:
         cursor = self.connection.cursor()
 
         ######################################################
+        # Users
+        ######################################################
+
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS users(
+
+                id TEXT PRIMARY KEY,
+
+                email TEXT UNIQUE NOT NULL,
+
+                password_hash TEXT NOT NULL,
+                
+                created_at TEXT NOT NULL
+            )
+            """
+        )
+
+        ######################################################
         # Health Events
         ######################################################
 
@@ -37,6 +56,8 @@ class Database:
             CREATE TABLE IF NOT EXISTS health_events(
 
                 id TEXT PRIMARY KEY,
+
+                patient_id TEXT,
 
                 title TEXT NOT NULL,
 

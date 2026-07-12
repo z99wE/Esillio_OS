@@ -121,7 +121,9 @@ RULES:
                 }).catch(() => null);
             }
 
-            if (response?.data?.ai_response) {
+            if (response?.data?.agent_responses) {
+                setResult(response.data.agent_responses);
+            } else if (response?.data?.ai_response) {
                 // Parse the AI text into per-agent sections
                 const raw = response.data.ai_response;
                 const parseAgent = (agentKey) => {

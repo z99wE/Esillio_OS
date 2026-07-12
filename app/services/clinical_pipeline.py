@@ -51,6 +51,7 @@ class ClinicalPipeline:
     def process(
         self,
         document_text: str,
+        patient_id: str = "anonymous",
     ) -> Dict[str, Any]:
 
         results = {}
@@ -221,13 +222,10 @@ class ClinicalPipeline:
             )
 
             memory = clinical_memory.update(
-
+                patient_id=patient_id,
                 extraction=extraction,
-
                 reasoning=reasoning,
-
                 wellness=wellness,
-
             )
 
             results["clinical_memory"] = memory

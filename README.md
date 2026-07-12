@@ -421,7 +421,7 @@ Because inference remains local-first, these improvements can be distributed wit
 
 ## Roadmap
 
-- [ ] Multi-user authentication
+- [x] Multi-user authentication (100% Free SQLite JWT Auth)
 - [ ] FHIR interoperability
 - [ ] Wearables integration
 - [ ] Clinical Graph Database
@@ -431,6 +431,26 @@ Because inference remains local-first, these improvements can be distributed wit
 - [ ] Medical RAG with semantic chunking
 - [ ] Differential timeline comparison
 - [ ] Offline PWA packaging
+
+---
+
+## 🚀 Zero-Cost Global Deployment (Hobby Plan)
+
+Esillio OS can be deployed completely for free without any credit card, maintaining its local-first privacy architecture:
+
+### 1. Backend: Hugging Face Spaces (Free)
+Hugging Face gives you a Docker environment with 16GB of RAM absolutely for free.
+- Go to [Hugging Face Spaces](https://huggingface.co/spaces) and create a **Docker** Space.
+- Link it to your GitHub repository.
+- The included `Dockerfile` will automatically start the FastAPI backend.
+- (Optional) Enable **Persistent Storage** for `/data` in Space Settings to persist `esillio.db`.
+
+### 2. Frontend: Vercel (Free)
+Vercel's Hobby plan is free forever for personal projects.
+- Import your repository on Vercel.
+- Framework Preset: **Vite**, Root Directory: **web**
+- Set `VITE_API_URL` to your Hugging Face Space URL.
+- Deploy.
 
 ---
 

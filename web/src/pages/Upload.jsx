@@ -5,7 +5,7 @@ import { uploadDocument } from "../api/upload";
 import { demoFiles } from "../utils/dummyData";
 
 export default function Upload() {
-    const { fetchTimeline } = useHealth();
+    const { fetchTimeline, currentPatientId } = useHealth();
     const [file, setFile] = useState(null);
     const [textNote, setTextNote] = useState("");
     const [isRecording, setIsRecording] = useState(false);
@@ -71,8 +71,12 @@ export default function Upload() {
     }, []);
 
     const simulateDrop = (demoFile) => {
-        // Create a dummy File object for simulation
-        const dummyFile = new File(["dummy content"], demoFile.name, { type: "application/pdf" });
+        // Create a dummy File object with some realistic text content for simulation
+        const dummyText = `Patient: Demo Patient
+Document: ${demoFile.name}
+Date: 2024-03-15
+Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating current medications.`;
+        const dummyFile = new File([dummyText], demoFile.name + ".txt", { type: "text/plain" });
         setFile(dummyFile);
         setLocalError(null);
         setSuccess(false);
@@ -102,7 +106,23 @@ export default function Upload() {
 
         try {
             // ALWAYS attempt the real API first
-            await uploadDocument(uploadPayload);
+            const formData = new FormData();
+            formData.append("file", uploadPayload);
+            formData.append("patient_id", currentPatientId);
+
+            const res = await fetch(import.meta.env.VITE_API_URL + "/upload" || "http://localhost:8000/upload", {
+                method: "POST",
+                headers: {
+                    "X-OpenAI-Key": localStorage.getItem("esillio_openai_key") || "",
+                    "X-Gemini-Key": localStorage.getItem("esillio_gemini_key") || "",
+                },
+                body: formData
+            });
+
+            if (!res.ok) {
+                throw new Error("Upload failed: " + res.statusText);
+            }
+
             setProgressText("Processing clinical data...");
             await new Promise(resolve => setTimeout(resolve, 1500)); 
 
