@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+
+  "title": "Esillio Health IR v1",
+
+  "type": "object",
+
+  "required": [
+    "event_type",
+    "timestamp",
+    "source",
+    "entities",
+    "confidence"
+  ],
+
+  "properties": {
+
+    "event_type": {
+      "type": "string"
+    },
+
+    "timestamp": {
+      "type": ["string","null"]
+    },
+
+    "source": {
+      "type": "string"
+    },
+
+    "confidence": {
+      "type": "number"
+    },
+
+    "entities": {
+
+      "type":"object",
+
+      "properties":{
+
+        "medications":{"type":"array"},
+
+        "biomarkers":{"type":"array"},
+
+        "conditions":{"type":"array"},
+
+        "symptoms":{"type":"array"},
+
+        "activities":{"type":"array"},
+
+        "nutrition":{"type":"array"}
+
+      }
+
+    },
+
+    "relationships":{
+
+      "type":"array"
+
+    }
+
+  }
+
+}

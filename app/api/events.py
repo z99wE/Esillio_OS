@@ -1,25 +1,26 @@
 from fastapi import APIRouter
 
 from app.schemas.health_event import HealthEvent
+from app.storage.repository import repository
 
 router = APIRouter(
     prefix="/events",
-    tags=["Health Events"]
+    tags=["Health Events"],
 )
-
-DATABASE = []
 
 
 @router.post("/")
 async def create_event(event: HealthEvent):
-    DATABASE.append(event)
+
+    repository.create_event(event)
 
     return {
-        "message": "Health Event stored successfully.",
-        "events": len(DATABASE)
+        "status": "stored",
+        "id": event.id,
     }
 
 
 @router.get("/")
 async def list_events():
-    return DATABASE
+
+    return repository.list_events()

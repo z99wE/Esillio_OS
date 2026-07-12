@@ -1,0 +1,1020 @@
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Medication
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Diagnosis
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Symptom
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Laboratory Result
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Vital Signs
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Exercise
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Nutrition
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Sleep
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Blood Pressure
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Heart Rate
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Blood Sugar
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+Weight
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+BMI
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Smoking
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Alcohol
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Allergy
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Vaccination
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Admission
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Hospital Discharge
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Emergency Visit
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Surgery
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Family History
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Pregnancy
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Menstrual Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Mental Health
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Stress
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Anxiety
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Depression
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Hydration
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Water Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Protein Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Carbohydrate Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Fat Intake
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Walking
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Running
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Cycling
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Swimming
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Wearable Device
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Smartwatch
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Continuous Glucose Monitor
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Blood Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+Urine Test
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+MRI
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+CT Scan
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+X-Ray
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+ECG
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Prescription
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Adherence
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Medication Side Effect
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Doctor Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit
+Follow-up Visit

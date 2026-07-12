@@ -6,6 +6,12 @@ __pycache__/
 # Virtual environments
 venv/
 .env
+.env.*
+.env.local
+
+# App Data
+app/uploads/
+app/chroma_db/
 
 # SQLite
 *.db
@@ -26,3 +32,15 @@ web/dist/
 
 # Python cache
 .pytest_cache/
+backups/
+
+# Machine Learning Artifacts
+Esillio-Compiler/artifacts/checkpoints/
+Esillio-Compiler/artifacts/esillio_compiler/
+Esillio-Compiler/dataset/
+Esillio-Compiler/logs/
+Esillio-Compiler/outputs/
+*.safetensors
+*.pt
+*.tar.gz
+*.jsonl

@@ -1,0 +1,19 @@
+/* ===========================
+   GLOBAL RESET & BASE
+=========================== */
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+body {
+    font-family: var(--font-secondary);
+    background-color: var(--color-neutral-background);
+    color: var(--color-text-primary);
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Let Tailwind handle the rest */

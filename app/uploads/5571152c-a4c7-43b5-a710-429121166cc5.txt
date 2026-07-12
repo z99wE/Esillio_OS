@@ -1,0 +1,7 @@
+Patient has diabetes.
+
+Started Metformin.
+
+Recent Hemoglobin was low.
+
+Complains of headache.
