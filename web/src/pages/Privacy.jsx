@@ -1,5 +1,5 @@
 import React from 'react';
-import GlassCard from '../components/ui/GlassCard';
+import GlassCard from '../components/GlassCard';
 
 export default function Privacy() {
     return (
