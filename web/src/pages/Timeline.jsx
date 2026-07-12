@@ -17,6 +17,29 @@ export default function Timeline() {
         timelineEvents = Array.isArray(timeline) ? timeline : (timeline?.events || timeline?.timeline || []);
     }
 
+    const exportToMarkdown = () => {
+        if (!timelineEvents || timelineEvents.length === 0) return;
+        
+        let md = `# My Health Timeline\n\n`;
+        timelineEvents.forEach(event => {
+            md += `### ${event.title}\n`;
+            if (event.date) md += `**Date:** ${event.date}\n`;
+            md += `**Category:** ${event.category || "Clinical Event"}\n\n`;
+            if (event.description) md += `${event.description}\n\n`;
+            md += `---\n\n`;
+        });
+
+        const blob = new Blob([md], { type: 'text/markdown' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'esillio_health_timeline.md';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <div className="w-full max-w-4xl mx-auto py-16 px-4 relative z-10">
             <div className="text-center mb-8 flex flex-col items-center">
@@ -27,6 +50,17 @@ export default function Timeline() {
                     Every uploaded document contributes to a continuous health story,
                     making trends and medical events easier to understand over time.
                 </p>
+                {timelineEvents.length > 0 && (
+                    <button 
+                        onClick={exportToMarkdown}
+                        className="mt-6 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-brand-primary text-sm font-semibold hover:bg-white/10 transition-colors flex items-center gap-2"
+                    >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Export to Markdown
+                    </button>
+                )}
             </div>
 
             {/* Patient Selector (Demo Mode) */}

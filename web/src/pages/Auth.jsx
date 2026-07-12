@@ -42,7 +42,7 @@ export default function Auth() {
                 </p>
             </div>
 
-            <div className="bg-background/40 backdrop-blur-3xl rounded-3xl p-8 shadow-2xl border border-white/5 relative overflow-hidden">
+            <div className="glass-card rounded-3xl p-8 relative overflow-hidden hover-glow transition-all duration-300">
                 <form onSubmit={handleAuth} className="flex flex-col gap-4 relative z-10">
                     <div>
                         <label className="text-sm font-semibold text-text-secondary mb-1 block">Email</label>
