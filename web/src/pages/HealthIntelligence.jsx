@@ -58,12 +58,42 @@ export default function HealthIntelligence() {
 
     const handleGenerateSummary = async () => {
         setIsGeneratingSummary(true);
+        
+        const triggerDownload = () => {
+            setTimeout(() => {
+                const summaryEl = document.getElementById('clinician-summary');
+                if (summaryEl) {
+                    const htmlContent = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Esillio Clinical Summary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white">
+    ${summaryEl.outerHTML}
+</body>
+</html>`;
+                    const blob = new Blob([htmlContent], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'esillio_clinical_summary.html';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                } else {
+                    window.print(); // fallback
+                }
+                setIsGeneratingSummary(false);
+            }, 500);
+        };
+
         try {
             const res = await client.get("/api/export/clinician");
             setClinicianData(res.data);
-            setTimeout(() => {
-                window.print();
-            }, 500);
+            triggerDownload();
         } catch (error) {
             console.error("Failed to generate summary:", error);
             // Fallback for demo mode if backend is not running
@@ -81,11 +111,7 @@ export default function HealthIntelligence() {
                 timeline: selectedPatient.timeline || []
             };
             setClinicianData(fallbackData);
-            setTimeout(() => {
-                window.print();
-            }, 500);
-        } finally {
-            setIsGeneratingSummary(false);
+            triggerDownload();
         }
     };
 
@@ -146,8 +172,8 @@ export default function HealthIntelligence() {
         <>
         <div className="w-full max-w-6xl mx-auto py-16 px-4 relative z-10 print:hidden">
             <div className="text-center mb-8 flex flex-col items-center">
-                <h1 className="text-4xl md:text-5xl font-medium tracking-tight bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent pb-2 leading-tight">
-                    Your health story is <span className="font-primary italic drop-shadow-sm">taking shape</span>
+                <h1 className="text-4xl md:text-5xl font-medium tracking-tight pb-2 leading-tight text-white">
+                    Your health story is <span className="font-primary italic drop-shadow-sm bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">taking shape</span>
                 </h1>
                 <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed mt-4">
                     Esillio has processed your records and updated your clinical memory.

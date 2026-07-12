@@ -177,8 +177,8 @@ export default function Settings() {
 
             <div className="w-full max-w-3xl relative z-[2] flex flex-col gap-8">
                 <div className="text-center flex flex-col items-center gap-4">
-                    <h1 className="text-4xl md:text-5xl font-medium tracking-tight bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent pb-2 leading-tight">
-                        AI Configuration
+                    <h1 className="text-4xl md:text-5xl font-medium tracking-tight pb-2 leading-tight text-white">
+                        AI <span className="font-primary italic drop-shadow-sm bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Configuration</span>
                     </h1>
                     <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed">
                         Choose your AI provider. Keys are stored in your browser and synced to the Esillio backend.

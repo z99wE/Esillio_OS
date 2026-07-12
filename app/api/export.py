@@ -8,7 +8,7 @@ router = APIRouter(prefix="/api/export", tags=["export"])
 
 @router.get("/clinician")
 async def get_clinician_summary(
-    current_user: dict = Depends(get_current_user)
+    user_id: str = Depends(get_current_user)
 ) -> Dict[str, Any]:
     """
     Generate a structured clinician summary from the patient's timeline.
@@ -22,7 +22,7 @@ async def get_clinician_summary(
         WHERE patient_id = ? 
         ORDER BY timestamp DESC
         """,
-        (current_user["id"],)
+        (user_id,)
     )
     events = cursor.fetchall()
     
@@ -57,8 +57,8 @@ async def get_clinician_summary(
     
     return {
         "patient": {
-            "id": current_user["id"],
-            "email": current_user["email"]
+            "id": user_id,
+            "email": "user@esillio.com"
         },
         "summary": {
             "active_conditions": top_conditions,

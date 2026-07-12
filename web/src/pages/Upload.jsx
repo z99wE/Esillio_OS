@@ -108,6 +108,7 @@ Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating curr
                     headers: {
                         "X-OpenAI-Key": localStorage.getItem("esillio_openai_key") || "",
                         "X-Gemini-Key": localStorage.getItem("esillio_gemini_key") || "",
+                        "Authorization": `Bearer ${localStorage.getItem("esillio_token") || "guest-token-123"}`
                     },
                     body: formData
                 });
@@ -152,11 +153,13 @@ Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating curr
             formData.append("file", uploadPayload);
             formData.append("patient_id", currentPatientId);
 
-            const res = await fetch(import.meta.env.VITE_API_URL + "/upload" || "http://localhost:8000/upload", {
+            const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+            const res = await fetch(baseUrl + "/upload/", {
                 method: "POST",
                 headers: {
                     "X-OpenAI-Key": localStorage.getItem("esillio_openai_key") || "",
                     "X-Gemini-Key": localStorage.getItem("esillio_gemini_key") || "",
+                    "Authorization": `Bearer ${localStorage.getItem("esillio_token") || "guest-token-123"}`
                 },
                 body: formData
             });
@@ -194,8 +197,8 @@ Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating curr
     return (
         <div className="w-full max-w-4xl mx-auto py-16 px-4 animate-fade-in relative z-10">
             <div className="text-center mb-12 flex flex-col items-center">
-                <h1 className="text-4xl md:text-5xl font-primary tracking-tight bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent pb-2 leading-tight">
-                    Add to your <span className="font-primary italic drop-shadow-sm font-light">Health Memory</span>
+                <h1 className="text-4xl md:text-5xl font-primary tracking-tight pb-2 leading-tight text-white">
+                    Add to your <span className="font-primary italic drop-shadow-sm font-light bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Health Memory</span>
                 </h1>
                 <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed mt-2 font-primary">
                     Upload medical reports, lab results, or imaging summaries. Esillio will extract and store the clinical intelligence securely.

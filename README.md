@@ -145,7 +145,7 @@ Esillio automatically:
 
 ✅ Extracts medical information via the BCC pipeline  
 ✅ Understands clinical context with structured reasoning  
-✅ **Clinician One-Pager:** Generates instant, physician-ready printable summaries of top conditions, medications, and biomarkers.  
+✅ **Clinician One-Pager:** Generates instant, physician-ready printable HTML summaries of top conditions, medications, and biomarkers.  
 ✅ **Proactive Anomaly Detection:** Monitors biomarker trajectories to automatically flag deteriorating trends with actionable AI insights.  
 ✅ **Wearables Integration:** Parses Apple Health & Oura CSV exports seamlessly into the clinical timeline.  
 ✅ Generates educational wellness guidance via multi-agent orchestration  
@@ -310,7 +310,7 @@ This high-retention, patient-owned data ecosystem unlocks massive B2B2C potentia
 ### Frontend
 
 - **React 18** + **Vite**
-- **TailwindCSS** — utility-first styling
+- **TailwindCSS** — utility-first styling with premium glassmorphic cursive headings
 - **HealthContext** — shared global patient state
 - **Web Speech API** — browser-native audio dictation
 
@@ -401,7 +401,7 @@ The application will automatically boot in **Demo Mode**, populated with rich pa
 | `/events` | GET | List compiled HealthEvents |
 | `/timeline` | GET | Chronological health timeline |
 | `/esiwell/compile` | POST | Multi-agent wellness orchestration |
-| `/export/clinician` | GET | **[NEW]** Generate JSON for physician-ready summaries |
+| `/export/clinician` | GET | **[NEW]** Generate JSON and HTML for physician-ready printable summaries |
 | `/intelligence/trends` | GET | **[NEW]** AI-powered biomarker anomaly detection |
 | `/memory/current` | GET | Current clinical memory state |
 | `/settings/ai` | GET/POST | BYOAI provider configuration |

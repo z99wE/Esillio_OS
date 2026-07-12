@@ -10,7 +10,7 @@ trend_detector = TrendDetector()
 
 @router.get("/trends")
 async def get_health_trends(
-    current_user: dict = Depends(get_current_user)
+    user_id: str = Depends(get_current_user)
 ) -> Dict[str, Any]:
     """
     Analyze biomarker history to detect deteriorating trends.
@@ -24,7 +24,7 @@ async def get_health_trends(
         WHERE patient_id = ? AND category = 'biomarker'
         ORDER BY timestamp ASC
         """,
-        (current_user["id"],)
+        (user_id,)
     )
     events = cursor.fetchall()
     

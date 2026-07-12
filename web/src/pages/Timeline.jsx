@@ -44,8 +44,8 @@ export default function Timeline() {
     return (
         <div className="w-full max-w-4xl mx-auto py-16 px-4 relative z-10">
             <div className="text-center mb-8 flex flex-col items-center">
-                <h1 className="text-4xl md:text-5xl font-medium tracking-tight bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent pb-2 leading-tight">
-                    Your Health <span className="font-primary italic drop-shadow-sm">Timeline</span>
+                <h1 className="text-4xl md:text-5xl font-medium tracking-tight pb-2 leading-tight text-white">
+                    Your Health <span className="font-primary italic drop-shadow-sm bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Timeline</span>
                 </h1>
                 <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed mt-4">
                     Every uploaded document contributes to a continuous health story,

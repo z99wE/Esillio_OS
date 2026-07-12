@@ -158,8 +158,8 @@ RULES:
 
             {/* Header */}
             <div className="text-center space-y-4">
-                <h1 className="text-4xl md:text-5xl font-primary tracking-tight bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent pb-2 leading-tight">
-                    EsiWell <span className="font-primary italic drop-shadow-sm font-light">Orchestrator</span>
+                <h1 className="text-4xl md:text-5xl font-primary tracking-tight pb-2 leading-tight text-white">
+                    EsiWell <span className="font-primary italic drop-shadow-sm font-light bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Orchestrator</span>
                 </h1>
                 <p className="text-base md:text-lg text-text-secondary max-w-2xl mx-auto leading-relaxed mt-2 font-primary">
                     Ask a question and our three specialised AI Agents will collaborate to give you personalised lifestyle and therapeutic advice based on your health timeline.

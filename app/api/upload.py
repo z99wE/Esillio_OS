@@ -100,7 +100,7 @@ async def upload_document(
 @router.post("/csv")
 async def upload_csv(
     file: UploadFile = File(...),
-    current_user: dict = Depends(get_current_user)
+    user_id: str = Depends(get_current_user)
 ):
     """
     Parse a CSV file (Apple Health or Oura) and save events as biomarkers.
@@ -110,7 +110,7 @@ async def upload_csv(
     reader = csv.DictReader(io.StringIO(decoded))
     
     events_created = 0
-    patient_id = current_user.get("id") or "1"
+    patient_id = user_id
     
     for row in reader:
         # Simple heuristic mapping for CSV rows

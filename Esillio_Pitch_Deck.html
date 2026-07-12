@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Esillio OS - Investor Pitch Deck</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* CSS Animations for scroll reveals */
+    .animate-on-scroll-hidden {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .animate-on-scroll-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    html, body {
+      overflow-x: hidden;
+      max-width: 100vw;
+      background-color: #050505; /* Even deeper black for better glass contrast */
+      color: #ffffff;
+    }
+
+    /* Snapping for presentation feel */
+    .slide-snap-container {
+      scroll-snap-type: y mandatory;
+      height: 100vh;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    .slide-section {
+      scroll-snap-align: start;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      padding: 4rem 1rem;
+    }
+
+    /* Custom Gradients mimicking the Cosmos UI */
+    .text-gradient-esillio {
+      background: linear-gradient(90deg, #ff9500, #d549d5, #6a0dad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      /* FIX: Prevent clipping on italicized gradient text */
+      padding-right: 0.15em; 
+      padding-bottom: 0.1em;
+      line-height: 1.2;
+    }
+    
+    .logo-metallic {
+      background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0px 4px 24px rgba(255,255,255,0.15));
+    }
+
+    /* True Liquid Glassmorphism */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03); /* Very subtle white tint */
+      border-top: 1px solid rgba(255, 255, 255, 0.15); /* Light source from top */
+      border-left: 1px solid rgba(255, 255, 255, 0.08); /* Light source from left */
+      border-right: 1px solid rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255,255,255,0.02);
+      border-radius: 24px; /* Softer corners for liquid feel */
+    }
+
+    .footer-source {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      color: #6b7280; /* Subtle grey */
+      text-align: center;
+      width: 90%;
+      letter-spacing: 0.05em;
+    }
+
+    /* Background DNA/Particle Graphic Base Class */
+    .bg-dna-graphic {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.15; /* Very low opacity */
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 0;
+      filter: grayscale(100%) contrast(120%) brightness(80%); /* Make it blend with the dark theme better */
+    }
+  </style>
+
+  <style type="text/tailwindcss">
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+  </style>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      important: '#app-root',
+      theme: {
+        extend: {
+          colors: {
+            'brand-orange': '#ff9500',
+            'brand-pink': '#d549d5',
+            'brand-violet': '#6a0dad',
+            'neutral-bg': '#050505',
+            'text-main': '#ffffff', /* Pure white */
+            'text-muted': '#d1d5db', /* Highly readable secondary text */
+            'border-subtle': 'rgba(255, 255, 255, 0.08)',
+          },
+          fontFamily: {
+            'primary': ['Playfair Display', 'serif'],
+            'secondary': ['Inter', 'sans-serif'],
+          },
+          keyframes: {
+            spin: {
+              'from': { transform: 'translate(-50%, -50%) rotate(0deg)' },
+              'to': { transform: 'translate(-50%, -50%) rotate(360deg)' },
+            },
+            'spin-reverse': {
+              'from': { transform: 'translate(-50%, -50%) rotate(360deg)' },
+              'to': { transform: 'translate(-50%, -50%) rotate(0deg)' },
+            }
+          },
+          animation: {
+            'spin-slow': 'spin 20s linear infinite',
+            'spin-reverse-slow': 'spin-reverse 25s linear infinite',
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body id="app-root" class="bg-neutral-bg text-text-main font-secondary antialiased selection:bg-brand-pink selection:text-white">
+
+  <!-- Fixed Navigation / Presentation Progress -->
+  <header class="fixed top-0 left-0 w-full z-50 py-6 px-8 flex justify-between items-center pointer-events-none">
+    <div class="flex items-center gap-2">
+      <span class="font-primary text-2xl font-medium tracking-wide logo-metallic">Esillio</span>
+    </div>
+    <div class="hidden md:flex items-center gap-2 pointer-events-auto">
+      <span class="text-xs font-medium text-text-muted tracking-widest uppercase bg-neutral-card/80 px-4 py-2 border border-border-subtle rounded-full backdrop-blur-md">Investor Deck</span>
+    </div>
+  </header>
+
+  <main class="slide-snap-container" id="presentation-container">
+
+    <!-- Slide 1: Title & Vision -->
+    <section id="slide1" class="slide-section overflow-hidden">
+      <!-- DNA Graphic Background -->
+      <img src="https://images.unsplash.com/photo-1614935151651-0bea6508ab6b?q=80&w=2000&auto=format&fit=crop" class="bg-dna-graphic" alt="DNA Particle Background">
+      
+      <div class="absolute left-1/2 top-1/2 w-[800px] sm:w-[1200px] h-[500px] sm:h-[800px] transform -translate-x-1/2 -translate-y-1/2 z-[0] pointer-events-none">
+        <div class="absolute left-1/2 top-1/2 w-[300px] h-[300px] rounded-full bg-[conic-gradient(from_0deg_at_50%_50%,#ff9500,#d549d5,#6a0dad,#ff9500)] blur-[120px] opacity-20 animate-spin-slow"></div>
+      </div>
+      
+      <div class="relative z-[1] max-w-6xl mx-auto flex flex-col items-center gap-8 text-center w-full px-4">
+        <h1 class="text-6xl sm:text-8xl md:text-[110px] font-primary font-medium tracking-tight logo-metallic mb-4" data-animation-on-scroll>
+          Esillio
+        </h1>
+        <h2 class="text-4xl md:text-6xl font-medium tracking-tight text-text-main" data-animation-on-scroll data-animation-delay="100">
+          Your body <span class="text-gradient-esillio italic">remembers.</span><br>
+          Now your healthcare can too.
+        </h2>
+        <p class="text-2xl md:text-3xl font-primary italic text-brand-pink mt-6 opacity-90" data-animation-on-scroll data-animation-delay="200">
+          "Biology is memory; Esillio is its librarian."
+        </p>
+        <div class="glass-card mt-8 p-8 max-w-3xl" data-animation-on-scroll data-animation-delay="300">
+            <p class="text-lg md:text-xl font-medium text-text-muted leading-relaxed">
+            A local-first AI operating system that compiles your scattered health records into a secure, searchable, continuous timeline.
+            </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Market Opportunity -->
+    <section id="slide2" class="slide-section relative overflow-hidden">
+       <!-- Subtle Graphic Background -->
+       <img src="https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop" class="bg-dna-graphic opacity-10" alt="Abstract Background">
+
+      <div class="max-w-6xl mx-auto w-full px-4 relative z-[1]">
+        <div class="flex flex-col items-center gap-4 text-center mb-16" data-animation-on-scroll>
+          <h2 class="text-4xl md:text-6xl font-primary font-medium tracking-tight text-text-main">
+            Trillions of dollars <span class="text-gradient-esillio italic">are at stake.</span>
+          </h2>
+          <p class="font-primary italic text-2xl text-brand-orange mt-4 opacity-90">"The data exists – it just needs to be connected."</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" data-animation-on-scroll data-animation-delay="150">
+          <div class="glass-card p-10 text-center flex flex-col justify-center items-center">
+            <p class="text-6xl font-bold text-text-main mb-4 tracking-tight">$2.3T</p>
+            <h3 class="text-xl font-semibold text-brand-orange mb-4 uppercase tracking-widest">Digital Health</h3>
+            <p class="text-base text-text-muted leading-relaxed">Growing aggressively from ~$450B today (projected 2033), demanding entirely new infrastructure.</p>
+          </div>
+          
+          <div class="glass-card p-10 text-center flex flex-col justify-center items-center">
+            <p class="text-6xl font-bold text-text-main mb-4 tracking-tight">$195B</p>
+            <h3 class="text-xl font-semibold text-brand-pink mb-4 uppercase tracking-widest">Healthcare AI</h3>
+            <p class="text-base text-text-muted leading-relaxed">Surging from ~$37B (2026), expected by 2031 to completely redefine clinical diagnostic tools.</p>
+          </div>
+          
+          <div class="glass-card p-10 text-center flex flex-col justify-center items-center">
+            <p class="text-6xl font-bold text-text-main mb-4 tracking-tight">$64.2B</p>
+            <h3 class="text-xl font-semibold text-brand-violet mb-4 uppercase tracking-widest">Personal Apps</h3>
+            <p class="text-base text-text-muted leading-relaxed">Consumer wellness app spending by 2033, proving the massive consumer appetite for data ownership.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-source">Sources: Fortune Business Insights, Grandview Research, Data Bridge (Digital Health TAM, AI Healthcare Growth, Personal Health Apps)</div>
+    </section>
+
+    <!-- Slide 3: The Problem -->
+    <section id="slide3" class="slide-section overflow-hidden">
+      <!-- Subtle Graphic Background -->
+      <img src="https://images.unsplash.com/photo-1618044733300-9472054094ee?q=80&w=2000&auto=format&fit=crop" class="bg-dna-graphic opacity-[0.08]" alt="Abstract Background">
+
+      <div class="absolute right-[-20%] top-1/2 w-[600px] h-[600px] bg-brand-orange/10 rounded-full blur-[120px] transform -translate-y-1/2 pointer-events-none"></div>
+      
+      <div class="max-w-6xl mx-auto w-full px-4 relative z-[1]">
+        <div class="glass-card p-12 md:p-16">
+          <div class="flex flex-col items-center gap-4 text-center mb-12" data-animation-on-scroll>
+            <h2 class="text-4xl md:text-6xl font-primary font-medium tracking-tight text-text-main">
+              No single view of your <span class="text-gradient-esillio italic">health story.</span>
+            </h2>
+            <p class="font-primary italic text-2xl text-text-muted mt-4">"Fragmented data costs lives and stalls innovation."</p>
+          </div>
+          
+          <ul class="flex flex-col gap-8 max-w-4xl mx-auto" data-animation-on-scroll data-animation-delay="200">
+            <li class="flex items-start gap-6">
+              <div class="w-12 h-12 rounded-full bg-brand-orange/20 flex items-center justify-center shrink-0 mt-1 border border-brand-orange/30">
+                <i class="fa-solid fa-server text-brand-orange text-xl"></i>
+              </div>
+              <div>
+                <strong class="text-2xl text-text-main block mb-2 font-medium">Violently Siloed</strong>
+                <span class="text-lg text-text-muted leading-relaxed">Today’s healthcare data is scattered across disparate labs, EHRs, wearables, and illegible doctor notes. Fragmentation hinders care and innovation.</span>
+              </div>
+            </li>
+            <li class="flex items-start gap-6">
+              <div class="w-12 h-12 rounded-full bg-brand-pink/20 flex items-center justify-center shrink-0 mt-1 border border-brand-pink/30">
+                <i class="fa-solid fa-puzzle-piece text-brand-pink text-xl"></i>
+              </div>
+              <div>
+                <strong class="text-2xl text-text-main block mb-2 font-medium">Missing Context</strong>
+                <span class="text-lg text-text-muted leading-relaxed">Patients lack context: preventable errors and misdiagnoses rise dramatically when providers only see scattered pieces of the puzzle.</span>
+              </div>
+            </li>
+            <li class="flex items-start gap-6">
+              <div class="w-12 h-12 rounded-full bg-brand-violet/20 flex items-center justify-center shrink-0 mt-1 border border-brand-violet/30">
+                <i class="fa-solid fa-lock text-brand-violet text-xl"></i>
+              </div>
+              <div>
+                <strong class="text-2xl text-text-main block mb-2 font-medium">Walled Gardens</strong>
+                <span class="text-lg text-text-muted leading-relaxed">Nearly all health data gets locked away in institutional silos, leaving individuals entirely unable to leverage their own history.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-source">Source: Industry EHR Fragmentation & Patient Data Access Studies</div>
+    </section>
+
+    <!-- Slide 4: Solution -->
+    <section id="slide4" class="slide-section overflow-hidden">
+        <!-- Subtle Graphic Background -->
+       <img src="https://images.unsplash.com/photo-1614935151651-0bea6508ab6b?q=80&w=2000&auto=format&fit=crop" class="bg-dna-graphic opacity-10" alt="DNA Background">
+
+      <div class="max-w-6xl mx-auto w-full px-4 relative z-[1]">
+        <div class="flex flex-col items-center gap-4 text-center mb-16" data-animation-on-scroll>
+          <h2 class="text-4xl md:text-6xl font-primary font-medium tracking-tight text-text-main max-w-4xl mx-auto leading-tight">
+            We compile your scattered history into one <span class="text-gradient-esillio italic">continuous narrative.</span>
+          </h2>
+          <p class="font-primary italic text-2xl text-brand-pink mt-4 opacity-90">"The best time to organize your medical history was years ago. The second best time is today."</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8" data-animation-on-scroll data-animation-delay="200">
+          <div class="glass-card p-10 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-40 h-40 bg-brand-orange/10 rounded-full blur-3xl transition-all duration-500 group-hover:bg-brand-orange/20"></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <h4 class="text-2xl font-semibold text-text-main mb-4 flex items-center gap-3">
+                <i class="fa-solid fa-microchip text-brand-orange"></i> Biological Compiler™
+              </h4>
+              <p class="text-lg leading-relaxed text-text-muted">AI transforms any input (doctor notes, complex PDFs, CSVs, wearables) into structured, time‑stamped HealthEvents effortlessly.</p>
+            </div>
+          </div>
+          
+          <div class="glass-card p-10 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-40 h-40 bg-brand-pink/10 rounded-full blur-3xl transition-all duration-500 group-hover:bg-brand-pink/20"></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <h4 class="text-2xl font-semibold text-text-main mb-4 flex items-center gap-3">
+                <i class="fa-solid fa-network-wired text-brand-pink"></i> Persistent Health Graph
+              </h4>
+              <p class="text-lg leading-relaxed text-text-muted">Links biomarkers, meds, and symptoms on-device. Enables trend alerts ("heart rate rose 8%") and complex semantic search ("when was I last sick?").</p>
+            </div>
+          </div>
+          
+          <div class="glass-card p-10 relative overflow-hidden group">
+            <div class="absolute top-0 right-0 w-40 h-40 bg-brand-violet/10 rounded-full blur-3xl transition-all duration-500 group-hover:bg-brand-violet/20"></div>
+            <div class="relative z-10 flex flex-col h-full">
+              <h4 class="text-2xl font-semibold text-text-main mb-4 flex items-center gap-3">
+                <i class="fa-solid fa-shield-halved text-brand-violet"></i> Local-First Privacy
+              </h4>
+              <p class="text-lg leading-relaxed text-text-muted">Zero cloud dependency. This is your most sensitive data, governed entirely by your privacy, running securely directly on your machine.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Tech & AMD -->
+    <section id="slide5" class="slide-section overflow-hidden">
+        <!-- Subtle Graphic Background -->
+       <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2000&auto=format&fit=crop" class="bg-dna-graphic opacity-10" alt="Tech Background">
+
+      <div class="absolute left-[-20%] top-1/2 w-[600px] h-[600px] bg-brand-violet/10 rounded-full blur-[120px] transform -translate-y-1/2 pointer-events-none"></div>
+      
+      <div class="max-w-6xl mx-auto w-full px-4 relative z-[1]">
+        <div class="glass-card p-12 md:p-16">
+           <div class="flex flex-col items-center gap-4 text-center mb-16" data-animation-on-scroll>
+             <h2 class="text-4xl md:text-6xl font-primary font-medium tracking-tight text-text-main">
+               AI innovation, optimized for <span class="text-gradient-esillio italic">privacy.</span>
+             </h2>
+             <p class="font-primary italic text-2xl text-text-muted mt-4">"Intelligence requires context, and context requires power."</p>
+           </div>
+
+           <div class="flex flex-col md:flex-row gap-12" data-animation-on-scroll data-animation-delay="150">
+              <div class="flex-1 flex flex-col gap-6">
+                 <h3 class="text-3xl font-semibold text-text-main mb-2">AMD-Accelerated AI Edge</h3>
+                 <p class="text-lg text-text-muted leading-relaxed">
+                   Under the hood is an open-source LLM fine-tuned specifically on healthcare data. 
+                 </p>
+                 <p class="text-lg text-text-muted leading-relaxed">
+                   We heavily leverage <strong>AMD’s high-performance compute (ROCm)</strong> for development, enabling hyper-efficient on-device inference <span class="text-sm opacity-60">(roadmap implementation)</span>.
+                 </p>
+              </div>
+              
+              <div class="w-px bg-border-subtle hidden md:block"></div>
+              
+              <div class="flex-1 flex flex-col gap-6">
+                 <h3 class="text-3xl font-semibold text-text-main mb-2">Vector + SQL Hybrid</h3>
+                 <p class="text-lg text-text-muted leading-relaxed">
+                   ChromaDB (vector store) and heavily encrypted SQLite hold the timeline. This architecture allows the OS to answer highly complex free-text health queries instantly, offline.
+                 </p>
+                 <p class="text-lg text-text-muted leading-relaxed">
+                   Future-proofed: Natively supports adding genomics, voice, and visual inputs without redesign.
+                 </p>
+              </div>
+           </div>
+        </div>
+      </div>
+      <div class="footer-source">Source: AMD Healthcare Computing Infrastructure & AI Development Frameworks</div>
+    </section>
+
+    <!-- Slide 6: Business Model -->
+    <section id="slide6" class="slide-section overflow-hidden">
+         <!-- Subtle Graphic Background -->
+       <img src="https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop" class="bg-dna-graphic opacity-10" alt="Abstract Background">
+
+      <div class="max-w-6xl mx-auto w-full px-4 relative z-[1]">
+        <div class="flex flex-col items-center gap-4 text-center mb-16" data-animation-on-scroll>
+          <h2 class="text-4xl md:text-6xl font-primary font-medium tracking-tight text-text-main">
+            Accessible to everyone, with <span class="text-gradient-esillio italic">enterprise optionality.</span>
+          </h2>
+          <p class="font-primary italic text-2xl text-text-muted mt-4">"A sustainable ecosystem built on undeniable value."</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" data-animation-on-scroll data-animation-delay="200">
+          <div class="glass-card p-10 flex flex-col items-center text-center">
+             <div class="w-16 h-16 rounded-full bg-brand-orange/20 flex items-center justify-center mb-6 border border-brand-orange/30">
+                <i class="fa-solid fa-mobile-screen text-brand-orange text-2xl"></i>
+             </div>
+             <h3 class="text-2xl font-semibold mb-4 text-text-main">Freemium App</h3>
+             <p class="text-lg text-text-muted leading-relaxed">Basic timeline tracking is free. Premium features (multi-device sync, advanced analytics, doctor portal) via subscription ($5–$10/mo).</p>
+          </div>
+          
+          <div class="glass-card p-10 flex flex-col items-center text-center relative border-brand-pink/50 border-2 shadow-[0_0_30px_rgba(213,73,213,0.15)] transform md:-translate-y-4">
+             <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-brand-pink text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest shadow-lg">Core Revenue</div>
+             <div class="w-16 h-16 rounded-full bg-brand-pink/20 flex items-center justify-center mb-6 mt-4 border border-brand-pink/30">
+                <i class="fa-solid fa-building text-brand-pink text-2xl"></i>
+             </div>
+             <h3 class="text-2xl font-semibold mb-4 text-text-main">B2B Licensing</h3>
+             <p class="text-lg text-text-muted leading-relaxed">Clinics, insurers, and pharma license our HIPAA-compliant API to drastically improve chronic care management and patient outreach.</p>
+          </div>
+
+          <div class="glass-card p-10 flex flex-col items-center text-center md:col-span-2 lg:col-span-1">
+             <div class="w-16 h-16 rounded-full bg-brand-violet/20 flex items-center justify-center mb-6 border border-brand-violet/30">
+                <i class="fa-solid fa-chart-line text-brand-violet text-2xl"></i>
+             </div>
+             <h3 class="text-2xl font-semibold mb-4 text-text-main">$100M+ Projection</h3>
+             <p class="text-lg text-text-muted leading-relaxed">Capturing just 0.1% of the digital health TAM (~$4B) yields $4M+ ARR. Scaling to $50–$100M+ revenue is highly feasible by 2028.<sup>†</sup></p>
+          </div>
+        </div>
+      </div>
+      <div class="footer-source">† Esillio Internal Revenue & Penetration Projections</div>
+    </section>
+
+    <!-- Slide 7: Competitive Moat -->
+    <section id="slide7" class="slide-section overflow-hidden">
+        <!-- Subtle Graphic Background -->
+       <img src="https://images.unsplash.com/photo-1618044733300-9472054094ee?q=80&w=2000&auto=format&fit=crop" class="bg-dna-graphic opacity-10" alt="Abstract Background">
+
+      <div class="absolute left-1/2 top-1/2 w-[800px] h-[500px] transform -translate-x-1/2 -translate-y-1/2 z-[0] pointer-events-none">
+        <div class="absolute left-1/2 top-1/2 w-[400px] h-[400px] rounded-full bg-[conic-gradient(from_0deg_at_50%_50%,#ff9500,#d549d5,#6a0dad,#ff9500)] blur-[150px] opacity-10 animate-spin-reverse-slow"></div>
+      </div>
+
+      <div class="max-w-6xl mx-auto w-full px-4 relative z-[1]">
+        <div class="flex flex-col items-center gap-4 text-center mb-16" data-animation-on-scroll>
+          <h2 class="text-4xl md:text-6xl font-primary font-medium tracking-tight text-text-main">
+            No one else <span class="text-gradient-esillio italic">connects the dots.</span>
+          </h2>
+          <p class="font-primary italic text-2xl text-text-muted mt-4">"True health memory requires absolute data sovereignty."</p>
+        </div>
+
+        <div class="flex flex-col lg:flex-row justify-center gap-8 lg:gap-12" data-animation-on-scroll data-animation-delay="200">
+          
+          <div class="glass-card flex flex-col gap-6 w-full max-w-lg p-10 opacity-60 hover:opacity-100 transition-opacity duration-300">
+            <h3 class="text-2xl font-medium text-text-muted uppercase tracking-widest text-center border-b border-border-subtle pb-4">Traditional Big Tech</h3>
+            <ul class="flex flex-col gap-6 mt-2">
+              <li class="flex items-start gap-4">
+                <i class="fa-solid fa-cloud text-gray-500 mt-1.5 text-xl"></i>
+                <span class="text-lg text-text-muted"><strong>Cloud Dependent:</strong> Rely on cloud processing, inherently risking massive data privacy breaches.</span>
+              </li>
+              <li class="flex items-start gap-4">
+                <i class="fa-solid fa-file-excel text-gray-500 mt-1.5 text-xl"></i>
+                <span class="text-lg text-text-muted"><strong>Isolated Logs:</strong> Fragmented entry forces users into isolated silos with zero longitudinal memory.</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="glass-card flex flex-col gap-6 w-full max-w-lg p-10 border-brand-pink/40 border-[2px] shadow-[0_0_40px_rgba(213,73,213,0.15)] relative overflow-hidden">
+             <div class="absolute top-0 right-0 w-32 h-32 bg-brand-pink/20 rounded-full blur-3xl pointer-events-none"></div>
+            <h3 class="text-3xl font-primary italic text-text-main text-center border-b border-border-subtle pb-4 relative z-10">Esillio OS</h3>
+            <ul class="flex flex-col gap-6 mt-2 relative z-10">
+              <li class="flex items-start gap-4">
+                <i class="fa-solid fa-shield-check text-green-400 mt-1.5 text-xl"></i>
+                <span class="text-lg text-text-main"><strong>Privacy & Ownership:</strong> HIPAA-grade, entirely on-device processing. Your data never leaves.</span>
+              </li>
+              <li class="flex items-start gap-4">
+                <i class="fa-solid fa-link text-brand-orange mt-1.5 text-xl"></i>
+                <span class="text-lg text-text-main"><strong>Absolute Continuity:</strong> We create a lifelong narrative. Once data is in Esillio, lock-in is immense.</span>
+              </li>
+              <li class="flex items-start gap-4">
+                <i class="fa-solid fa-bolt text-brand-violet mt-1.5 text-xl"></i>
+                <span class="text-lg text-text-main"><strong>AMD-Accelerated Edge:</strong> Optimized local infrastructure prevents open-source copycats from replicating our pipeline.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8: Roadmap -->
+    <section id="slide8" class="slide-section overflow-hidden">
+        <!-- Subtle Graphic Background -->
+       <img src="https://images.unsplash.com/photo-1614935151651-0bea6508ab6b?q=80&w=2000&auto=format&fit=crop" class="bg-dna-graphic opacity-[0.08]" alt="DNA Background">
+
+      <div class="max-w-5xl mx-auto w-full px-4 relative z-[1]">
+        <div class="flex flex-col items-center gap-4 text-center mb-16" data-animation-on-scroll>
+          <h2 class="text-4xl md:text-6xl font-primary font-medium tracking-tight text-text-main">
+            Building the future of <span class="text-gradient-esillio italic">personal health.</span>
+          </h2>
+          <p class="font-primary italic text-2xl text-text-muted mt-4">"A relentless march toward proactive healthcare."</p>
+        </div>
+
+        <div class="glass-card p-12" data-animation-on-scroll data-animation-delay="150">
+          <div class="border-l-2 border-border-subtle pl-10 relative ml-4">
+            
+            <div class="mb-14 relative">
+              <div class="absolute -left-[49px] top-1.5 w-6 h-6 rounded-full bg-brand-orange border-4 border-[#121212] shadow-[0_0_15px_rgba(255,149,0,0.5)]"></div>
+              <h3 class="text-3xl font-bold text-text-main mb-3 flex items-center gap-4">
+                2026 
+                <span class="text-sm font-semibold text-brand-orange uppercase tracking-wider border border-brand-orange/30 rounded px-3 py-1 bg-brand-orange/10">Done</span>
+              </h3>
+              <p class="text-xl text-text-muted leading-relaxed">MVP Continuity Compiler complete. Manual logging and basic HealthEvent model successfully prototyped in app UI. Early validation.</p>
+            </div>
+            
+            <div class="mb-14 relative">
+              <div class="absolute -left-[49px] top-1.5 w-6 h-6 rounded-full bg-brand-pink border-4 border-[#121212] shadow-[0_0_15px_rgba(213,73,213,0.5)]"></div>
+              <h3 class="text-3xl font-bold text-text-main mb-3">2027</h3>
+              <p class="text-xl text-text-muted leading-relaxed">Add complex AI ingestion (OCR/PDF parsing, NLP for clinical notes, wearables). Launch closed beta pilots with healthcare partners.</p>
+            </div>
+            
+            <div class="mb-14 relative">
+              <div class="absolute -left-[49px] top-1.5 w-6 h-6 rounded-full bg-brand-violet border-4 border-[#121212] shadow-[0_0_15px_rgba(106,13,173,0.5)]"></div>
+              <h3 class="text-3xl font-bold text-text-main mb-3">2028</h3>
+              <p class="text-xl text-text-muted leading-relaxed">Public multi-platform app launch. Developer API (Vector DB) release. First revenue generation backed by AMD-accelerated model training.</p>
+            </div>
+
+            <div class="relative">
+              <div class="absolute -left-[49px] top-1.5 w-6 h-6 rounded-full border-4 border-[#121212] bg-text-muted shadow-lg"></div>
+              <h3 class="text-3xl font-bold text-text-muted mb-3">2029+</h3>
+              <p class="text-xl text-text-muted leading-relaxed">Expand globally, add specialized agents (medication, nutrition), and execute continuous model improvements.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 9: Why Invest -->
+    <section id="slide9" class="slide-section overflow-hidden">
+        <!-- Subtle Graphic Background -->
+       <img src="https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=2000&auto=format&fit=crop" class="bg-dna-graphic opacity-10" alt="Abstract Background">
+
+      <div class="max-w-6xl mx-auto w-full px-4 relative z-[1]">
+        <div class="glass-card p-12 md:p-16 relative overflow-hidden" data-animation-on-scroll>
+          <div class="absolute w-[600px] h-[600px] rounded-full bg-[conic-gradient(from_0deg_at_50%_50%,#ff9500,#d549d5,#6a0dad)] blur-[120px] opacity-10 animate-spin-slow top-[-300px] left-[-300px] pointer-events-none"></div>
+          
+          <div class="text-center mb-12 relative z-[2]">
+            <h2 class="text-4xl md:text-6xl font-primary font-medium tracking-tight text-text-main mb-6">
+              We're the first to build a <span class="text-gradient-esillio italic">true health OS.</span>
+            </h2>
+            <p class="text-xl md:text-2xl text-text-muted max-w-4xl mx-auto leading-relaxed">
+              <strong>First-Mover Advantage:</strong> No major player does this with absolute privacy and local AI. Our IP (Continuity Compiler and Health Graph) is novel, defensible, and scales globally.
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 relative z-[2]">
+            <div class="text-center p-8 rounded-xl bg-white/5 border border-white/10">
+              <p class="text-5xl md:text-6xl font-bold text-brand-orange mb-3 tracking-tight">$2T+</p>
+              <span class="text-base font-semibold text-text-main uppercase tracking-widest">Market Wave</span>
+              <p class="text-sm text-text-muted mt-3">Even niche success natively taps into a trillion-dollar TAM.</p>
+            </div>
+            <div class="text-center p-8 rounded-xl bg-white/5 border border-white/10">
+              <p class="text-5xl md:text-6xl font-bold text-brand-pink mb-3 tracking-tight">100%</p>
+              <span class="text-base font-semibold text-text-main uppercase tracking-widest">Local Processing</span>
+              <p class="text-sm text-text-muted mt-3">Absolute privacy guarantee via secure on-device AI.</p>
+            </div>
+            <div class="text-center p-8 rounded-xl bg-white/5 border border-white/10">
+              <p class="text-5xl md:text-6xl font-bold text-brand-violet mb-3 tracking-tight">MVP</p>
+              <span class="text-base font-semibold text-text-main uppercase tracking-widest">Validated</span>
+              <p class="text-sm text-text-muted mt-3">Hackathon MVP complete. Early local-first user tests are highly positive.</p>
+            </div>
+          </div>
+
+          <div class="relative z-[2] text-center border-t border-border-subtle pt-10">
+            <h4 class="text-3xl font-semibold text-text-main mb-4">The Ask</h4>
+            <p class="text-xl text-text-muted max-w-3xl mx-auto p-6 rounded-lg border border-border-subtle bg-white/5 backdrop-blur-md">
+              Raising Seed Capital to finalize complex AI integrations, optimize our AMD inference pipeline, and launch clinical beta pilots.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10: Visionary Close -->
+    <section id="slide10" class="slide-section relative overflow-hidden bg-neutral-bg">
+        <!-- DNA Graphic Background -->
+      <img src="https://images.unsplash.com/photo-1614935151651-0bea6508ab6b?q=80&w=2000&auto=format&fit=crop" class="bg-dna-graphic opacity-[0.25]" alt="DNA Particle Background">
+
+      <div class="absolute left-1/2 top-1/2 w-[800px] sm:w-[1000px] h-[600px] sm:h-[800px] transform -translate-x-1/2 -translate-y-1/2 z-[0] pointer-events-none">
+        <div class="absolute left-1/2 top-1/2 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] rounded-full bg-[radial-gradient(circle,rgba(213,73,213,0.15)_0%,rgba(106,13,173,0.05)_50%,transparent_100%)] blur-[100px] animate-pulse"></div>
+      </div>
+      
+      <div class="relative z-[1] max-w-6xl mx-auto px-4 flex flex-col items-center justify-center text-center h-full">
+        
+        <h1 class="text-[80px] sm:text-[120px] md:text-[160px] font-primary font-medium logo-metallic tracking-tight mb-8" data-animation-on-scroll>
+          Esillio
+        </h1>
+
+        <div class="glass-card p-10 md:p-14 max-w-4xl" data-animation-on-scroll data-animation-delay="200">
+          <h2 class="text-3xl sm:text-5xl font-medium text-text-main mb-6 leading-tight tracking-tight">
+            Your health history is your most valuable data.<br>
+            <span class="text-text-muted">We give it a voice.</span>
+          </h2>
+          <p class="font-primary italic text-3xl text-brand-orange mt-8 mb-12">
+            "Join us in building the OS that your body has always needed."
+          </p>
+          
+          <a href="mailto:founders@esillio.com" class="inline-flex items-center justify-center px-10 py-5 rounded-lg font-bold text-lg bg-white text-black hover:bg-gray-200 transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_40px_rgba(255,255,255,0.3)]">
+            Invest in Esillio
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Intersection Observer for scroll animations
+    document.addEventListener('DOMContentLoaded', () => {
+      const animatedElements = document.querySelectorAll('[data-animation-on-scroll]');
+      
+      const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                  const delay = parseInt(entry.target.getAttribute('data-animation-delay')) || 0;
+                  setTimeout(() => {
+                      entry.target.classList.add('animate-on-scroll-visible');
+                  }, delay);
+              } else {
+                  // Reset animation when out of view (good for presentations scrolling back up)
+                  entry.target.classList.remove('animate-on-scroll-visible');
+              }
+          });
+      }, { threshold: 0.15 });
+
+      animatedElements.forEach(el => {
+        el.classList.add('animate-on-scroll-hidden');
+        observer.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>

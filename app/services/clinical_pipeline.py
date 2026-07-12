@@ -221,8 +221,10 @@ class ClinicalPipeline:
                 "Updating Clinical Memory..."
             )
 
-            memory = clinical_memory.update(
-                patient_id=patient_id,
+            from app.memory.clinical_memory import get_memory
+            memory_instance = get_memory(patient_id)
+
+            memory = memory_instance.update(
                 extraction=extraction,
                 reasoning=reasoning,
                 wellness=wellness,

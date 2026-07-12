@@ -30,8 +30,8 @@ export default function Connect() {
 
             <div className="relative z-10 max-w-5xl mx-auto">
                 <div className="text-center flex flex-col items-center gap-4 mb-16">
-                    <h1 className="text-4xl md:text-5xl font-medium tracking-tight bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent pb-2 leading-tight">
-                        Your Biology, Connected.
+                    <h1 className="text-4xl md:text-5xl font-medium tracking-tight pb-2 leading-tight text-white">
+                        Your Biology, <span className="font-primary italic drop-shadow-sm bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Connected</span>
                     </h1>
                     <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed">
                         Esillio OS acts as the local intelligence layer for all your wearables and medical devices. All data remains strictly on your device.

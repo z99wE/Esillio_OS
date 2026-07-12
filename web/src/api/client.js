@@ -24,7 +24,7 @@ client.interceptors.request.use(async (config) => {
     if (geminiKey) config.headers["X-Gemini-Key"] = geminiKey;
     if (localUrl) config.headers["X-Local-URL"] = localUrl;
 
-    const token = localStorage.getItem("esillio_token");
+    const token = localStorage.getItem("esillio_token") || "guest-token-123";
     if (token) {
         config.headers["Authorization"] = `Bearer ${token}`;
     }

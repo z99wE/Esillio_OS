@@ -14,6 +14,17 @@ SECRET_KEY = "esillio_local_secret_hackathon"
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security)):
     token = credentials.credentials
+    
+    # Handle the hardcoded guest session
+    if token == "guest-token-123":
+        user_id = "usr-demo-1"
+        try:
+            from app.utils.seed_guest import seed_guest_if_needed
+            seed_guest_if_needed(user_id)
+        except Exception as e:
+            print(f"Error seeding guest: {e}")
+        return user_id
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         user_id = payload.get("sub")
