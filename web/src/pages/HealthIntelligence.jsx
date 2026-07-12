@@ -67,7 +67,23 @@ export default function HealthIntelligence() {
         } catch (error) {
             console.error("Failed to generate summary:", error);
             // Fallback for demo mode if backend is not running
-            alert("Could not fetch from backend. Ensure FastAPI is running.");
+            const fallbackData = {
+                patient: {
+                    id: selectedPatient.id,
+                    email: selectedPatient.email || "demo@esillio.com"
+                },
+                summary: {
+                    active_conditions: (selectedPatient.conditions || []).map(c => ({ title: c, date: "Recent" })),
+                    current_medications: (selectedPatient.medications || []).map(m => ({ title: m, date: "Active" })),
+                    recent_biomarkers: (selectedPatient.wellnessInsights || []).map(w => ({ title: w, date: "Recent" })),
+                    total_events: (selectedPatient.timeline || []).length
+                },
+                timeline: selectedPatient.timeline || []
+            };
+            setClinicianData(fallbackData);
+            setTimeout(() => {
+                window.print();
+            }, 500);
         } finally {
             setIsGeneratingSummary(false);
         }

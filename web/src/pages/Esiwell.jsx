@@ -338,7 +338,7 @@ RULES:
             </div>
 
             {/* Loading dots */}
-            {loading && (
+            {loading && mode === 'orchestrate' && (
                 <div className="p-[1px] bg-gradient-to-b from-white/10 to-transparent rounded-3xl w-full">
                     <div className="bg-background/50 backdrop-blur-3xl rounded-3xl p-10 border border-white/5 flex flex-col items-center justify-center gap-4">
                         <div className="flex gap-2">
