@@ -232,7 +232,7 @@ Esillio is provider-agnostic. Connect your own inference key in the Settings pag
 | Groq | ✅ |
 | Any OpenAI-compatible API | ✅ |
 
-API keys are stored in browser localStorage and injected as request headers — never sent to any third-party server.
+API keys are **never** stored in the cloud or sent to third-party telemetry servers. They are saved securely inside the backend's **local SQLite database** (`esillio.db`). Because Esillio OS runs locally on your hardware (or in your own private container instance), you retain absolute physical control over the database containing your keys.
 
 ---
 
