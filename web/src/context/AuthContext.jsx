@@ -42,12 +42,20 @@ export const AuthProvider = ({ children }) => {
         setUser(null);
     };
 
+    const loginAsGuest = () => {
+        const guestUser = { id: 'usr-demo-1', email: 'guest@esillio.com', patient_id: 'usr-demo-1' };
+        localStorage.setItem('esillio_token', 'guest-token-123');
+        localStorage.setItem('esillio_user', JSON.stringify(guestUser));
+        setUser(guestUser);
+    };
+
     const value = {
         user,
         loading,
         login,
         register,
         signOut,
+        loginAsGuest,
     };
 
     return (

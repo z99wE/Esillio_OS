@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function Auth() {
-    const { user, login, register } = useAuth();
+    const { user, login, register, loginAsGuest } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -32,35 +32,35 @@ export default function Auth() {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto py-24 px-4 relative z-10 animate-fade-in">
+        <div className="w-full max-w-lg mx-auto py-24 px-4 relative z-10 animate-fade-in">
             <div className="text-center mb-8">
-                <h1 className="text-4xl font-primary tracking-tight bg-gradient-to-r from-brand-primary via-accent-purple to-accent-blue bg-clip-text text-transparent pb-2 leading-tight">
+                <h1 className="text-4xl md:text-5xl font-primary tracking-tight bg-gradient-to-r from-brand-primary via-accent-purple to-accent-blue bg-clip-text text-transparent pb-2 leading-tight font-bold">
                     Welcome to Esillio
                 </h1>
-                <p className="text-text-secondary mt-2">
+                <p className="text-text-secondary mt-2 text-lg">
                     {isSignUp ? "Create an account to securely store your health memory." : "Sign in to access your health memory."}
                 </p>
             </div>
 
-            <div className="glass-card rounded-3xl p-8 relative overflow-hidden hover-glow transition-all duration-300">
-                <form onSubmit={handleAuth} className="flex flex-col gap-4 relative z-10">
+            <div className="glass-card rounded-3xl p-8 md:p-10 relative overflow-hidden hover-glow transition-all duration-300 shadow-2xl shadow-brand-primary/10 border border-white/10">
+                <form onSubmit={handleAuth} className="flex flex-col gap-5 relative z-10">
                     <div>
-                        <label className="text-sm font-semibold text-text-secondary mb-1 block">Email</label>
+                        <label className="text-sm font-semibold text-text-secondary mb-1.5 block">Email</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-text focus:outline-none focus:border-brand-primary/50 transition-colors"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-text focus:outline-none focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 transition-all"
                             required
                         />
                     </div>
                     <div>
-                        <label className="text-sm font-semibold text-text-secondary mb-1 block">Password</label>
+                        <label className="text-sm font-semibold text-text-secondary mb-1.5 block">Password</label>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-text focus:outline-none focus:border-brand-primary/50 transition-colors"
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-text focus:outline-none focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 transition-all"
                             required
                         />
                     </div>
@@ -74,18 +74,28 @@ export default function Auth() {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3 rounded-xl bg-gradient-to-r from-brand-primary to-accent-purple text-white font-bold tracking-wide uppercase hover:opacity-90 transition-opacity disabled:opacity-50 mt-4"
+                        className="w-full py-4 rounded-xl bg-gradient-to-r from-brand-primary to-accent-purple text-white font-bold tracking-wide hover:opacity-90 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-brand-primary/20 disabled:opacity-50 mt-4 text-[15px]"
                     >
-                        {loading ? 'Processing...' : (isSignUp ? 'Sign Up' : 'Sign In')}
+                        {loading ? 'Processing...' : (isSignUp ? 'Start taking care of yourself to take care of others' : 'Start taking care of yourself to take care of others')}
                     </button>
                     
                     <button
                         type="button"
-                        onClick={() => setIsSignUp(!isSignUp)}
-                        className="text-brand-primary text-sm font-medium hover:underline mt-2"
+                        onClick={loginAsGuest}
+                        className="w-full py-3 rounded-xl bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-all mt-2"
                     >
-                        {isSignUp ? "Already have an account? Sign in" : "Need an account? Sign up"}
+                        Try as Guest
                     </button>
+                    
+                    <div className="text-center mt-4">
+                        <button
+                            type="button"
+                            onClick={() => setIsSignUp(!isSignUp)}
+                            className="text-text-secondary text-sm font-medium hover:text-white transition-colors"
+                        >
+                            {isSignUp ? "Already have an account? Sign in" : "Need an account? Sign up"}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
