@@ -45,3 +45,4 @@ Esillio-Compiler/outputs/
 *.tar.gz
 *.jsonl
 .gstack/
+app/uploads/*
