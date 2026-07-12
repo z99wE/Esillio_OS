@@ -44,3 +44,4 @@ Esillio-Compiler/outputs/
 *.pt
 *.tar.gz
 *.jsonl
+.gstack/

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import GlassCard from '../components/GlassCard';
 
 export default function Auth() {
     const { user, login, register, loginAsGuest } = useAuth();
@@ -42,7 +43,7 @@ export default function Auth() {
                 </p>
             </div>
 
-            <div className="glass-card rounded-3xl p-8 md:p-10 relative overflow-hidden hover-glow transition-all duration-300 shadow-2xl shadow-brand-primary/10 border border-white/10">
+            <GlassCard className="p-8 md:p-10 w-full relative z-10">
                 <form onSubmit={handleAuth} className="flex flex-col gap-5 relative z-10">
                     <div>
                         <label className="text-sm font-semibold text-text-secondary mb-1.5 block">Email</label>
@@ -76,7 +77,7 @@ export default function Auth() {
                         disabled={loading}
                         className="w-full py-4 rounded-xl bg-gradient-to-r from-brand-primary to-accent-purple text-white font-bold tracking-wide hover:opacity-90 transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-brand-primary/20 disabled:opacity-50 mt-4 text-[15px]"
                     >
-                        {loading ? 'Processing...' : (isSignUp ? 'Start taking care of yourself to take care of others' : 'Start taking care of yourself to take care of others')}
+                        {loading ? 'Processing...' : (isSignUp ? 'Start Caring' : 'Continue Care')}
                     </button>
                     
                     <button
@@ -97,7 +98,7 @@ export default function Auth() {
                         </button>
                     </div>
                 </form>
-            </div>
+            </GlassCard>
         </div>
     );
 }
