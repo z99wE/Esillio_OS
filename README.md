@@ -139,8 +139,10 @@ Esillio automatically:
 
 ✅ Extracts medical information via the BCC pipeline  
 ✅ Understands clinical context with structured reasoning  
+✅ **Clinician One-Pager:** Generates instant, physician-ready printable summaries of top conditions, medications, and biomarkers.  
+✅ **Proactive Anomaly Detection:** Monitors biomarker trajectories to automatically flag deteriorating trends with actionable AI insights.  
+✅ **Wearables Integration:** Parses Apple Health & Oura CSV exports seamlessly into the clinical timeline.  
 ✅ Generates educational wellness guidance via multi-agent orchestration  
-✅ Produces clinician-friendly summaries  
 ✅ Builds a longitudinal health memory  
 ✅ Updates a living, queryable medical timeline  
 
@@ -239,6 +241,14 @@ Esillio was designed with privacy as a first principle.
 - **Portable SQLite storage** — single file, easy backup
 - **Local semantic memory** — ChromaDB runs entirely on-device
 - **Prompt injection guardrails** — system prompts are hardened against manipulation
+
+---
+
+## Strategic Advantage & Ecosystem
+
+While Esillio is deeply committed to a private, local-first consumer experience, this architecture inherently creates a powerful distribution wedge. By solving the "cold start" problem of fragmented health history, Esillio transforms scattered documents into high-signal structured data.
+
+This high-retention, patient-owned data ecosystem unlocks massive B2B2C potential. Empowered patients become the ultimate integration point for wearable manufacturers, digital therapeutics, clinical trials, and telemedicine platforms. By prioritizing the user first, Esillio builds a scalable, highly defensible intelligence layer positioned at the center of the modern health economy.
 
 ---
 
@@ -391,9 +401,12 @@ The app runs in **Demo Mode** automatically if the backend is unreachable — al
 | Endpoint | Method | Purpose |
 |---|---|---|
 | `/upload` | POST | Upload medical documents |
+| `/upload/csv` | POST | **[NEW]** Import Apple Health / Oura CSV data |
 | `/events` | GET | List compiled HealthEvents |
 | `/timeline` | GET | Chronological health timeline |
 | `/esiwell/compile` | POST | Multi-agent wellness orchestration |
+| `/export/clinician` | GET | **[NEW]** Generate JSON for physician-ready summaries |
+| `/intelligence/trends` | GET | **[NEW]** AI-powered biomarker anomaly detection |
 | `/memory/current` | GET | Current clinical memory state |
 | `/settings/ai` | GET/POST | BYOAI provider configuration |
 
@@ -422,10 +435,11 @@ Because inference remains local-first, these improvements can be distributed wit
 ## Roadmap
 
 - [x] Multi-user authentication (100% Free SQLite JWT Auth)
+- [x] Wearables integration (Apple Health, Oura CSV exports)
+- [x] Longitudinal biomarker analytics (Proactive Trend Detection)
+- [x] Clinician-ready export functionality (Printable One-Pager)
 - [ ] FHIR interoperability
-- [ ] Wearables integration
 - [ ] Clinical Graph Database
-- [ ] Longitudinal biomarker analytics
 - [ ] Patient-to-provider sharing
 - [ ] Local multimodal vision models
 - [ ] Medical RAG with semantic chunking
