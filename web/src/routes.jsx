@@ -12,6 +12,9 @@ import Subscription from "./pages/Subscription";
 
 import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Privacy from "./pages/Privacy";
+import Disclaimer from "./pages/Disclaimer";
+import Legal from "./pages/Legal";
 
 export default function AppRoutes() {
     return (
@@ -45,6 +48,18 @@ export default function AppRoutes() {
             <Route
                 path="/subscription"
                 element={<Subscription />}
+            />
+            <Route
+                path="/privacy"
+                element={<Privacy />}
+            />
+            <Route
+                path="/disclaimer"
+                element={<Disclaimer />}
+            />
+            <Route
+                path="/legal"
+                element={<Legal />}
             />
 
             <Route
