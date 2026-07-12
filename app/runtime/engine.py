@@ -12,8 +12,10 @@ _runtime = None
 class AIRuntime:
     """
     Esillio Runtime
-
+    
     Dynamically loads the configured provider.
+    Optimised for execution on AMD Instinct GPUs using ROCm.
+    Default local target model: Gemma 4 (4-bit quantised for efficient local inference).
     """
 
     def __init__(self):

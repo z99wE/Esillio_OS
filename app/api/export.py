@@ -34,7 +34,7 @@ async def get_clinician_summary(
     
     for row in events:
         event = dict(row)
-        cat = event.get("category", "").lower()
+        cat = (event.get("category") or "").lower()
         
         # Build timeline
         timeline.append(event)

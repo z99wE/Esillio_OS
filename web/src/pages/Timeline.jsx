@@ -24,6 +24,7 @@ export default function Timeline() {
         timelineEvents.forEach(event => {
             md += `### ${event.title}\n`;
             if (event.date) md += `**Date:** ${event.date}\n`;
+            else if (event.timestamp) md += `**Date:** ${new Date(event.timestamp).toLocaleString()}\n`;
             md += `**Category:** ${event.category || "Clinical Event"}\n\n`;
             if (event.description) md += `${event.description}\n\n`;
             md += `---\n\n`;
@@ -37,7 +38,7 @@ export default function Timeline() {
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+        setTimeout(() => URL.revokeObjectURL(url), 100);
     };
 
     return (

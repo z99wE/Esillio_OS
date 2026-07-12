@@ -24,25 +24,24 @@ Every consultation starts from scratch. Every lab report lives in a different PD
 
 ---
 
-## AMD Compute & Local AI Architecture
+## AMD Compute & Gemma 4 Architecture
 
-> **Use high-performance GPU infrastructure to build and optimise the intelligence once, then deploy it as a completely local-first application.**
+> **Esillio OS leverages AMD Instinct™ accelerators via ROCm to deploy Gemma 4 locally, ensuring healthcare AI remains completely sovereign, incredibly fast, and uncompromised on privacy.**
 
-Rather than relying on permanent cloud inference, Esillio uses AMD GPU compute during **development and optimisation** while allowing end users to retain full ownership of their health data without recurring cloud costs.
+Rather than relying on permanent cloud inference with recurring costs and massive data privacy risks, Esillio uses AMD GPU compute to run **Gemma 4** locally. This forms the bedrock of our business model—delivering high-performance, private health reasoning without exposing PHI (Personal Health Information) to third-party APIs.
 
-The GPU-accelerated optimisation pipeline includes:
+The AMD-powered pipeline includes:
 
 | Phase | Description |
 |---|---|
-| Preprocessing | Synthetic longitudinal health datasets |
-| Embedding generation | Vectorisation of medical documents |
-| Inference benchmarking | Latency & throughput profiling |
-| Model evaluation | Accuracy assessment across document types |
-| Local model packaging | Preparing optimised weights for local deployment |
-| Quantisation experiments | INT4/INT8 compression for CPU inference |
-| Compiler validation | End-to-end BCC pipeline correctness checks |
+| Hardware Target | AMD Instinct™ GPUs using ROCm for uncompromising local performance |
+| Foundational Model | **Gemma 4** (4-bit quantised) serving as the core clinical reasoning engine |
+| Preprocessing | Synthetic longitudinal health datasets compiled locally |
+| Embedding generation | Vectorisation of medical documents using ROCm-accelerated Transformers |
+| Inference benchmarking | Low-latency inference ideal for rapid multi-agent execution |
+| Local model packaging | Preparing highly optimised Gemma 4 weights for edge deployment |
 
-This enables the application to remain lightweight while preserving full local inference capability on any machine.
+This architecture ensures Esillio OS runs effortlessly on scalable hardware, forming a robust foundation for our B2B2C go-to-market strategy.
 
 ---
 
@@ -357,42 +356,32 @@ Esillio-Latest/
 
 ---
 
-## Running Locally
+## Quickstart: Running via Docker
+
+For the AMD Developer Challenge 2026, the entire application is containerized and extremely simple to run.
 
 ### Prerequisites
 
-- Python 3.11+
-- Node.js 18+
-- (Optional) Ollama for local inference
+- Docker and Docker Compose installed on your system.
 
-### Backend
+### Startup Instructions
 
-```bash
-cd Esillio-Latest
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/z99wE/Esillio_OS.git
+   cd Esillio_OS
+   ```
 
-cp .env.example .env
-# Edit .env — set your BYOAI keys if desired
+2. **Launch the containers:**
+   ```bash
+   docker-compose up --build
+   ```
 
-pip install -r requirements.txt
+3. **Access the application:**
+   - **Frontend:** http://localhost:5173
+   - **Backend API Docs:** http://localhost:8000/docs
 
-uvicorn app.main:app --reload
-```
-
-Backend available at `http://localhost:8000`
-
-### Frontend
-
-```bash
-cd web
-
-npm install
-
-npm run dev
-```
-
-Frontend available at `http://localhost:5173`
-
-The app runs in **Demo Mode** automatically if the backend is unreachable — all pages will display rich patient data without any configuration.
+The application will automatically boot in **Demo Mode**, populated with rich patient data, ensuring judges can evaluate the UI, architecture, and UX immediately without requiring API keys.
 
 ---
 
