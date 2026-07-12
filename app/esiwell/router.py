@@ -180,13 +180,12 @@ def _run_orchestration(request: CompileRequest) -> dict:
 def compile_health_note(request: CompileRequest, user_id: str = Depends(get_current_user)):
     """
     Primary multi-agent endpoint.
-    """
-    request.patient_id = user_id
-
+    
     Routes through the configured AI provider (OpenAI, Gemini, Ollama, etc.)
     with the full system prompt + patient context. Falls back to the local
     transformers classifier if no provider is configured.
     """
+    request.patient_id = user_id
     return _run_orchestration(request)
 
 
