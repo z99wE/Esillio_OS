@@ -43,6 +43,13 @@ The AMD-powered pipeline includes:
 
 This architecture ensures Esillio OS runs effortlessly on scalable hardware, forming a robust foundation for our B2B2C go-to-market strategy.
 
+### **The AMD-Trained Micro-Artifact**
+
+For maximum portability and speed, the massive foundational models trained on AMD GPUs are distilled down into a highly optimized, lightweight **17MB micro-artifact** using our **Esillio-Compiler**. 
+- This tiny compiled model is natively embedded directly inside the backend Docker container.
+- It leverages the Huggingface `transformers` pipeline to run completely offline on **CPU**.
+- This guarantees 100% privacy, instantaneous classification, and zero cloud dependency, while maintaining the intelligence originally generated on AMD hardware.
+
 ---
 
 ## Biological Continuity Compiler™

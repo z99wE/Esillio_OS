@@ -3,9 +3,6 @@ from app.runtime.config import (
     OPENAI_API_KEY,
     OPENAI_BASE_URL,
     OPENAI_MODEL,
-    LOCAL_BASE_URL,
-    LOCAL_MODEL,
-    LOCAL_API_KEY,
 )
 
 from app.runtime.providers.local_provider import LocalProvider
@@ -80,11 +77,7 @@ def create_provider():
 
     if provider.lower() == "local":
         try:
-            return LocalProvider(
-                base_url=LOCAL_BASE_URL,
-                model=LOCAL_MODEL,
-                api_key=LOCAL_API_KEY,
-            )
+            return LocalProvider()
         except Exception:
             logger.exception(
                 "LocalProvider failed to load — falling back to stub."

@@ -1,6 +1,8 @@
 import logging
+from pathlib import Path
 from typing import Optional
-from openai import OpenAI
+
+from transformers import pipeline
 
 logger = logging.getLogger(__name__)
 
@@ -10,27 +12,27 @@ class LocalProvider:
     Local Provider
     
     Responsibilities:
-    - Act as a lightweight proxy to local inference servers (e.g., Ollama, LM Studio)
-    - Do not bundle any heavy ML libraries (torch, transformers)
-    - Use standard OpenAI compatible endpoints
+    - Load the highly optimized local compiler model (trained on AMD)
+    - Run fast text classification via huggingface pipeline on CPU
     """
 
     def __init__(
         self,
-        base_url: str = "http://host.docker.internal:11434/v1",  # Default to Ollama local URL
-        model: str = "gemma",
-        api_key: str = "local",
+        model_path: str = "/app/Esillio-Compiler/artifacts/esillio_compiler",
     ):
-        self.model = model
+        self.model_path = str(Path(model_path))
+
         try:
-            logger.info(f"Initializing lightweight local provider connected to {base_url}")
-            self.client = OpenAI(
-                base_url=base_url,
-                api_key=api_key
+            logger.info(f"Loading compiled local model pipeline from {self.model_path}...")
+            self.classifier = pipeline(
+                "text-classification",
+                model=self.model_path,
+                tokenizer=self.model_path,
             )
-            logger.info("Local Provider Ready")
+            logger.info("Compiled Runtime Ready")
+            
         except Exception:
-            logger.exception("Failed to initialize lightweight local provider")
+            logger.exception("Failed to load local compiled runtime")
             raise
 
     ###########################################################
@@ -38,26 +40,17 @@ class LocalProvider:
     def generate(
         self,
         prompt: str,
-        max_new_tokens: int = 1024,
+        max_new_tokens: Optional[int] = None,
     ) -> str:
         """
-        Sends the prompt to the local API
+        Classifies the text and returns the classification result as a string.
         """
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": prompt,
-                    }
-                ],
-                max_tokens=max_new_tokens,
-            )
-            return response.choices[0].message.content
+            result = self.classifier(prompt)
+            return str(result)
         except Exception as e:
-            logger.error(f"Generation failed via local API: {e}")
-            return f"Error communicating with local AI server: {e}"
+            logger.error(f"Classification failed: {e}")
+            return f"Error analyzing data: {e}"
 
     ###########################################################
 
@@ -65,9 +58,9 @@ class LocalProvider:
         self,
         image_path: str,
         prompt: str,
-        max_new_tokens: int = 1024,
+        max_new_tokens: Optional[int] = None,
     ) -> str:
         """
-        Fallback message, local proxy image processing can be added if local vision model is running
+        The compiled model is text-only. Returns a fallback message.
         """
-        return "Image analysis requires connecting to a local vision model endpoint."
+        return "Image analysis is not supported by the current micro-model. Please use the OpenAI provider for visual tasks."

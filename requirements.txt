@@ -11,3 +11,5 @@ sqlalchemy
 uvicorn
 Pillow
 openai
+transformers
+safetensors
