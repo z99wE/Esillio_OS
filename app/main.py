@@ -56,6 +56,10 @@ app.include_router(clinical_memory_router)
 app.include_router(settings_router)
 app.include_router(esiwell_router)
 app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
+from app.api.export import router as export_router
+app.include_router(export_router)
+from app.api.intelligence import router as intelligence_router
+app.include_router(intelligence_router)
 
 ############################################################
 # Root Health Check

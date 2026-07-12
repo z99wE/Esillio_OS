@@ -92,6 +92,48 @@ Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating curr
         maxFiles: 1
     });
 
+    const onCsvDrop = useCallback(async (acceptedFiles) => {
+        if (acceptedFiles?.length > 0) {
+            const csvFile = acceptedFiles[0];
+            setIsUploading(true);
+            setLocalError(null);
+            setProgressText("Uploading CSV data...");
+            try {
+                const formData = new FormData();
+                formData.append("file", csvFile);
+                formData.append("patient_id", currentPatientId);
+
+                const res = await fetch((import.meta.env.VITE_API_URL || "http://localhost:8000") + "/upload/csv", {
+                    method: "POST",
+                    headers: {
+                        "X-OpenAI-Key": localStorage.getItem("esillio_openai_key") || "",
+                        "X-Gemini-Key": localStorage.getItem("esillio_gemini_key") || "",
+                    },
+                    body: formData
+                });
+
+                if (!res.ok) {
+                    throw new Error("CSV Upload failed: " + res.statusText);
+                }
+
+                setSuccess(true);
+                await fetchTimeline();
+            } catch(err) {
+                setLocalError(err.message || "Failed to upload CSV");
+            } finally {
+                setIsUploading(false);
+            }
+        }
+    }, [currentPatientId, fetchTimeline]);
+
+    const { getRootProps: getCsvRootProps, getInputProps: getCsvInputProps, isDragActive: isCsvDragActive } = useDropzone({
+        onDrop: onCsvDrop,
+        accept: {
+            'text/csv': ['.csv'],
+        },
+        maxFiles: 1
+    });
+
     const handleUpload = async () => {
         if (!file && !textNote.trim()) return;
 
@@ -191,6 +233,33 @@ Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating curr
                                     <button className="px-6 py-2.5 rounded-full bg-white/10 border border-white/10 text-text font-primary text-sm font-medium hover:bg-white/20 transition-all shadow-sm">
                                         Browse Files
                                     </button>
+                                </div>
+
+                                {/* CSV DROP ZONE */}
+                                <div className="mt-6">
+                                    <div 
+                                        {...getCsvRootProps()} 
+                                        className={`relative z-10 rounded-2xl p-6 text-center cursor-pointer transition-all duration-300 overflow-hidden border border-transparent backdrop-blur-xl group/drop-csv ${
+                                            isCsvDragActive 
+                                                ? "bg-[#FF4533]/10 border-[#FF4533]/50 scale-[1.02] shadow-[0_0_30px_rgba(255,69,51,0.2)]" 
+                                                : "bg-white/5 border-white/10 hover:bg-[#FF4533]/10 hover:border-[#FF4533]/30 hover:shadow-[0_0_15px_rgba(255,69,51,0.1)]"
+                                        }`}
+                                    >
+                                        <input {...getCsvInputProps()} />
+                                        <div className="flex flex-col items-center justify-center">
+                                            <div className="h-12 w-12 mb-3 rounded-full bg-[#FF4533]/20 flex items-center justify-center border border-[#FF4533]/30 text-[#FF4533] shadow-[0_0_10px_rgba(255,69,51,0.3)]">
+                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                                </svg>
+                                            </div>
+                                            <h3 className="text-lg font-primary font-medium text-text-primary mb-1">
+                                                Drop Apple Health or Oura CSV
+                                            </h3>
+                                            <p className="text-[#FF4533]/70 font-primary text-xs">
+                                                Instantly map your wearables data to your clinical timeline
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* DEMO FILES (Zero-Input Demo Mode) */}

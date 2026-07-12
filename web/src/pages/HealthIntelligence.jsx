@@ -3,6 +3,7 @@ import useUpload from "../hooks/useUpload";
 import { useHealth } from "../context/HealthContext";
 import { dummyPatients } from "../utils/dummyData";
 import GlassCard from "../components/GlassCard";
+import ClinicianSummary from "../components/ClinicianSummary";
 import client from "../api/client";
 
 // Helper: render any string or array field as readable text
@@ -52,6 +53,25 @@ export default function HealthIntelligence() {
     const uploadContext = useUpload();
     const { currentPatientId, setCurrentPatientId } = useHealth();
     const [aiStatus, setAiStatus] = useState(null); // { ai_ready, provider }
+    const [clinicianData, setClinicianData] = useState(null);
+    const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
+
+    const handleGenerateSummary = async () => {
+        setIsGeneratingSummary(true);
+        try {
+            const res = await client.get("/api/export/clinician");
+            setClinicianData(res.data);
+            setTimeout(() => {
+                window.print();
+            }, 500);
+        } catch (error) {
+            console.error("Failed to generate summary:", error);
+            // Fallback for demo mode if backend is not running
+            alert("Could not fetch from backend. Ensure FastAPI is running.");
+        } finally {
+            setIsGeneratingSummary(false);
+        }
+    };
 
     const selectedPatient = React.useMemo(
         () => dummyPatients.find(p => p.id === currentPatientId) || dummyPatients[0],
@@ -107,7 +127,8 @@ export default function HealthIntelligence() {
     const pipelineStatus = intelligence.pipeline_status || upload.status || "complete";
 
     return (
-        <div className="w-full max-w-6xl mx-auto py-16 px-4 relative z-10">
+        <>
+        <div className="w-full max-w-6xl mx-auto py-16 px-4 relative z-10 print:hidden">
             <div className="text-center mb-8 flex flex-col items-center">
                 <h1 className="text-4xl md:text-5xl font-medium tracking-tight bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent pb-2 leading-tight">
                     Your health story is <span className="font-primary italic drop-shadow-sm">taking shape</span>
@@ -115,6 +136,14 @@ export default function HealthIntelligence() {
                 <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed mt-4">
                     Esillio has processed your records and updated your clinical memory.
                 </p>
+
+                <button 
+                    onClick={handleGenerateSummary}
+                    disabled={isGeneratingSummary}
+                    className="mt-6 px-6 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white font-medium transition-all duration-300 backdrop-blur-md shadow-[0_0_15px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(255,255,255,0.2)] disabled:opacity-50"
+                >
+                    {isGeneratingSummary ? "Generating..." : "Generate Clinician Summary"}
+                </button>
 
                 {/* AI Provider status badge */}
                 {aiStatus && (
@@ -276,5 +305,11 @@ export default function HealthIntelligence() {
                 </div>
             )}
         </div>
+
+        {/* PRINT ONLY SECTION */}
+        <div className="hidden print:block absolute top-0 left-0 w-full bg-white z-[9999] min-h-screen">
+            {clinicianData && <ClinicianSummary data={clinicianData} />}
+        </div>
+        </>
     );
 }

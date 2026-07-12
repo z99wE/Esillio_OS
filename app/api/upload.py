@@ -1,5 +1,8 @@
 from fastapi import APIRouter, UploadFile, File, Form, Depends
-
+import csv
+import io
+import uuid
+from datetime import datetime
 from app.services.document_service import DocumentService
 from app.services.text_extractor import TextExtractor
 from app.services.document_parser import DocumentParser
@@ -92,6 +95,65 @@ async def upload_document(
 
         },
 
-        "clinical_intelligence": ai_result,
+    }
 
+@router.post("/csv")
+async def upload_csv(
+    file: UploadFile = File(...),
+    current_user: dict = Depends(get_current_user)
+):
+    """
+    Parse a CSV file (Apple Health or Oura) and save events as biomarkers.
+    """
+    content = await file.read()
+    decoded = content.decode("utf-8")
+    reader = csv.DictReader(io.StringIO(decoded))
+    
+    events_created = 0
+    patient_id = current_user.get("id") or "1"
+    
+    for row in reader:
+        # Simple heuristic mapping for CSV rows
+        date_str = row.get("date") or row.get("timestamp") or datetime.now().isoformat()
+        
+        for key, value in row.items():
+            key_lower = key.lower()
+            if key_lower in ["date", "timestamp", "time"]:
+                continue
+                
+            if not value or str(value).strip() == "":
+                continue
+                
+            category = "biomarker"
+            if any(term in key_lower for term in ["sleep", "steps", "activity", "calorie"]):
+                category = "lifestyle"
+                
+            # Use repository to insert raw event if we had a proper model
+            from app.storage.database import database
+            cursor = database.connection.cursor()
+            
+            # Simple insert
+            cursor.execute(
+                """
+                INSERT INTO health_events (id, patient_id, title, category, description, value, timestamp)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    str(uuid.uuid4()),
+                    patient_id,
+                    key.replace("_", " ").title(),
+                    category,
+                    f"Imported from {file.filename}",
+                    str(value),
+                    date_str
+                )
+            )
+            events_created += 1
+            
+    database.connection.commit()
+    
+    return {
+        "status": "success",
+        "events_created": events_created,
+        "message": f"Successfully parsed {events_created} wearable entries."
     }
