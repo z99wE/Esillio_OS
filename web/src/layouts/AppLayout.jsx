@@ -16,13 +16,13 @@ export default function AppLayout({ children }) {
                 
                 {/* Footer Liquid Motif with Subtle Wordmark */}
                 <div className="relative w-full h-[300px] flex items-end justify-center group mt-auto cursor-default">
-                    {/* Gradient blooms - smooth fade */}
-                    <div className="absolute bottom-[-150px] left-1/2 -translate-x-1/2 w-[1400px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(138,43,226,0.15),rgba(255,69,51,0.08),transparent_60%)] blur-[80px] transition-all duration-[2s] ease-out group-hover:scale-[1.1] group-hover:opacity-100 opacity-60 pointer-events-none"></div>
-                    <div className="absolute bottom-[-50px] left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[radial-gradient(ellipse_at_center,rgba(0,229,255,0.12),transparent_60%)] blur-[40px] transition-all duration-[1.5s] ease-out group-hover:scale-[1.2] group-hover:opacity-100 opacity-40 pointer-events-none"></div>
+                    {/* Vibrant Orangeish Pop at the extreme bottom */}
+                    <div className="absolute bottom-[-100px] left-1/2 -translate-x-1/2 w-[1200px] h-[400px] bg-[radial-gradient(ellipse_at_center,rgba(255,120,0,0.25),rgba(255,60,0,0.1),transparent_70%)] blur-[50px] transition-all duration-[2s] ease-out group-hover:scale-[1.15] group-hover:opacity-100 pointer-events-none z-0"></div>
+                    <div className="absolute bottom-[-150px] left-1/2 -translate-x-1/2 w-[1400px] h-[600px] bg-[radial-gradient(ellipse_at_center,rgba(138,43,226,0.15),transparent_60%)] blur-[80px] transition-all duration-[2s] ease-out group-hover:scale-[1.1] pointer-events-none z-0"></div>
                     
-                    {/* Vibrant Liquid Glass Wordmark */}
-                    <div className="relative z-20 mb-[10px] w-full flex justify-center transition-all duration-[1.2s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:blur-[2px] group-hover:tracking-[0.1em] group-hover:scale-105 select-none">
-                        <span className="font-primary text-[100px] sm:text-[160px] md:text-[200px] font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-b from-white/90 via-white/30 to-transparent opacity-40 group-hover:opacity-80 transition-opacity duration-1000" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}>
+                    {/* Sharp, Distanced Liquid Glass Wordmark */}
+                    <div className="relative z-20 w-full flex justify-center transition-all duration-[1.2s] cubic-bezier(0.16, 1, 0.3, 1) group-hover:tracking-[0.05em] group-hover:scale-[1.02] select-none pb-4">
+                        <span className="font-primary text-[20vw] md:text-[220px] leading-none font-bold tracking-wide text-transparent bg-clip-text bg-gradient-to-b from-white via-white/50 to-white/10 opacity-90 transition-all duration-1000 group-hover:opacity-100 group-hover:drop-shadow-[0_0_20px_rgba(255,120,0,0.3)]" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.3)' }}>
                             Esillio
                         </span>
                     </div>
