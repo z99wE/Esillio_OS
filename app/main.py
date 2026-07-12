@@ -31,9 +31,15 @@ _ALLOWED_ORIGINS = [
     "http://localhost:3000",    # fallback dev
     "http://127.0.0.1:5173",
     "http://127.0.0.1:3000",
-    # Add your production domain here, e.g.:
-    # "https://esillio.vercel.app",
 ]
+
+import os
+if os.getenv("FRONTEND_URL"):
+    _ALLOWED_ORIGINS.append(os.getenv("FRONTEND_URL"))
+
+cors_env = os.getenv("CORS_ALLOWED_ORIGINS", "")
+if cors_env:
+    _ALLOWED_ORIGINS.extend([x.strip() for x in cors_env.split(",") if x.strip()])
 
 app.add_middleware(
     CORSMiddleware,
