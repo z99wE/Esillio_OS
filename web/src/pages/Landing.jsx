@@ -107,6 +107,69 @@ export default function Landing() {
                 </div>
             </section>
 
+            {/* COMPARATIVE ANALYSIS SECTION */}
+            <section className="py-16 md:py-24 relative z-[1]">
+                <div className="max-w-7xl mx-auto px-4 sm:px-8">
+                    <div className="text-center mb-12">
+                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-medium -tracking-[0.04em] leading-relaxed bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">
+                            Why Esillio is Different
+                        </h2>
+                        <p className="text-text-secondary mt-4 max-w-2xl mx-auto">
+                            Unlike traditional health apps that lock your data in the cloud, Esillio is built for ownership, privacy, and continuous context.
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto perspective-[1000px]">
+                        {/* Competitors Card */}
+                        <GlassCard className="relative flex flex-col gap-6 p-8 opacity-80 scale-95 border-red-500/10">
+                            <h3 className="text-xl font-semibold text-text-secondary text-center uppercase tracking-widest border-b border-white/5 pb-4">Traditional Cloud Apps</h3>
+                            <ul className="space-y-4 text-text-secondary text-sm">
+                                <li className="flex flex-col gap-1">
+                                    <span className="font-bold text-red-400/80">✗ Sent to Cloud</span>
+                                    <span>Your sensitive medical data leaves your device for processing.</span>
+                                </li>
+                                <li className="flex flex-col gap-1">
+                                    <span className="font-bold text-red-400/80">✗ Vendor Lock-in</span>
+                                    <span>Forced to use their proprietary AI models and pay subscriptions.</span>
+                                </li>
+                                <li className="flex flex-col gap-1">
+                                    <span className="font-bold text-red-400/80">✗ Session Amnesia</span>
+                                    <span>Every chat starts from zero. No longitudinal memory of your past.</span>
+                                </li>
+                                <li className="flex flex-col gap-1">
+                                    <span className="font-bold text-red-400/80">✗ Single Chatbot</span>
+                                    <span>A generic AI tries to answer everything without specialized medical reasoning.</span>
+                                </li>
+                            </ul>
+                        </GlassCard>
+
+                        {/* Esillio Card */}
+                        <GlassCard className="relative flex flex-col gap-6 p-8 shadow-[0_0_30px_rgba(138,43,226,0.15)] border-brand-primary/20 z-10 scale-100 hover:scale-[1.02] transition-transform duration-300">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/10 rounded-full blur-[40px] pointer-events-none"></div>
+                            <h3 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-accent-purple text-center border-b border-white/10 pb-4">Esillio OS</h3>
+                            <ul className="space-y-4 text-text-primary text-sm">
+                                <li className="flex flex-col gap-1">
+                                    <span className="font-bold text-brand-primary flex items-center gap-2">✓ Local-First Privacy</span>
+                                    <span className="text-text-secondary">Process everything locally. Your data never leaves your device by default.</span>
+                                </li>
+                                <li className="flex flex-col gap-1">
+                                    <span className="font-bold text-brand-primary flex items-center gap-2">✓ Bring Your Own AI</span>
+                                    <span className="text-text-secondary">Plug in OpenAI, Anthropic, or run totally offline with local LLMs.</span>
+                                </li>
+                                <li className="flex flex-col gap-1">
+                                    <span className="font-bold text-brand-primary flex items-center gap-2">✓ Biological Continuity Compiler™</span>
+                                    <span className="text-text-secondary">Builds a persistent, queryable timeline from scattered records using ChromaDB.</span>
+                                </li>
+                                <li className="flex flex-col gap-1">
+                                    <span className="font-bold text-brand-primary flex items-center gap-2">✓ Multi-Agent Orchestration</span>
+                                    <span className="text-text-secondary">Specialized agents (EsiDiet, EsiCalm) run in parallel for nuanced wellness insights.</span>
+                                </li>
+                            </ul>
+                        </GlassCard>
+                    </div>
+                </div>
+            </section>
+
             {/* TRUST & PRIVACY */}
             <section className="py-16 md:py-24">
                 <div className="max-w-7xl mx-auto px-4 sm:px-8">
