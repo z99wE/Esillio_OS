@@ -119,14 +119,14 @@ export default function ClinicianQueue() {
                                         <button 
                                             onClick={() => handleUpdateStatus('rejected')}
                                             disabled={actionLoading}
-                                            className="px-4 py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 border border-red-500/30 font-primary text-sm font-medium transition-colors disabled:opacity-50"
+                                            className="px-5 py-2.5 rounded-xl bg-neutral-surface/50 text-white hover:bg-red-500/20 border border-white/10 hover:border-red-500/30 font-secondary text-sm font-medium transition-all duration-300 disabled:opacity-50"
                                         >
                                             Reject
                                         </button>
                                         <button 
                                             onClick={() => handleUpdateStatus('approved')}
                                             disabled={actionLoading}
-                                            className="px-4 py-2 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20 border border-green-500/30 font-primary text-sm font-medium transition-colors disabled:opacity-50"
+                                            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-primary to-[#8A2BE2] text-white hover:shadow-cta border border-white/20 font-secondary text-sm font-medium transition-all duration-300 disabled:opacity-50"
                                         >
                                             Approve & Publish
                                         </button>
@@ -135,17 +135,21 @@ export default function ClinicianQueue() {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow">
                                     <div className="flex flex-col gap-2">
-                                        <label className="text-sm text-text-secondary font-primary">Edit Content (Markdown)</label>
-                                        <textarea 
-                                            className="w-full h-[500px] bg-black/40 border border-white/10 rounded-lg p-4 text-sm text-white/90 font-mono focus:border-brand-primary outline-none resize-none"
-                                            value={editingContent}
-                                            onChange={e => setEditingContent(e.target.value)}
-                                        />
+                                        <label className="text-sm text-text-secondary font-secondary tracking-wide uppercase">Edit Content (Markdown)</label>
+                                        <div className="glass-panel rounded-xl overflow-hidden h-[500px]">
+                                            <textarea 
+                                                className="w-full h-full bg-transparent border-none p-5 text-sm text-white/90 font-mono focus:ring-0 outline-none resize-none custom-scrollbar"
+                                                value={editingContent}
+                                                onChange={e => setEditingContent(e.target.value)}
+                                            />
+                                        </div>
                                     </div>
                                     <div className="flex flex-col gap-2">
-                                        <label className="text-sm text-text-secondary font-primary">Preview</label>
-                                        <div className="w-full h-[500px] bg-white/5 border border-white/10 rounded-lg p-6 overflow-y-auto prose prose-invert prose-brand prose-sm font-primary">
-                                            <ReactMarkdown>{editingContent}</ReactMarkdown>
+                                        <label className="text-sm text-text-secondary font-secondary tracking-wide uppercase">Preview</label>
+                                        <div className="glass-panel rounded-xl p-6 h-[500px] overflow-y-auto custom-scrollbar">
+                                            <div className="prose prose-invert prose-brand max-w-none font-secondary prose-headings:font-primary prose-headings:font-normal">
+                                                <ReactMarkdown>{editingContent}</ReactMarkdown>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

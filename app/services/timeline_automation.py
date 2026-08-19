@@ -81,35 +81,24 @@ class TimelineAutomationService:
                         supabase.table("timeline_events").update({
                             "is_superseded": False # This event is new, the old one is superseded
                         }).eq("id", event_id).execute()
+                        
+                    # If task is medication change and we got a new medication event
+                    elif task.get("type") == "medication_change" and event_type == "medication":
+                        supabase.table("tasks").update({
+                            "status": "stale",
+                            "stale_reason": f"Superseded by new medication record: {title}"
+                        }).eq("id", task["id"]).execute()
+                        
+                        supabase.table("timeline_events").update({
+                            "is_superseded": False
+                        }).eq("id", event_id).execute()
 
-        # 3. Auto-generate new tasks
-        clinical_text = f"Title: {title}\n\nContent:\n{clinical_data}"
-        runtime = get_runtime()
-        capability = runtime.capabilities.get("task_generator")
-        if not capability:
-            from app.runtime.capabilities.task_generator import TaskGeneratorCapability
-            capability = TaskGeneratorCapability(llm=runtime.provider)
-            
-        try:
-            result = capability.run(clinical_text=clinical_text)
-            tasks_to_insert = result.get("tasks", [])
-            
-            for task in tasks_to_insert:
-                task_type = task.get("task_type", "general")
-                if task_type not in ['appointment_prep', 'lab_followup', 'medication_change', 'ask_doctor', 'general']:
-                    task_type = 'general'
-                    
-                task_data = {
-                    "user_id": user_id,
-                    "source_record_id": event_id,
-                    "title": task.get("title", "Follow-up Task"),
-                    "description": task.get("description", ""),
-                    "type": task_type,
-                    "status": "pending",
-                    "checklist": task.get("checklist", [])
-                }
-                supabase.table("tasks").insert(task_data).execute()
-        except Exception as e:
-            logger.error(f"Failed to auto-generate tasks for event {event_id}: {e}")
+                    # If task is ask_doctor and we got a clinical note/consultation that addresses it
+                    elif task.get("type") == "ask_doctor" and event_type in ["consultation", "diagnosis", "procedure"]:
+                        supabase.table("tasks").update({
+                            "status": "stale",
+                            "stale_reason": f"Potentially addressed in recent record: {title}"
+                        }).eq("id", task["id"]).execute()
+
 
 timeline_automation = TimelineAutomationService()

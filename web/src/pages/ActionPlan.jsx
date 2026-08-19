@@ -114,7 +114,7 @@ export default function ActionPlan() {
                 <h1 className="text-4xl md:text-5xl font-primary tracking-tight pb-2 leading-tight text-white">
                     Your <span className="font-primary italic drop-shadow-sm font-light bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Action Plan</span>
                 </h1>
-                <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed mt-4 font-primary">
+                <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed mt-4 font-secondary">
                     Follow-up tasks automatically extracted from your clinical timeline to help you stay on top of your health journey.
                 </p>
             </div>
@@ -135,7 +135,7 @@ export default function ActionPlan() {
                 <div className="bg-neutral-surface border border-border-primary rounded-xl p-16 text-center relative overflow-hidden glass-panel">
                     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-brand-primary/10 rounded-full blur-[80px]"></div>
                     <h2 className="text-2xl font-primary font-medium text-text-primary mb-3 relative z-10">No Pending Actions</h2>
-                    <p className="text-text-secondary relative z-10 max-w-md mx-auto font-primary">
+                    <p className="text-text-secondary relative z-10 max-w-md mx-auto font-secondary">
                         Your action plan is currently empty. New tasks will appear here as they are identified from your uploaded medical records.
                     </p>
                 </div>
@@ -153,15 +153,15 @@ export default function ActionPlan() {
                                 {pendingTasks.map(task => (
                                     <GlassCard key={task.id} className="p-6 flex flex-col h-full hover:bg-white/5 transition-colors border border-white/5">
                                         <div className="flex justify-between items-start mb-4">
-                                            <span className={`text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full border ${getTypeColor(task.type)} backdrop-blur-md font-primary`}>
+                                            <span className={`text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full border ${getTypeColor(task.type)} backdrop-blur-md font-secondary`}>
                                                 {getTypeLabel(task.type)}
                                             </span>
-                                            <span className="text-xs text-text-secondary font-primary">
+                                            <span className="text-xs text-text-secondary font-secondary">
                                                 {new Date(task.created_at).toLocaleDateString()}
                                             </span>
                                         </div>
                                         <h3 className="text-xl font-medium text-white mb-2 font-primary">{task.title}</h3>
-                                        <p className="text-text-secondary leading-relaxed mb-4 font-primary text-sm">
+                                        <p className="text-text-secondary leading-relaxed mb-4 font-secondary text-sm">
                                             {task.description}
                                         </p>
                                         
@@ -183,7 +183,7 @@ export default function ActionPlan() {
                                                                     <polyline points="20 6 9 17 4 12"></polyline>
                                                                 </svg>
                                                             </div>
-                                                            <span className={`text-sm font-primary leading-tight transition-colors ${isChecked ? 'text-text-secondary line-through' : 'text-white/90 group-hover:text-white'}`}>
+                                                            <span className={`text-sm font-secondary leading-tight transition-colors ${isChecked ? 'text-text-secondary line-through' : 'text-white/90 group-hover:text-white'}`}>
                                                                 {displayItem}
                                                             </span>
                                                         </label>
@@ -196,13 +196,13 @@ export default function ActionPlan() {
                                         <div className="flex items-center gap-3 mt-auto pt-4 border-t border-white/5">
                                             <button 
                                                 onClick={() => handleUpdateStatus(task.id, 'completed')}
-                                                className="flex-1 py-2 rounded-lg bg-brand-primary/10 hover:bg-brand-primary/20 text-brand-primary border border-brand-primary/30 font-medium text-sm transition-colors font-primary"
+                                                className="flex-1 py-2 rounded-xl bg-gradient-to-r from-brand-primary/10 to-[#8A2BE2]/10 hover:from-brand-primary/20 hover:to-[#8A2BE2]/20 text-white border border-brand-primary/30 font-medium text-sm transition-all duration-300 font-secondary"
                                             >
                                                 Mark Done
                                             </button>
                                             <button 
                                                 onClick={() => handleUpdateStatus(task.id, 'dismissed')}
-                                                className="flex-1 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-text/70 border border-white/10 font-medium text-sm transition-colors font-primary"
+                                                className="flex-1 py-2 rounded-xl bg-neutral-surface/50 hover:bg-neutral-surface/80 text-white/70 hover:text-white border border-white/10 hover:border-white/20 font-medium text-sm transition-all duration-300 font-secondary"
                                             >
                                                 Dismiss
                                             </button>

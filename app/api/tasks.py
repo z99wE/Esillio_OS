@@ -20,8 +20,52 @@ class TaskGenerateRequest(BaseModel):
 async def get_tasks(user=Depends(get_current_user)):
     """
     Get all tasks for the authenticated user, ordered by creation date descending.
+    Lazily generates tasks for any timeline events that don't have them yet.
     """
     try:
+        # 1. Fetch all timeline events for this user
+        events_res = supabase.table("timeline_events").select("id, title, clinical_data").eq("patient_id", user["id"]).execute()
+        events = events_res.data or []
+        
+        # 2. Fetch all source_record_ids from tasks for this user
+        tasks_res = supabase.table("tasks").select("source_record_id").eq("user_id", user["id"]).execute()
+        existing_source_ids = {t["source_record_id"] for t in (tasks_res.data or []) if t.get("source_record_id")}
+        
+        # 3. Find events that don't have tasks generated yet
+        unprocessed_events = [e for e in events if e["id"] not in existing_source_ids]
+        
+        if unprocessed_events:
+            runtime = get_runtime()
+            capability = runtime.capabilities.get("task_generator")
+            if not capability:
+                from app.runtime.capabilities.task_generator import TaskGeneratorCapability
+                capability = TaskGeneratorCapability(llm=runtime.provider)
+            
+            for event in unprocessed_events:
+                clinical_text = f"Title: {event.get('title', 'Unknown')}\n\nContent:\n{event.get('clinical_data', '')}"
+                try:
+                    result = capability.run(clinical_text=clinical_text)
+                    tasks_to_insert = result.get("tasks", [])
+                    
+                    for task in tasks_to_insert:
+                        task_type = task.get("task_type", "general")
+                        if task_type not in ['appointment_prep', 'lab_followup', 'medication_change', 'ask_doctor', 'general']:
+                            task_type = 'general'
+                            
+                        task_data = {
+                            "user_id": user["id"],
+                            "source_record_id": event["id"],
+                            "title": task.get("title", "Follow-up Task"),
+                            "description": task.get("description", ""),
+                            "type": task_type,
+                            "status": "pending",
+                            "checklist": task.get("checklist", [])
+                        }
+                        supabase.table("tasks").insert(task_data).execute()
+                except Exception as e:
+                    print(f"Lazy generation failed for event {event['id']}: {e}")
+
+        # 4. Return all tasks
         response = supabase.table("tasks").select("*").eq("user_id", user["id"]).order("created_at", desc=True).execute()
         return response.data
     except Exception as e:

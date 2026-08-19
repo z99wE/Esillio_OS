@@ -83,11 +83,11 @@ Why this phase matters:
 Purpose: turn insights into actions.
 
 - [x] Create follow-up task objects
-- [ ] Add appointment prep checklists
-- [ ] Add lab follow-up reminders
-- [ ] Add medication change follow-ups
-- [ ] Add “ask your doctor” prompts
-- [ ] Add stale task detection when context changes
+- [x] Add appointment prep checklists
+- [x] Add lab follow-up reminders
+- [x] Add medication change follow-ups
+- [x] Add “ask your doctor” prompts
+- [x] Add stale task detection when context changes
 
 Why this phase matters:
 - Increases retention
