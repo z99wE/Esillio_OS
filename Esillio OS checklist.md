@@ -25,10 +25,10 @@ Phase 1 code status:
 - [x] Frontend production build passes
 
 What is still left for Phase 1 before real production deployment:
-- [ ] Set a real `JWT_SECRET_KEY` in the deployment environment
-- [ ] Set `ENABLE_GUEST_LOGIN=false` for production
-- [ ] Configure real admin AI keys or key pool values in the backend environment
-- [ ] Add an `.env.example` or deployment secrets template
+- [x] Set a real `JWT_SECRET_KEY` in the deployment environment
+- [x] Set `ENABLE_GUEST_LOGIN=false` for production
+- [x] Configure real admin AI keys or key pool values in the backend environment
+- [x] Add an `.env.example` or deployment secrets template
 - [ ] Do a manual browser QA pass for login, logout, guest mode, upload limits, and credit exhaustion messaging
 
 Important note:
