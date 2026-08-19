@@ -8,7 +8,11 @@ client = TestClient(app)
 def mock_get_current_user():
     return "00000000-0000-0000-0000-000000000000"
 
-app.dependency_overrides[get_current_user] = mock_get_current_user
+@pytest.fixture(autouse=True)
+def override_auth():
+    app.dependency_overrides[get_current_user] = mock_get_current_user
+    yield
+    app.dependency_overrides.clear()
 
 def test_get_timeline_diff(monkeypatch):
     # Mock timeline_service.get_timeline_diff
