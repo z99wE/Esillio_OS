@@ -1,4 +1,5 @@
-from pydantic_settings import BaseSettings
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -6,9 +7,18 @@ class Settings(BaseSettings):
     VERSION: str = "0.1.0"
     DESCRIPTION: str = "The Persistence Layer for Human Biology"
     DATABASE_URL: str = "sqlite:///./data/esillio.db"
+    JWT_SECRET_KEY: str = Field(default="dev-only-change-me")
+    JWT_ACCESS_TOKEN_EXPIRE_DAYS: int = 7
+    ENABLE_GUEST_LOGIN: bool = True
+    FREE_DAILY_CREDITS: int = 5
+    PAID_DAILY_CREDITS: int = 20
+    MAX_UPLOAD_MB: int = 10
+    ADMIN_EMAIL: str = ""
+    SUPABASE_URL: str = ""
+    SUPABASE_ANON_KEY: str = ""
+    SUPABASE_SERVICE_ROLE_KEY: str = ""
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
 settings = Settings()

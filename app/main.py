@@ -1,5 +1,7 @@
 from fastapi import FastAPI
+from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import Response
 
 from app.config import settings
 
@@ -10,6 +12,7 @@ from app.api.upload import router as upload_router
 from app.api.timeline import router as timeline_router
 from app.api.clinical_memory import router as clinical_memory_router
 from app.api.settings import router as settings_router
+from app.api.usage import router as usage_router
 from app.esiwell.router import router as esiwell_router
 from app.api.auth import auth_router
 
@@ -49,6 +52,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Referrer-Policy"] = "no-referrer"
+    response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+    response.headers["Cross-Origin-Opener-Policy"] = "same-origin"
+    return response
+
 ############################################################
 # API Routers
 ############################################################
@@ -60,6 +74,7 @@ app.include_router(upload_router)
 app.include_router(timeline_router)
 app.include_router(clinical_memory_router)
 app.include_router(settings_router)
+app.include_router(usage_router)
 app.include_router(esiwell_router)
 app.include_router(auth_router, prefix="/api/auth", tags=["auth"])
 from app.api.export import router as export_router

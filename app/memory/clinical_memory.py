@@ -1,5 +1,5 @@
 from copy import deepcopy
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 
 from app.compiler.health_compiler import HealthCompiler
@@ -31,8 +31,8 @@ class ClinicalMemory:
             "patient_id": self.patient_id,
             "current_state": {},
             "history": [],
-            "created_at": datetime.utcnow().isoformat(),
-            "updated_at": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
         }
 
     ############################################################
@@ -54,7 +54,7 @@ class ClinicalMemory:
 
         self.patient_memory["history"].append(
             {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "summary": extraction.get("summary", ""),
                 "conditions": extraction.get("conditions", []),
                 "medications": extraction.get("medications", []),
@@ -63,7 +63,7 @@ class ClinicalMemory:
         )
 
         self.patient_memory["updated_at"] = (
-            datetime.utcnow().isoformat()
+            datetime.now(timezone.utc).isoformat()
         )
 
         return deepcopy(self.patient_memory)

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, Form, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, HTTPException
 import csv
 import io
 import uuid
@@ -7,6 +7,7 @@ from app.services.document_service import DocumentService
 from app.services.text_extractor import TextExtractor
 from app.services.document_parser import DocumentParser
 from app.services.clinical_pipeline import pipeline
+from app.services.usage_service import usage_service
 
 from app.storage.repository import repository
 from app.api.auth import get_current_user
@@ -37,7 +38,10 @@ async def upload_document(
     # Save uploaded document
     ########################################################
 
-    document = service.save_document(file)
+    try:
+        document = service.save_document(file)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
 
     ########################################################
     # Extract text
@@ -61,7 +65,31 @@ async def upload_document(
     # Clinical Intelligence Pipeline
     ########################################################
 
-    ai_result = pipeline.process(text, patient_id=patient_id)
+    ai_result = {}
+    usage = usage_service.consume(
+        user_id=patient_id,
+        action="upload_document",
+        credits=1,
+        metadata={
+            "filename": file.filename,
+            "document_id": document["filename"],
+        },
+    )
+
+    if usage["ok"]:
+        ai_result = pipeline.process(text, patient_id=patient_id)
+    else:
+        ai_result = {
+            "pipeline_status": "budget_limited",
+            "errors": ["Daily usage limit reached. Document saved, extraction only."],
+            "medical_extraction": {
+                "summary": "Document saved successfully. AI processing is temporarily limited by your daily quota.",
+            },
+            "clinical_reasoning": {},
+            "wellness": {},
+            "guardian": {},
+            "clinical_memory": {},
+        }
 
     ########################################################
     # Unified Response
@@ -70,6 +98,7 @@ async def upload_document(
     return {
 
         "status": "success",
+        "usage": usage["usage"],
 
         "document": document,
 
@@ -94,6 +123,8 @@ async def upload_document(
             ],
 
         },
+
+        "clinical_intelligence": ai_result,
 
     }
 

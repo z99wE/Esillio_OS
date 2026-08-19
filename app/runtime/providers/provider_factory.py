@@ -1,11 +1,13 @@
 from app.runtime.config import (
     AI_PROVIDER,
     OPENAI_API_KEY,
+    OPENAI_API_KEYS,
     OPENAI_BASE_URL,
     OPENAI_MODEL,
 )
 
 from app.runtime.providers.local_provider import LocalProvider
+from app.runtime.providers.key_pool_provider import KeyPoolProvider
 from app.runtime.providers.openai_provider import OpenAIProvider
 from app.storage.repository import settings_repository
 
@@ -91,17 +93,31 @@ def create_provider():
     ##########################################################
 
     if provider.lower() in ("openai", "gemini", "custom", "lightning"):
-        if not api_key:
+        key_pool = []
+        if api_key:
+            key_pool = [api_key]
+        elif OPENAI_API_KEYS:
+            key_pool = OPENAI_API_KEYS
+
+        if not key_pool:
             logger.warning(
                 "No API key configured. Using stub provider (demo mode)."
             )
             return _stub_provider()
 
-        return OpenAIProvider(
-            api_key=api_key,
-            base_url=base_url,
-            model=model,
-        )
+        providers = [
+            OpenAIProvider(
+                api_key=key,
+                base_url=base_url,
+                model=model,
+            )
+            for key in key_pool
+        ]
+
+        if len(providers) == 1:
+            return providers[0]
+
+        return KeyPoolProvider(providers)
 
     ##########################################################
 

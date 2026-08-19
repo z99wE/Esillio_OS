@@ -1,22 +1,24 @@
 import jwt
 import datetime
 import uuid
-import hashlib
+import bcrypt
 from fastapi import APIRouter, Request, HTTPException, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from app.storage.database import database
+from app.config import settings
 
 auth_router = APIRouter()
 security = HTTPBearer()
 
-SECRET_KEY = "esillio_local_secret_hackathon"
+SECRET_KEY = settings.JWT_SECRET_KEY
+TOKEN_EXPIRE_DAYS = settings.JWT_ACCESS_TOKEN_EXPIRE_DAYS
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security)):
     token = credentials.credentials
     
     # Handle the hardcoded guest session
-    if token == "guest-token-123":
+    if token == "guest-token-123" and settings.ENABLE_GUEST_LOGIN:
         user_id = "usr-demo-1"
         try:
             from app.utils.seed_guest import seed_guest_if_needed
@@ -39,12 +41,34 @@ class AuthRequest(BaseModel):
     password: str
 
 def hash_password(password: str) -> str:
-    return hashlib.sha256(password.encode()).hexdigest()
+    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    try:
+        return bcrypt.checkpw(
+            plain_password.encode("utf-8"),
+            hashed_password.encode("utf-8"),
+        )
+    except Exception:
+        return False
+
+
+def create_token(user_id: str) -> str:
+    return jwt.encode(
+        {
+            "sub": user_id,
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=TOKEN_EXPIRE_DAYS),
+        },
+        SECRET_KEY,
+        algorithm="HS256",
+    )
 
 @auth_router.post("/register")
 def register(request: AuthRequest):
+    email = request.email.strip().lower()
     cursor = database.connection.cursor()
-    cursor.execute("SELECT id FROM users WHERE email = ?", (request.email,))
+    cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
     if cursor.fetchone():
         raise HTTPException(status_code=400, detail="Email already registered")
     
@@ -54,21 +78,22 @@ def register(request: AuthRequest):
     
     cursor.execute(
         "INSERT INTO users (id, email, password_hash, created_at) VALUES (?, ?, ?, ?)",
-        (user_id, request.email, hashed_pw, now)
+        (user_id, email, hashed_pw, now)
     )
     database.connection.commit()
     
-    token = jwt.encode({"sub": user_id, "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7)}, SECRET_KEY, algorithm="HS256")
-    return {"token": token, "user": {"id": user_id, "email": request.email}}
+    token = create_token(user_id)
+    return {"token": token, "user": {"id": user_id, "email": email}}
 
 @auth_router.post("/login")
 def login(request: AuthRequest):
+    email = request.email.strip().lower()
     cursor = database.connection.cursor()
-    cursor.execute("SELECT id, password_hash FROM users WHERE email = ?", (request.email,))
+    cursor.execute("SELECT id, password_hash FROM users WHERE email = ?", (email,))
     row = cursor.fetchone()
-    if not row or row["password_hash"] != hash_password(request.password):
+    if not row or not verify_password(request.password, row["password_hash"]):
         raise HTTPException(status_code=401, detail="Invalid email or password")
     
     user_id = row["id"]
-    token = jwt.encode({"sub": user_id, "exp": datetime.datetime.utcnow() + datetime.timedelta(days=7)}, SECRET_KEY, algorithm="HS256")
-    return {"token": token, "user": {"id": user_id, "email": request.email}}
+    token = create_token(user_id)
+    return {"token": token, "user": {"id": user_id, "email": email}}

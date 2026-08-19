@@ -1,7 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 
 from app.schemas.health_event import HealthEvent
 from app.storage.repository import repository
+from app.api.auth import get_current_user
 
 router = APIRouter(
     prefix="/events",
@@ -21,6 +22,6 @@ async def create_event(event: HealthEvent):
 
 
 @router.get("/")
-async def list_events():
+async def list_events(user_id: str = Depends(get_current_user)):
 
-    return repository.list_events()
+    return repository.list_events(patient_id=user_id)

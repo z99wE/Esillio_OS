@@ -1,9 +1,17 @@
+from pathlib import Path
+
+import pytest
 from transformers import pipeline
+
+MODEL_DIR = Path("artifacts/esillio_compiler")
+
+if not MODEL_DIR.exists():
+    pytest.skip("Local compiler artifact not present; skipping integration smoke test.", allow_module_level=True)
 
 classifier = pipeline(
     "text-classification",
-    model="artifacts/esillio_compiler",
-    tokenizer="artifacts/esillio_compiler"
+    model=str(MODEL_DIR),
+    tokenizer=str(MODEL_DIR)
 )
 
 examples = [

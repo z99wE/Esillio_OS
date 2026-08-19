@@ -51,7 +51,7 @@ function IntelligenceSection({ title, data }) {
 
 export default function HealthIntelligence() {
     const uploadContext = useUpload();
-    const { currentPatientId, setCurrentPatientId } = useHealth();
+    const { currentPatientId, setCurrentPatientId, usage } = useHealth();
     const [aiStatus, setAiStatus] = useState(null); // { ai_ready, provider }
     const [clinicianData, setClinicianData] = useState(null);
     const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
@@ -198,6 +198,11 @@ export default function HealthIntelligence() {
                         {aiStatus.ai_ready
                             ? `AI Connected — ${aiStatus.provider?.replace("Provider", "").replace("_", "")}`
                             : "Demo Mode — Add API key in Settings for full AI"}
+                    </div>
+                )}
+                {usage && (
+                    <div className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-medium border border-brand-primary/20 bg-brand-primary/10 text-brand-primary">
+                        Credits today: {usage.credits_used}/{usage.daily_limit} used
                     </div>
                 )}
             </div>

@@ -12,6 +12,7 @@ export function HealthProvider({ children }) {
     const [currentPatientId, setCurrentPatientId] = useState("usr-demo-1");
     const [timeline, setTimeline] = useState([]);
     const [memory, setMemory] = useState(null);
+    const [usage, setUsage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -66,6 +67,15 @@ export function HealthProvider({ children }) {
         }
     };
 
+    const fetchUsage = async () => {
+        try {
+            const res = await apiClient.get("/usage/current", { headers: getHeadersWithKeys() });
+            setUsage(res.data?.usage || null);
+        } catch {
+            setUsage(null);
+        }
+    };
+
     const uploadDocument = async (file) => {
         try {
             setIsLoading(true);
@@ -94,6 +104,7 @@ export function HealthProvider({ children }) {
     useEffect(() => {
         fetchTimeline();
         fetchMemory();
+        fetchUsage();
     }, [currentPatientId]);
 
     const value = React.useMemo(() => ({
@@ -101,12 +112,14 @@ export function HealthProvider({ children }) {
         setCurrentPatientId,
         timeline,
         memory,
+        usage,
         isLoading,
         error,
         fetchTimeline,
         fetchMemory,
+        fetchUsage,
         uploadDocument
-    }), [currentPatientId, timeline, memory, isLoading, error]);
+    }), [currentPatientId, timeline, memory, usage, isLoading, error]);
 
     return (
         <HealthContext.Provider value={value}>

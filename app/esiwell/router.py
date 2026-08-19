@@ -4,6 +4,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends
 from app.api.auth import get_current_user
+from app.services.usage_service import usage_service
 
 from .schemas import CompileRequest, ChatRequest
 
@@ -111,6 +112,22 @@ def _run_orchestration(request: CompileRequest) -> dict:
         local["ai_response"] = provider.generate("")
         return local
 
+    usage = usage_service.consume(
+        user_id=request.patient_id or "default",
+        action="esiwell_compile",
+        credits=1,
+        metadata={
+            "agent_set": ["EsiDiet", "EsiActive", "EsiCalm"],
+            "mode": "compile",
+        },
+    )
+    if not usage["ok"]:
+        local = _local_classify(request.text)
+        local["error"] = "Daily free credits exhausted. Showing local classification instead."
+        local["usage"] = usage["usage"]
+        local["ai_response"] = local.get("summary", "")
+        return local
+
     import concurrent.futures
 
     def _call_agent(agent_name: str, role_desc: str) -> str:
@@ -164,6 +181,7 @@ def _run_orchestration(request: CompileRequest) -> dict:
             "ai_response": ai_response_str,
             "agent_responses": agent_responses,
             "patient_id": request.patient_id,
+            "usage": usage["usage"],
         }
     except Exception:
         logger.exception("AI runtime orchestration failed — falling back to local classifier.")
