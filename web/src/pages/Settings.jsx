@@ -207,12 +207,19 @@ export default function Settings() {
                 }
                 setByokActive(Boolean(s.byok_active));
                 setIsAdmin(Boolean(s.is_admin));
-            } catch {
-                setError("Could not load AI settings.");
+            } catch (err) {
+                // 401 = not authenticated (guest mode or expired token) — not a real error
+                const status = err?.response?.status;
+                if (status === 401 || status === 403) {
+                    // silently default — user is in guest mode
+                } else {
+                    setError("Could not load AI settings. Is the backend running?");
+                }
             }
         };
         load();
     }, []);
+
 
     useEffect(() => {
         setApiKey("");

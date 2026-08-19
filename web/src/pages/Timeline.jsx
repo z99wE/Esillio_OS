@@ -131,7 +131,7 @@ export default function Timeline() {
             )}
 
             {!isLoading && timelineEvents.length > 0 && (
-                <div className="relative border-l border-border-primary ml-4 sm:ml-8 pl-8 sm:pl-10 space-y-12 pb-12">
+                <div className="relative border-l border-border-primary ml-4 sm:ml-8 pl-8 sm:pl-10 space-y-12">
                     {/* Top gradient fade for the line */}
                     <div className="absolute top-0 left-[-1px] w-[2px] h-12 bg-gradient-to-b from-neutral-background to-transparent z-10"></div>
                     

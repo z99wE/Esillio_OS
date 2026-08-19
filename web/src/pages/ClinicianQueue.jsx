@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import client from "../api/client";
 import GlassCard from "../components/GlassCard";
 import ReactMarkdown from "react-markdown";
+import DNABackground from "../components/DNABackground";
 
 export default function ClinicianQueue() {
     const [drafts, setDrafts] = useState([]);
@@ -53,7 +54,9 @@ export default function ClinicianQueue() {
     };
 
     return (
-        <div className="w-full max-w-6xl mx-auto py-16 px-4 relative z-10 animate-fade-in-up">
+        <div className="relative min-h-screen bg-[#0A0A0A] overflow-hidden">
+            <DNABackground />
+            <div className="w-full max-w-6xl mx-auto py-16 px-4 relative z-10 animate-fade-in-up">
             <div className="text-center mb-12 flex flex-col items-center">
                 <h1 className="text-4xl md:text-5xl font-primary tracking-tight pb-2 leading-tight text-white">
                     Clinician <span className="font-primary italic drop-shadow-sm font-light bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Review Queue</span>
@@ -162,7 +165,9 @@ export default function ClinicianQueue() {
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 }
+
 

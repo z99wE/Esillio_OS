@@ -1,14 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import apiClient from '../api/client';
+import { supabase } from '../supabaseClient';
 
 const AuthContext = createContext({});
 
 export const useAuth = () => useContext(AuthContext);
 
-import { supabase } from '../supabaseClient';
-
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [session, setSession] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -23,19 +23,21 @@ export const AuthProvider = ({ children }) => {
             return 'patient';
         };
 
-        const handleSession = async (session) => {
-            if (session?.user) {
-                const role = await fetchRole(session.user.id);
+        const handleSession = async (supabaseSession) => {
+            if (supabaseSession?.user) {
+                const role = await fetchRole(supabaseSession.user.id);
                 const sessionUser = {
-                    id: session.user.id,
-                    email: session.user.email,
-                    patient_id: session.user.id,
+                    id: supabaseSession.user.id,
+                    email: supabaseSession.user.email,
+                    patient_id: supabaseSession.user.id,
                     role: role
                 };
                 setUser(sessionUser);
-                localStorage.setItem('esillio_token', session.access_token);
+                setSession(supabaseSession);
+                localStorage.setItem('esillio_token', supabaseSession.access_token);
             } else {
                 setUser(null);
+                setSession(null);
                 localStorage.removeItem('esillio_token');
             }
             setLoading(false);
@@ -80,6 +82,7 @@ export const AuthProvider = ({ children }) => {
 
     const value = {
         user,
+        session,
         loading,
         login,
         register,
