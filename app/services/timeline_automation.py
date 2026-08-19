@@ -1,0 +1,115 @@
+import logging
+import asyncio
+from app.storage.supabase_client import supabase
+from app.runtime.engine import get_runtime
+from typing import Dict, Any, List
+
+logger = logging.getLogger(__name__)
+
+class TimelineAutomationService:
+    async def process_new_events(self, user_id: str, events: List[Dict[str, Any]]):
+        """
+        Main entry point for post-processing timeline events.
+        Runs in background.
+        """
+        for event in events:
+            try:
+                await self._process_single_event(user_id, event)
+            except Exception as e:
+                logger.error(f"Error processing timeline event {event.get('id')}: {e}")
+
+    async def _process_single_event(self, user_id: str, event: Dict[str, Any]):
+        event_id = event.get("id")
+        event_type = event.get("event_type")
+        title = event.get("title", "")
+        clinical_data = event.get("clinical_data", {})
+        
+        # 1. Detect if it's a diagnosis and generate an education card
+        if event_type == "diagnosis":
+            # Check if there's already an active card for this diagnosis
+            res = supabase.table("education_cards").select("id").eq("patient_id", user_id).eq("title", f"Understanding {title}").neq("status", "stale").execute()
+            if not res.data:
+                # No active card, generate one
+                # Note: This is an internal generation, typically triggered by an automated system clinician
+                runtime = get_runtime()
+                
+                prompt = f"""
+                Create a patient education card for the condition: {title}.
+                Make it easy to understand, empathetic, and actionable. Format as Markdown.
+                """
+                
+                try:
+                    response = runtime.provider.invoke(prompt)
+                    content_md = response.content if hasattr(response, 'content') else str(response)
+                    
+                    supabase.table("education_cards").insert({
+                        "patient_id": user_id,
+                        # Using system clinician ID or null
+                        "title": f"Understanding {title}",
+                        "content_md": content_md,
+                        "status": "draft"
+                    }).execute()
+                except Exception as e:
+                    logger.error(f"Failed to auto-generate education card: {e}")
+            else:
+                # We have a new diagnosis event, but an old card exists. Mark old cards as stale.
+                supabase.table("education_cards").update({"status": "stale"}).eq("patient_id", user_id).eq("title", f"Understanding {title}").neq("status", "stale").execute()
+
+        # 2. Check for stale tasks
+        # If this event is a lab result, we might supersede an existing 'lab_followup' task.
+        if event_type in ["lab_result", "procedure", "vitals", "medication"]:
+            # Find pending tasks
+            pending_tasks_res = supabase.table("tasks").select("*").eq("user_id", user_id).eq("status", "pending").execute()
+            if pending_tasks_res.data:
+                for task in pending_tasks_res.data:
+                    # Very basic heuristic: if the task title mentions something related to this event's title
+                    # e.g., Task "Follow up on A1C" and Event "A1C Result"
+                    # In a real system, we'd use an LLM or vector search to check relevance.
+                    # For now, let's use a simple text overlap check
+                    task_title = task.get("title", "").lower()
+                    evt_title = title.lower()
+                    
+                    # If task is lab followup and we got a lab result
+                    if task.get("type") == "lab_followup" and event_type == "lab_result":
+                        # Mark stale
+                        supabase.table("tasks").update({
+                            "status": "stale",
+                            "stale_reason": f"Superseded by new lab result: {title}"
+                        }).eq("id", task["id"]).execute()
+                        
+                        # Mark the event as superseding
+                        supabase.table("timeline_events").update({
+                            "is_superseded": False # This event is new, the old one is superseded
+                        }).eq("id", event_id).execute()
+
+        # 3. Auto-generate new tasks
+        clinical_text = f"Title: {title}\n\nContent:\n{clinical_data}"
+        runtime = get_runtime()
+        capability = runtime.capabilities.get("task_generator")
+        if not capability:
+            from app.runtime.capabilities.task_generator import TaskGeneratorCapability
+            capability = TaskGeneratorCapability(llm=runtime.provider)
+            
+        try:
+            result = capability.run(clinical_text=clinical_text)
+            tasks_to_insert = result.get("tasks", [])
+            
+            for task in tasks_to_insert:
+                task_type = task.get("task_type", "general")
+                if task_type not in ['appointment_prep', 'lab_followup', 'medication_change', 'ask_doctor', 'general']:
+                    task_type = 'general'
+                    
+                task_data = {
+                    "user_id": user_id,
+                    "source_record_id": event_id,
+                    "title": task.get("title", "Follow-up Task"),
+                    "description": task.get("description", ""),
+                    "type": task_type,
+                    "status": "pending",
+                    "checklist": task.get("checklist", [])
+                }
+                supabase.table("tasks").insert(task_data).execute()
+        except Exception as e:
+            logger.error(f"Failed to auto-generate tasks for event {event_id}: {e}")
+
+timeline_automation = TimelineAutomationService()

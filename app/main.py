@@ -83,6 +83,8 @@ app.include_router(export_router)
 from app.api.intelligence import router as intelligence_router
 app.include_router(intelligence_router)
 app.include_router(education_router, prefix="/api/education", tags=["education"])
+from app.api.tasks import router as tasks_router
+app.include_router(tasks_router, prefix="/api/tasks", tags=["tasks"])
 
 ############################################################
 # Root Health Check

@@ -60,12 +60,28 @@ class TimelineService:
                         "event_id": event_id,
                         "document_id": document_id,
                         "source_snippet": event.get("source_snippet", ""),
-                        "confidence_score": event.get("confidence_score", 1.0)
                     }
                     supabase.table("insight_provenance").insert(provenance_data).execute()
-
+                    
             except Exception as e:
                 logger.exception(f"Failed to save timeline event: {e}")
+                
+        # Trigger automation in background (if we had proper async background tasks)
+        # For simplicity in this sync method, we will do a basic wrapper
+        try:
+            from app.services.timeline_automation import timeline_automation
+            import asyncio
+            # In a real ASGI app we'd use BackgroundTasks, here we just try to run it safely
+            try:
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    loop.create_task(timeline_automation.process_new_events(patient_id, events))
+                else:
+                    loop.run_until_complete(timeline_automation.process_new_events(patient_id, events))
+            except RuntimeError:
+                asyncio.run(timeline_automation.process_new_events(patient_id, events))
+        except Exception as e:
+            logger.error(f"Failed to trigger timeline automation: {e}")
 
     def get_patient_timeline(self, patient_id: str):
         if not supabase:
@@ -95,7 +111,9 @@ class TimelineService:
             events_b = res_b.data
             
             from app.runtime.capabilities.clinical_diff import ClinicalDiffCapability
-            diff_cap = ClinicalDiffCapability()
+            from app.runtime.engine import get_runtime
+            runtime = get_runtime()
+            diff_cap = ClinicalDiffCapability(llm=runtime.provider)
             return diff_cap.run(events_a, events_b)
         except Exception as e:
             logger.error(f"Failed to generate timeline diff: {e}")
@@ -147,7 +165,9 @@ class TimelineService:
                 evt["insight_provenance"] = prov_map.get(evt["id"], [])
             
             from app.runtime.capabilities.condition_summary import ConditionSummaryCapability
-            summary_cap = ConditionSummaryCapability()
+            from app.runtime.engine import get_runtime
+            runtime = get_runtime()
+            summary_cap = ConditionSummaryCapability(llm=runtime.provider)
             return summary_cap.run(condition, related_events)
         except Exception as e:
             logger.error(f"Failed to generate condition summary: {e}")

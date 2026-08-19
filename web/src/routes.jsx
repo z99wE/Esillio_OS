@@ -6,6 +6,7 @@ import Esiwell from "./pages/Esiwell";
 import Upload from "./pages/Upload";
 import Documents from "./pages/Documents";
 import Timeline from "./pages/Timeline";
+import ActionPlan from "./pages/ActionPlan";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import Connect from "./pages/Connect";
@@ -39,6 +40,10 @@ export default function AppRoutes() {
             <Route
                 path="/timeline"
                 element={<ProtectedRoute><Timeline /></ProtectedRoute>}
+            />
+            <Route
+                path="/action-plan"
+                element={<ProtectedRoute><ActionPlan /></ProtectedRoute>}
             />
             <Route
                 path="/documents"

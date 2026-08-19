@@ -119,15 +119,22 @@ async def update_education_card(
     if role != "clinician":
         raise HTTPException(status_code=403, detail="Only clinicians can update education cards.")
         
-    update_data = {"status": req.status}
-    if req.content_md is not None:
-        update_data["content_md"] = req.content_md
-        
     try:
-        res = supabase.table("education_cards").update(update_data).eq("id", card_id).execute()
-        if not res.data:
+        # Fetch the current card
+        current_card_res = supabase.table("education_cards").select("*").eq("id", card_id).execute()
+        if not current_card_res.data:
             raise HTTPException(status_code=404, detail="Card not found")
-            
+        current_card = current_card_res.data[0]
+        
+        update_data = {"status": req.status}
+        if req.content_md is not None:
+            update_data["content_md"] = req.content_md
+            # If it's already approved and we are changing content, bump version
+            if current_card["status"] == "approved" and req.content_md != current_card["content_md"]:
+                update_data["version"] = current_card.get("version", 1) + 1
+                
+        res = supabase.table("education_cards").update(update_data).eq("id", card_id).execute()
+        
         return {"status": "success", "data": res.data[0]}
     except Exception as e:
         logger.error(f"Error updating education card: {e}")

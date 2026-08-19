@@ -56,9 +56,9 @@ Purpose: make Esillio a patient-owned continuity layer instead of a simple track
 
 - [x] Build source-linked timeline records
 - [x] Store provenance for every extracted insight
-- [x] Add change-diff views between visits and uploads
-- [x] Add condition-specific history summaries
-- [x] Add structured source references for summaries and education
+- [ ] Add change-diff views between visits and uploads
+- [ ] Add condition-specific history summaries
+- [ ] Add structured source references for summaries and education
 
 Why this phase matters:
 - Creates switching cost
@@ -82,7 +82,7 @@ Why this phase matters:
 ## Phase 5: Patient Follow-Up Workflows
 Purpose: turn insights into actions.
 
-- [ ] Create follow-up task objects
+- [x] Create follow-up task objects
 - [ ] Add appointment prep checklists
 - [ ] Add lab follow-up reminders
 - [ ] Add medication change follow-ups

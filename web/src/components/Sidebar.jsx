@@ -9,6 +9,7 @@ export default function Sidebar() {
         ["Health", "/health"],
         ["Upload", "/upload"],
         ["Timeline", "/timeline"],
+        ["Action Plan", "/action-plan"],
         ["Documents", "/documents"],
         ["Guardian", "/guardian"],
         ["Education", "/education"],
