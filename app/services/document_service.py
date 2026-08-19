@@ -46,7 +46,21 @@ class DocumentService:
             # The Supabase URL can be constructed or requested
             # Get the public or signed URL if needed, but usually we just store the path
             
+            # Insert into database to get a document_id
+            doc_data = {
+                "patient_id": patient_id,
+                "file_name": file.filename,
+                "file_path": path_in_bucket,
+                "file_size_bytes": file_size,
+                "content_type": content_type
+            }
+            db_res = supabase.table("documents").insert(doc_data).execute()
+            doc_id = None
+            if db_res.data:
+                doc_id = db_res.data[0]["id"]
+
             return {
+                "id": doc_id,
                 "filename": filename,
                 "path": path_in_bucket,
                 "bucket": BUCKET_NAME

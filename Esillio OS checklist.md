@@ -40,10 +40,11 @@ Purpose: move from local-only persistence to a real multi-tenant backend.
 
 - [x] Replace SQLite as the primary production datastore with Supabase Postgres
 - [x] Move authentication to Supabase Auth
-- [x] Add Row Level Security for per-patient access control
-- [ ] Move document storage to Supabase Storage
-- [ ] Add audit logs for all sensitive actions
-- [ ] Add patient, clinician, and admin role separation
+- [x] Configure backend APIs to verify tokens (via `supabase_client.auth.get_user`).
+- [x] Migrate Document Storage to Supabase Storage.
+- [x] Integrate `AuditService` with Supabase PostgreSQL (replace local SQLite triggers).
+- [x] Refactor RBAC using roles from the `profiles` table.
+- [x] Implement robust unit testing around Phase 2 modules.
 
 Why this phase matters:
 - Enables production tenancy
@@ -53,8 +54,8 @@ Why this phase matters:
 ## Phase 3: Moat Data Model
 Purpose: make Esillio a patient-owned continuity layer instead of a simple tracker.
 
-- [ ] Build source-linked timeline records
-- [ ] Store provenance for every extracted insight
+- [x] Build source-linked timeline records
+- [x] Store provenance for every extracted insight
 - [ ] Add change-diff views between visits and uploads
 - [ ] Add condition-specific history summaries
 - [ ] Add structured source references for summaries and education

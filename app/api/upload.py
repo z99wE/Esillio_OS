@@ -62,16 +62,6 @@ async def upload_document(
     )
 
     ########################################################
-    # Timeline Extraction
-    ########################################################
-
-    events = parser.parse(text)
-
-    for event in events:
-
-        repository.create_event(event, patient_id=patient_id)
-
-    ########################################################
     # Clinical Intelligence Pipeline
     ########################################################
 
@@ -87,7 +77,7 @@ async def upload_document(
     )
 
     if usage["ok"]:
-        ai_result = pipeline.process(text, patient_id=patient_id)
+        ai_result = pipeline.process(text, patient_id=patient_id, document_id=document.get("id"))
     else:
         ai_result = {
             "pipeline_status": "budget_limited",
@@ -113,25 +103,15 @@ async def upload_document(
         "document": document,
 
         "timeline": {
-
-            "events_created": len(events),
-
+            "events_created": len(ai_result.get("timeline_events", [])),
             "events": [
-
                 {
-
-                    "title": event.title,
-
-                    "category": event.category,
-
-                    "confidence": event.confidence,
-
+                    "title": event.get("title"),
+                    "category": event.get("event_type"),
+                    "confidence": event.get("confidence_score")
                 }
-
-                for event in events
-
+                for event in ai_result.get("timeline_events", [])
             ],
-
         },
 
         "clinical_intelligence": ai_result,
