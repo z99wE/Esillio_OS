@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { supabase } from '../utils/supabaseClient';
 import GlassCard from '../components/GlassCard';
 
 function Sharing() {
