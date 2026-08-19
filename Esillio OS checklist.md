@@ -19,6 +19,22 @@ Why this phase matters:
 - Creates a safe base for Supabase migration
 - Gives the app a cost floor so free users cannot burn through the budget
 
+Phase 1 code status:
+- [x] All planned code changes for Phase 1 are implemented
+- [x] Backend tests pass
+- [x] Frontend production build passes
+
+What is still left for Phase 1 before real production deployment:
+- [ ] Set a real `JWT_SECRET_KEY` in the deployment environment
+- [ ] Set `ENABLE_GUEST_LOGIN=false` for production
+- [ ] Configure real admin AI keys or key pool values in the backend environment
+- [ ] Add an `.env.example` or deployment secrets template
+- [ ] Do a manual browser QA pass for login, logout, guest mode, upload limits, and credit exhaustion messaging
+
+Important note:
+- There is no more Phase 1 feature work left to build in code.
+- What remains is deployment configuration and final validation, not product development.
+
 ## Phase 2: Supabase Core Migration
 Purpose: move from local-only persistence to a real multi-tenant backend.
 
@@ -130,7 +146,7 @@ Purpose: make the app actually feel reliable and shippable.
 - [ ] Add accessibility checks
 - [ ] Add error boundaries and graceful UI fallbacks
 - [ ] Add logging and observability
-- [ ] Add CI pipeline for tests and builds
+- [x] Add CI pipeline for tests and builds
 - [ ] Add CD pipeline for deploy previews and production releases
 
 Why this phase matters:
@@ -186,6 +202,7 @@ Why this phase matters:
 
 ## Current Status
 
-- Phase 1 is complete and pushed
+- Phase 1 code work is complete and pushed
+- Phase 1 deployment/config follow-ups are still pending
 - Supabase migration has not started yet
 - The next implementation target should be Supabase data/auth/storage
