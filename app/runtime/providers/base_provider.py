@@ -11,7 +11,7 @@ class BaseProvider(ABC):
         self,
         prompt: str,
         max_new_tokens: int = 1024,
-    ) -> str:
+    ) -> tuple[str, dict]:
         pass
 
     @abstractmethod
@@ -20,5 +20,5 @@ class BaseProvider(ABC):
         image_path: str,
         prompt: str,
         max_new_tokens: int = 1024,
-    ) -> str:
+    ) -> tuple[str, dict]:
         pass

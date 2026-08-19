@@ -148,7 +148,8 @@ def _run_orchestration(request: CompileRequest) -> dict:
         full_prompt = "\n".join(parts)
         
         try:
-            return runtime.analyze_text(prompt=full_prompt)
+            content, usage = runtime.analyze_text(prompt=full_prompt)
+            return content
         except Exception as e:
             logger.exception(f"{agent_name} failed.")
             return f"Error connecting to {agent_name}: {str(e)}"

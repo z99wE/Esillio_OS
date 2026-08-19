@@ -34,6 +34,7 @@ class ClinicalReasoningCapability:
     def run(
         self,
         patient_record: dict,
+        user_id: str | None = None,
     ) -> dict:
 
         prompt = self.prompt.replace(
@@ -44,11 +45,16 @@ class ClinicalReasoningCapability:
             ),
         )
 
-        response = self.runtime.analyze_text(
+        content, usage = self.runtime.analyze_text(
             prompt=prompt,
+            user_id=user_id,
+            action="reasoning",
+            credits=2,
         )
 
-        return self._validate(response)
+        parsed = self._validate(content)
+        parsed["usage"] = usage
+        return parsed
 
     ##########################################################
 

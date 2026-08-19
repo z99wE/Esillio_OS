@@ -113,10 +113,10 @@ Purpose: keep the product affordable at scale.
 
 - [x] Add daily credit limits for free users
 - [x] Add provider fallback routing
-- [ ] Add admin-managed LLM key pool rotation
-- [ ] Add per-tenant cost tracking
-- [ ] Add graceful downgrade when limits are reached
-- [ ] Add BYOK support for power users
+- [x] Add admin-managed LLM key pool rotation
+- [x] Add per-tenant cost tracking
+- [x] Add graceful downgrade when limits are reached
+- [x] Add BYOK support for power users
 
 Why this phase matters:
 - Prevents runaway AI spend

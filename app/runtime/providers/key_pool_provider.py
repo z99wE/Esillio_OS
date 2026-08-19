@@ -25,7 +25,7 @@ class KeyPoolProvider:
             self._cursor = (self._cursor + 1) % len(self.providers)
         return self.providers[start:] + self.providers[:start]
 
-    def generate(self, prompt: str, max_new_tokens: int = 1024, **kwargs) -> str:
+    def generate(self, prompt: str, max_new_tokens: int = 1024, **kwargs) -> tuple[str, dict]:
         last_error = None
         for provider in self._ordered_providers():
             try:
@@ -37,7 +37,7 @@ class KeyPoolProvider:
             raise last_error
         raise RuntimeError("No providers available")
 
-    def analyze_image(self, image_path: str, prompt: str, max_new_tokens: int = 1024, **kwargs) -> str:
+    def analyze_image(self, image_path: str, prompt: str, max_new_tokens: int = 1024, **kwargs) -> tuple[str, dict]:
         last_error = None
         for provider in self._ordered_providers():
             try:

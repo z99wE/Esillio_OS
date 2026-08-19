@@ -7,7 +7,7 @@ class TrendDetector:
     def __init__(self):
         self.engine = get_runtime()
 
-    def analyze_trends(self, biomarkers: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def analyze_trends(self, biomarkers: List[Dict[str, Any]], user_id: str | None = None) -> Dict[str, Any]:
         """
         Analyze a list of biomarker events to detect negative health trajectories.
         """
@@ -57,14 +57,20 @@ class TrendDetector:
         """
 
         try:
-            response = self.engine.analyze_text(prompt=prompt)
+            content, usage = self.engine.analyze_text(
+                prompt=prompt,
+                user_id=user_id,
+                action="trend_detection",
+                credits=2,
+            )
             # Try to extract JSON if wrapped in markdown
-            if "```json" in response:
-                response = response.split("```json")[1].split("```")[0].strip()
-            elif "```" in response:
-                response = response.split("```")[1].strip()
+            if "```json" in content:
+                content = content.split("```json")[1].split("```")[0].strip()
+            elif "```" in content:
+                content = content.split("```")[1].strip()
                 
-            result = json.loads(response)
+            result = json.loads(content)
+            result["usage"] = usage
             return result
         except Exception as e:
             print(f"Error in trend detection: {e}")

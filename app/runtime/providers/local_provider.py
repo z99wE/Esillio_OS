@@ -41,16 +41,16 @@ class LocalProvider:
         self,
         prompt: str,
         max_new_tokens: Optional[int] = None,
-    ) -> str:
+    ) -> tuple[str, dict]:
         """
         Classifies the text and returns the classification result as a string.
         """
         try:
             result = self.classifier(prompt)
-            return str(result)
+            return str(result), {"prompt_tokens": 0, "completion_tokens": 0}
         except Exception as e:
             logger.error(f"Classification failed: {e}")
-            return f"Error analyzing data: {e}"
+            return f"Error analyzing data: {e}", {"prompt_tokens": 0, "completion_tokens": 0}
 
     ###########################################################
 
@@ -59,8 +59,8 @@ class LocalProvider:
         image_path: str,
         prompt: str,
         max_new_tokens: Optional[int] = None,
-    ) -> str:
+    ) -> tuple[str, dict]:
         """
         The compiled model is text-only. Returns a fallback message.
         """
-        return "Image analysis is not supported by the current micro-model. Please use the OpenAI provider for visual tasks."
+        return "Image analysis is not supported by the current micro-model. Please use the OpenAI provider for visual tasks.", {"prompt_tokens": 0, "completion_tokens": 0}

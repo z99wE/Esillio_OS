@@ -25,10 +25,17 @@ class TimelineExtractionCapability:
 
     ########################################################
 
-    def run(self, document: str) -> dict:
+    def run(self, document: str, user_id: str | None = None) -> dict:
         prompt = self.prompt.replace("{{DOCUMENT}}", document)
-        response = self.runtime.analyze_text(prompt=prompt)
-        return self._validate(response)
+        content, usage = self.runtime.analyze_text(
+            prompt=prompt,
+            user_id=user_id,
+            action="timeline_extraction",
+            credits=2,
+        )
+        parsed = self._validate(content)
+        parsed["usage"] = usage
+        return parsed
 
     ########################################################
 

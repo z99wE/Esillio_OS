@@ -15,15 +15,16 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def create_provider():
+def create_provider(user_id: str | None = None):
     """
     Creates the active AI provider.
 
     Priority
     --------
-    1. User settings (saved via /settings/ai → SQLite)
-    2. Environment variables (.env)
-    3. No-op stub (demo mode — returns empty string)
+    1. User BYOK (from llm_keys)
+    2. Admin System Keys (from llm_keys)
+    3. Environment variables (.env)
+    4. No-op stub (demo mode — returns empty string)
     """
 
     ##########################################################
@@ -36,15 +37,41 @@ def create_provider():
     model = OPENAI_MODEL or "gpt-4o"
 
     ##########################################################
-    # Override with user settings from Supabase (highest priority)
+    # DB Keys: BYOK and Admin Keys (highest priority)
     ##########################################################
 
     try:
         from app.storage.supabase_client import supabase
         if supabase:
-            # We don't have a settings table yet, but we will rely on env vars for now.
-            # You can implement Supabase settings retrieval here later if needed.
-            pass
+            key_pool = []
+            byok_active = False
+
+            # 1. User BYOK
+            if user_id:
+                user_keys = supabase.table("llm_keys").select("api_key").eq("user_id", user_id).eq("is_active", True).execute()
+                if user_keys.data:
+                    byok_active = True
+                    key_pool = [k["api_key"] for k in user_keys.data]
+
+            # 2. Admin System Keys
+            if not key_pool:
+                admin_keys = supabase.table("llm_keys").select("api_key").is_("user_id", "null").eq("is_active", True).execute()
+                if admin_keys.data:
+                    key_pool = [k["api_key"] for k in admin_keys.data]
+
+            if key_pool:
+                providers = [
+                    OpenAIProvider(
+                        api_key=key,
+                        base_url=base_url,
+                        model=model,
+                    )
+                    for key in key_pool
+                ]
+
+                provider_obj = providers[0] if len(providers) == 1 else KeyPoolProvider(providers)
+                provider_obj.byok_active = byok_active
+                return provider_obj
 
     except Exception:
         logger.warning(
@@ -58,12 +85,16 @@ def create_provider():
 
     if provider.lower() == "local":
         try:
-            return LocalProvider()
+            provider_obj = LocalProvider()
+            provider_obj.byok_active = False
+            return provider_obj
         except Exception:
             logger.exception(
                 "LocalProvider failed to load — falling back to stub."
             )
-            return _stub_provider()
+            stub = _stub_provider()
+            stub.byok_active = False
+            return stub
 
     ##########################################################
     # OpenAI-Compatible Runtime
@@ -82,7 +113,9 @@ def create_provider():
             logger.warning(
                 "No API key configured. Using stub provider (demo mode)."
             )
-            return _stub_provider()
+            stub = _stub_provider()
+            stub.byok_active = False
+            return stub
 
         providers = [
             OpenAIProvider(
@@ -94,14 +127,19 @@ def create_provider():
         ]
 
         if len(providers) == 1:
-            return providers[0]
-
-        return KeyPoolProvider(providers)
+            provider_obj = providers[0]
+        else:
+            provider_obj = KeyPoolProvider(providers)
+        
+        provider_obj.byok_active = False
+        return provider_obj
 
     ##########################################################
 
     logger.warning("Unrecognised provider '%s' — using stub.", provider)
-    return _stub_provider()
+    stub = _stub_provider()
+    stub.byok_active = False
+    return stub
 
 
 ##########################################################
@@ -109,13 +147,14 @@ def create_provider():
 ##########################################################
 
 class _StubProvider:
-    def generate(self, prompt: str, **kwargs) -> str:
+    def generate(self, prompt: str, **kwargs) -> tuple[str, dict]:
         return (
             "No AI provider is configured. "
-            "Add an API key in Settings to enable AI features."
+            "Add an API key in Settings to enable AI features.",
+            {"prompt_tokens": 0, "completion_tokens": 0}
         )
 
-    def analyze_image(self, image_path: str, prompt: str, **kwargs) -> str:
+    def analyze_image(self, image_path: str, prompt: str, **kwargs) -> tuple[str, dict]:
         return self.generate(prompt)
 
 

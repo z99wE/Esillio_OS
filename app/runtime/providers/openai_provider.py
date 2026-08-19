@@ -26,7 +26,7 @@ class OpenAIProvider(BaseProvider):
         self,
         prompt: str,
         max_new_tokens: int = 1024,
-    ) -> str:
+    ) -> tuple[str, dict]:
 
         response = self.client.chat.completions.create(
 
@@ -42,7 +42,12 @@ class OpenAIProvider(BaseProvider):
             max_tokens=max_new_tokens,
         )
 
-        return response.choices[0].message.content
+        usage = {
+            "prompt_tokens": response.usage.prompt_tokens if response.usage else 0,
+            "completion_tokens": response.usage.completion_tokens if response.usage else 0,
+        }
+
+        return response.choices[0].message.content, usage
 
     ########################################################
 
@@ -51,7 +56,7 @@ class OpenAIProvider(BaseProvider):
         image_path: str,
         prompt: str,
         max_new_tokens: int = 1024,
-    ) -> str:
+    ) -> tuple[str, dict]:
 
         with open(image_path, "rb") as f:
             image = base64.b64encode(
@@ -85,4 +90,9 @@ class OpenAIProvider(BaseProvider):
             max_tokens=max_new_tokens,
         )
 
-        return response.choices[0].message.content
+        usage = {
+            "prompt_tokens": response.usage.prompt_tokens if response.usage else 0,
+            "completion_tokens": response.usage.completion_tokens if response.usage else 0,
+        }
+
+        return response.choices[0].message.content, usage

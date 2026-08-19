@@ -36,6 +36,7 @@ class MedicalExtractionCapability:
     def run(
         self,
         document: str,
+        user_id: str | None = None,
     ) -> dict:
 
         prompt = self.prompt.replace(
@@ -43,11 +44,16 @@ class MedicalExtractionCapability:
             document,
         )
 
-        response = self.runtime.analyze_text(
-            prompt=prompt
+        content, usage = self.runtime.analyze_text(
+            prompt=prompt,
+            user_id=user_id,
+            action="extraction",
+            credits=1,
         )
 
-        return self._validate(response)
+        parsed = self._validate(content)
+        parsed["usage"] = usage
+        return parsed
 
     ########################################################
 
