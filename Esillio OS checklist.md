@@ -97,11 +97,11 @@ Why this phase matters:
 ## Phase 6: Permissioned Sharing
 Purpose: support real-world collaboration without losing privacy.
 
-- [ ] Add share links with expiration
-- [ ] Add caregiver-specific access modes
-- [ ] Add clinician view modes
-- [ ] Add summary-only sharing
-- [ ] Add document-level permissions
+- [x] Add share links with expiration
+- [x] Add caregiver-specific access modes
+- [x] Add clinician view modes
+- [x] Add summary-only sharing
+- [x] Add document-level permissions
 
 Why this phase matters:
 - Enables family and care-team collaboration

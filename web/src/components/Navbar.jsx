@@ -21,6 +21,14 @@ const links = [
         path: "/connect",
     },
     {
+        title: "Sharing",
+        path: "/sharing",
+    },
+    {
+        title: "Queue",
+        path: "/clinician-queue",
+    },
+    {
         title: "Settings",
         path: "/settings",
     },

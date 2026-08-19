@@ -13,6 +13,8 @@ import Connect from "./pages/Connect";
 import Subscription from "./pages/Subscription";
 import EducationCards from "./pages/EducationCards";
 import ClinicianQueue from "./pages/ClinicianQueue";
+import Sharing from "./pages/Sharing";
+import SharedPatientView from "./pages/SharedPatientView";
 
 import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -56,6 +58,14 @@ export default function AppRoutes() {
             <Route
                 path="/clinician-queue"
                 element={<ProtectedRoute><ClinicianQueue /></ProtectedRoute>}
+            />
+            <Route
+                path="/sharing"
+                element={<ProtectedRoute><Sharing /></ProtectedRoute>}
+            />
+            <Route
+                path="/patient/:id"
+                element={<ProtectedRoute><SharedPatientView /></ProtectedRoute>}
             />
             <Route
                 path="/settings"
