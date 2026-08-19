@@ -25,26 +25,34 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Security(securi
         return user_id
 
     try:
-        # Supabase JWT decoding
-        # We can decode locally to save a network request to Supabase Auth servers.
-        # Ensure JWT_SECRET_KEY in .env matches the Supabase project JWT secret.
-        payload = jwt.decode(
-            token, 
-            SECRET_KEY, 
-            algorithms=["HS256"], 
-            options={"verify_aud": False} # Supabase aud is 'authenticated' usually, but safe to ignore if signature matches the strong secret
-        )
-        user_id = payload.get("sub")
-        if not user_id:
-            raise HTTPException(status_code=401, detail="Invalid token payload: no subject")
-        return user_id
+        # Try fast local validation if the secret is valid
+        if SECRET_KEY and SECRET_KEY != "dev-only-change-me":
+            payload = jwt.decode(
+                token, 
+                SECRET_KEY, 
+                algorithms=["HS256"], 
+                options={"verify_aud": False} 
+            )
+            user_id = payload.get("sub")
+            if not user_id:
+                raise HTTPException(status_code=401, detail="Invalid token payload: no subject")
+            return user_id
+        else:
+            raise ValueError("No local secret")
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token has expired")
     except Exception as e:
-        # Alternatively, we could do a server-side check with Supabase:
-        # response = supabase.auth.get_user(token)
-        # return response.user.id
-        raise HTTPException(status_code=401, detail=f"Invalid authentication credentials")
+        # Fallback: Server-side check with Supabase (handles ES256/RS256 and missing local secrets securely)
+        if supabase:
+            try:
+                # The python client uses the token in the header or as a parameter
+                response = supabase.auth.get_user(token)
+                if response and response.user:
+                    return response.user.id
+            except Exception as supabase_err:
+                logging.error(f"Supabase server-side token validation failed: {supabase_err}")
+                
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
 def require_role(allowed_roles: list[str]):
     def role_checker(user_id: str = Depends(get_current_user)):

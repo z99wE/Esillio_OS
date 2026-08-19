@@ -7,10 +7,10 @@ export default function Legal() {
             <div className="w-full max-w-4xl space-y-12 animate-fade-in-up">
                 
                 <div className="text-center space-y-6">
-                    <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
-                        Legal & Terms of Service
+                    <h1 className="text-4xl md:text-5xl font-primary tracking-tight pb-2 leading-tight text-white">
+                        Legal & <span className="font-primary italic drop-shadow-sm font-light bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Terms of Service</span>
                     </h1>
-                    <blockquote className="text-xl md:text-2xl text-text-muted font-medium italic border-l-4 border-brand-secondary pl-6 mx-auto max-w-3xl text-left">
+                    <blockquote className="text-xl md:text-2xl text-text-muted font-medium italic border-l-4 border-brand-secondary pl-6 mx-auto max-w-3xl text-left font-primary">
                         "By utilizing Esillio OS, you agree to a software-as-is premise that empowers you with total data sovereignty, while releasing the developers from liabilities related to local execution."
                     </blockquote>
                 </div>

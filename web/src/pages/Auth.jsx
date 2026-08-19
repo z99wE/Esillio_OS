@@ -39,10 +39,10 @@ export default function Auth() {
             
             <div className="w-full max-w-lg mx-auto relative z-10 animate-fade-in">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl md:text-5xl font-primary tracking-tight pb-2 leading-tight text-white font-bold">
+                    <h1 className="text-4xl md:text-5xl font-primary tracking-tight pb-2 leading-tight text-white">
                         Welcome to <span className="font-primary italic drop-shadow-sm font-light bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Esillio</span>
                     </h1>
-                    <p className="text-text-secondary mt-2 text-lg">
+                    <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed mt-2 font-primary">
                         {isSignUp ? "Create an account to securely store your health memory." : "Sign in to access your health memory."}
                     </p>
                 </div>

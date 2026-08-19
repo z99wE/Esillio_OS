@@ -156,11 +156,11 @@ export default function Settings() {
             </div>
 
             <div className="w-full max-w-3xl relative z-[2] flex flex-col gap-8">
-                <div className="text-center flex flex-col items-center gap-4">
-                    <h1 className="text-4xl md:text-5xl font-medium tracking-tight pb-2 leading-tight text-white">
-                        AI <span className="font-primary italic drop-shadow-sm bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Configuration</span>
+                <div className="text-center mb-4 flex flex-col items-center">
+                    <h1 className="text-4xl md:text-5xl font-primary tracking-tight pb-2 leading-tight text-white">
+                        AI <span className="font-primary italic drop-shadow-sm font-light bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Configuration</span>
                     </h1>
-                    <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed">
+                    <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed mt-2 font-primary">
                         Choose your AI provider. Secrets stay on the backend so the browser never carries provider keys.
                     </p>
                 </div>

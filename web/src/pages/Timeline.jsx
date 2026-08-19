@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useHealth } from "../context/HealthContext";
 import GlassCard from "../components/GlassCard";
 import { dummyPatients } from "../utils/dummyData";
+import ConditionSummaryModal from "../components/ConditionSummaryModal";
 
 export default function Timeline() {
     const { timeline, isLoading, error, currentPatientId, setCurrentPatientId } = useHealth();
+    const [selectedCondition, setSelectedCondition] = useState(null);
 
     const isDemoPatient = currentPatientId.startsWith('usr-demo-');
     const demoPatient = dummyPatients.find(p => p.id === currentPatientId) || dummyPatients[0];
@@ -51,17 +53,19 @@ export default function Timeline() {
                     Every uploaded document contributes to a continuous health story,
                     making trends and medical events easier to understand over time.
                 </p>
-                {timelineEvents.length > 0 && (
-                    <button 
-                        onClick={exportToMarkdown}
-                        className="mt-6 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-brand-primary text-sm font-semibold hover:bg-white/10 transition-colors flex items-center gap-2"
-                    >
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                        </svg>
-                        Export to Markdown
-                    </button>
-                )}
+                <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
+                    {timelineEvents.length > 0 && (
+                        <button 
+                            onClick={exportToMarkdown}
+                            className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-brand-primary text-sm font-semibold hover:bg-white/10 transition-colors flex items-center gap-2"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            Export to Markdown
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* Patient Selector (Demo Mode) */}
@@ -144,13 +148,53 @@ export default function Timeline() {
                                             <p className="text-sm text-accent font-medium mt-1">{event.date}</p>
                                         )}
                                     </div>
-                                    <span className="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-text/70 w-max shrink-0 backdrop-blur-md">
-                                        {event.category || "Clinical Event"}
-                                    </span>
+                                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
+                                        <span className="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-text/70 backdrop-blur-md">
+                                            {event.category || "Clinical Event"}
+                                        </span>
+                                        {event.category?.toLowerCase() === "diagnosis" || event.category?.toLowerCase() === "condition" ? (
+                                            <button 
+                                                onClick={() => setSelectedCondition(event.title)}
+                                                className="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/30 text-brand-primary hover:bg-brand-primary/20 transition-colors backdrop-blur-md flex items-center gap-1"
+                                                title="Generate AI condition summary"
+                                            >
+                                                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                                                </svg>
+                                                Summarize
+                                            </button>
+                                        ) : null}
+                                    </div>
                                 </div>
                                 
                                 {event.description && (
-                                    <p className="text-text/70 leading-relaxed mb-6">{event.description}</p>
+                                    <p className="text-text/70 leading-relaxed mb-4">{event.description}</p>
+                                )}
+                                
+                                {event.insight_provenance && event.insight_provenance.length > 0 && (
+                                    <div className="mt-4 pt-4 border-t border-white/10">
+                                        <h4 className="text-xs font-semibold uppercase tracking-wider text-text-secondary mb-3 flex items-center gap-2">
+                                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            Source Provenance
+                                        </h4>
+                                        <div className="flex flex-col gap-2">
+                                            {event.insight_provenance.map((prov, i) => (
+                                                <div key={prov.id || i} className="bg-white/5 border border-white/10 rounded-lg p-3 text-sm">
+                                                    <p className="text-text/80 italic">"{prov.source_snippet}"</p>
+                                                    <div className="flex justify-between items-center mt-2">
+                                                        <span className="text-xs text-text-secondary font-mono">
+                                                            Confidence: {(prov.confidence_score * 100).toFixed(0)}%
+                                                        </span>
+                                                        <span className="text-xs text-brand-primary/80">
+                                                            Doc ID: {prov.document_id ? prov.document_id.substring(0,8) : 'Unknown'}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
                                 )}
                             </GlassCard>
                     </div>
@@ -159,6 +203,13 @@ export default function Timeline() {
                     {/* Bottom gradient fade for the line */}
                     <div className="absolute bottom-0 left-[-1px] w-[2px] h-24 bg-gradient-to-t from-neutral-background to-transparent z-10"></div>
                 </div>
+            )}
+
+            {selectedCondition && (
+                <ConditionSummaryModal 
+                    condition={selectedCondition} 
+                    onClose={() => setSelectedCondition(null)} 
+                />
             )}
         </div>
     );

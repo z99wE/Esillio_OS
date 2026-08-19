@@ -4,11 +4,14 @@ import Landing from "./pages/Landing";
 import HealthIntelligence from "./pages/HealthIntelligence";
 import Esiwell from "./pages/Esiwell";
 import Upload from "./pages/Upload";
+import Documents from "./pages/Documents";
 import Timeline from "./pages/Timeline";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import Connect from "./pages/Connect";
 import Subscription from "./pages/Subscription";
+import EducationCards from "./pages/EducationCards";
+import ClinicianQueue from "./pages/ClinicianQueue";
 
 import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -36,6 +39,18 @@ export default function AppRoutes() {
             <Route
                 path="/timeline"
                 element={<ProtectedRoute><Timeline /></ProtectedRoute>}
+            />
+            <Route
+                path="/documents"
+                element={<ProtectedRoute><Documents /></ProtectedRoute>}
+            />
+            <Route
+                path="/education"
+                element={<ProtectedRoute><EducationCards /></ProtectedRoute>}
+            />
+            <Route
+                path="/clinician-queue"
+                element={<ProtectedRoute><ClinicianQueue /></ProtectedRoute>}
             />
             <Route
                 path="/settings"

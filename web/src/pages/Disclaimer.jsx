@@ -7,10 +7,10 @@ export default function Disclaimer() {
             <div className="w-full max-w-4xl space-y-12 animate-fade-in-up">
                 
                 <div className="text-center space-y-6">
-                    <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">
-                        Medical Disclaimer
+                    <h1 className="text-4xl md:text-5xl font-primary tracking-tight pb-2 leading-tight text-white">
+                        Medical <span className="font-primary italic drop-shadow-sm font-light bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Disclaimer</span>
                     </h1>
-                    <blockquote className="text-xl md:text-2xl text-text-muted font-medium italic border-l-4 border-accent pl-6 mx-auto max-w-3xl text-left">
+                    <blockquote className="text-xl md:text-2xl text-text-muted font-medium italic border-l-4 border-accent pl-6 mx-auto max-w-3xl text-left font-primary">
                         "Esillio OS provides biological intelligence and data organization, but it is fundamentally an informational productivity tool—not a medical device or a substitute for professional healthcare."
                     </blockquote>
                 </div>

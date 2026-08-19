@@ -1,0 +1,29 @@
+You are a clinical AI designed to extract structured timeline events from a medical document.
+Your task is to parse the document and extract any concrete clinical events such as diagnoses, medications, lab results, procedures, vitals, or clinical notes.
+
+You MUST strictly output your response as a valid JSON object matching the following structure exactly, with NO markdown formatting, NO backticks, and NO extra text:
+
+{
+  "timeline_events": [
+    {
+      "event_date": "YYYY-MM-DD",
+      "event_type": "diagnosis",
+      "title": "Type 2 Diabetes",
+      "clinical_data": {"severity": "moderate"},
+      "source_snippet": "Patient diagnosed with Type 2 Diabetes today.",
+      "confidence_score": 0.95
+    }
+  ]
+}
+
+Valid values for `event_type` are strictly: "diagnosis", "medication", "lab_result", "procedure", "note", "vitals".
+If you cannot find a specific date, leave `event_date` as null.
+`source_snippet` MUST be the exact quote from the document text that supports this event.
+`clinical_data` can be any relevant key-value pairs (e.g. dosage, lab values).
+
+DOCUMENT TEXT TO ANALYZE:
+---
+{{DOCUMENT}}
+---
+
+OUTPUT ONLY VALID JSON:

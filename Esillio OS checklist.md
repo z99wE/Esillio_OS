@@ -56,9 +56,9 @@ Purpose: make Esillio a patient-owned continuity layer instead of a simple track
 
 - [x] Build source-linked timeline records
 - [x] Store provenance for every extracted insight
-- [ ] Add change-diff views between visits and uploads
-- [ ] Add condition-specific history summaries
-- [ ] Add structured source references for summaries and education
+- [x] Add change-diff views between visits and uploads
+- [x] Add condition-specific history summaries
+- [x] Add structured source references for summaries and education
 
 Why this phase matters:
 - Creates switching cost

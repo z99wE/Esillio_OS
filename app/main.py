@@ -15,6 +15,7 @@ from app.api.settings import router as settings_router
 from app.api.usage import router as usage_router
 from app.esiwell.router import router as esiwell_router
 from app.api.auth import auth_router
+from app.api.education import router as education_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -81,6 +82,7 @@ from app.api.export import router as export_router
 app.include_router(export_router)
 from app.api.intelligence import router as intelligence_router
 app.include_router(intelligence_router)
+app.include_router(education_router, prefix="/api/education", tags=["education"])
 
 ############################################################
 # Root Health Check

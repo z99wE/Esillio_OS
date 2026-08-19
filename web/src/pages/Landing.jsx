@@ -25,11 +25,11 @@ export default function Landing() {
                     <div className="absolute left-1/2 top-1/2 w-[200px] sm:w-[300px] h-[200px] sm:h-[300px] rounded-full bg-[conic-gradient(from_0deg_at_50%_50%,#ff8844,#ff4533,#ffaa66)] blur-[32px] animate-spin-reverse opacity-50"></div>
                 </div>
                 <div className="relative z-[2] max-w-7xl mx-auto px-4 sm:px-8 flex flex-col items-center gap-6 sm:gap-8 text-center mt-20">
-                    <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[80px] font-medium -tracking-[0.04em] leading-tight max-w-4xl px-4">
+                    <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[80px] font-primary tracking-tight leading-tight max-w-4xl px-4">
                         <span className="bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Your body remembers.</span> <br/>
-                        <span className="font-primary font-normal italic text-brand-primary">Now your healthcare can too.</span>
+                        <span className="font-primary font-light drop-shadow-sm italic text-brand-primary">Now your healthcare can too.</span>
                     </h1>
-                    <p className="text-base sm:text-lg md:text-xl font-medium -tracking-[0.02em] text-text-secondary max-w-2xl leading-relaxed px-4">
+                    <p className="text-base sm:text-lg md:text-xl font-primary text-text-secondary max-w-2xl leading-relaxed px-4">
                         Build your personal health timeline, one note at a time.
                         <br/><br/>
                         EsiWell transforms fragmented health information into a living, searchable, AI-powered health memory, helping people preserve context, uncover patterns, and make better health decisions over time.

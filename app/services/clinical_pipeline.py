@@ -52,6 +52,7 @@ class ClinicalPipeline:
         self,
         document_text: str,
         patient_id: str = "anonymous",
+        document_id: str = None,
     ) -> Dict[str, Any]:
 
         results = {}
@@ -87,6 +88,28 @@ class ClinicalPipeline:
             )
 
             results["medical_extraction"] = {}
+
+        ########################################################
+        # Timeline Extraction (Phase 3)
+        ########################################################
+        try:
+            logger.info("Running Timeline Extraction...")
+            from app.runtime.capabilities.timeline import TimelineExtractionCapability
+            timeline_extractor = TimelineExtractionCapability()
+            
+            timeline_res = timeline_extractor.run(document_text)
+            events = timeline_res.get("timeline_events", [])
+            
+            if events and patient_id != "anonymous" and document_id:
+                logger.info(f"Saving {len(events)} timeline events for patient {patient_id}")
+                from app.services.timeline_service import timeline_service
+                timeline_service.save_timeline_events(patient_id, document_id, events)
+                
+            results["timeline_events"] = events
+        except Exception:
+            logger.exception("Timeline extraction failed.")
+            errors.append("Timeline extraction failed.")
+            results["timeline_events"] = []
 
         ########################################################
         # EsiWell Runtime

@@ -9,11 +9,11 @@ export default function Subscription() {
             <DNABackground />
 
             <div className="relative z-10 max-w-6xl mx-auto">
-                <div className="text-center flex flex-col items-center gap-4 mb-20">
-                    <h1 className="text-4xl md:text-5xl font-medium tracking-tight pb-2 leading-tight text-white">
-                        Unlock <span className="font-primary italic drop-shadow-sm bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Esillio Pro</span>
+                <div className="text-center mb-20 flex flex-col items-center">
+                    <h1 className="text-4xl md:text-5xl font-primary tracking-tight pb-2 leading-tight text-white">
+                        Unlock <span className="font-primary italic drop-shadow-sm font-light bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Esillio Pro</span>
                     </h1>
-                    <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed">
+                    <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed mt-2 font-primary">
                         Take full control of your biological intelligence with unlimited cloud sync, advanced multimodal inference, and priority access to new features.
                     </p>
                 </div>
