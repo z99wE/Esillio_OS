@@ -3,6 +3,7 @@ from typing import Dict, Any, List
 
 from app.storage.supabase_client import supabase
 from app.api.auth import get_current_user
+from app.services.audit_service import audit_service
 
 router = APIRouter(prefix="/api/export", tags=["export"])
 
@@ -20,7 +21,6 @@ async def get_clinician_summary(
     events = response.data
     
     # Log export action
-    from app.services.audit_service import audit_service
     audit_service.log_action(
         user_id=user_id,
         action="export_clinician_summary",
