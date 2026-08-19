@@ -41,7 +41,7 @@ def create_provider():
     ##########################################################
 
     try:
-        settings = settings_repository.get_settings()
+        settings = settings_repository.get_settings(include_sensitive=True)
 
         db_provider = settings.get("provider", "").strip()
         db_base_url = settings.get("base_url", "").strip()

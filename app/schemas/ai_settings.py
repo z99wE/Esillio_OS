@@ -11,6 +11,9 @@ class AISettings(BaseModel):
     provider: Literal[
         "local",
         "openai",
+        "gemini",
+        "lightning",
+        "custom",
     ] = "local"
 
     base_url: str = Field(
@@ -23,4 +26,8 @@ class AISettings(BaseModel):
 
     model: str = Field(
         default="gpt-4.1",
+    )
+
+    retain_existing_key: bool = Field(
+        default=False,
     )

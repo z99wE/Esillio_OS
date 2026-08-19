@@ -11,6 +11,8 @@ Purpose: make the app secure and stable enough to build on.
 - [x] Add security headers on the FastAPI app
 - [x] Add upload file type and size guardrails
 - [x] Add basic usage budgeting and daily credit limits
+- [x] Stop exposing provider API keys to the browser
+- [x] Add CI checks for backend tests and frontend builds
 
 Why this phase matters:
 - Prevents obvious security failures
@@ -184,7 +186,6 @@ Why this phase matters:
 
 ## Current Status
 
-- Phase 1 is partially complete and already pushed
+- Phase 1 is complete and pushed
 - Supabase migration has not started yet
 - The next implementation target should be Supabase data/auth/storage
-

@@ -79,6 +79,7 @@ def save_ai_settings(settings: AISettings):
         base_url=settings.base_url,
         api_key=settings.api_key,
         model=settings.model,
+        retain_existing_key=settings.retain_existing_key,
     )
 
     # Hot-reload the AI runtime with new settings

@@ -16,19 +16,10 @@ export function HealthProvider({ children }) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const getHeadersWithKeys = () => {
-        return {
-            "X-OpenAI-Key": localStorage.getItem("esillio_openai_key") || "",
-            "X-Anthropic-Key": localStorage.getItem("esillio_anthropic_key") || "",
-            "X-Gemini-Key": localStorage.getItem("esillio_gemini_key") || "",
-            "X-Local-URL": localStorage.getItem("esillio_local_url") || ""
-        };
-    };
-
     const fetchTimeline = async () => {
         try {
             setIsLoading(true);
-            const res = await apiClient.get("/timeline", { headers: getHeadersWithKeys() });
+            const res = await apiClient.get("/timeline");
             if (res.data && res.data.length === 0) {
                 const patient = dummyPatients.find(p => p.id === currentPatientId) || dummyPatients[0];
                 setTimeline(patient.timeline || []);
@@ -49,7 +40,7 @@ export function HealthProvider({ children }) {
     const fetchMemory = async () => {
         try {
             setIsLoading(true);
-            const res = await apiClient.get("/memory/current", { headers: getHeadersWithKeys() });
+            const res = await apiClient.get("/memory/current");
             if (!res.data || Object.keys(res.data).length === 0) {
                 const patient = dummyPatients.find(p => p.id === currentPatientId) || dummyPatients[0];
                 setMemory(patient);
@@ -69,7 +60,7 @@ export function HealthProvider({ children }) {
 
     const fetchUsage = async () => {
         try {
-            const res = await apiClient.get("/usage/current", { headers: getHeadersWithKeys() });
+            const res = await apiClient.get("/usage/current");
             setUsage(res.data?.usage || null);
         } catch {
             setUsage(null);
@@ -84,7 +75,6 @@ export function HealthProvider({ children }) {
             
             await apiClient.post("/upload", formData, {
                 headers: {
-                    ...getHeadersWithKeys(),
                     "Content-Type": "multipart/form-data"
                 }
             });

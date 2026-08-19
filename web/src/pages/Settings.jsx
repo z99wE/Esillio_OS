@@ -60,6 +60,7 @@ export default function Settings() {
     const [apiKey, setApiKey] = useState("");
     const [customUrl, setCustomUrl] = useState("");
     const [customModel, setCustomModel] = useState("");
+    const [keyPresent, setKeyPresent] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [isTesting, setIsTesting] = useState(false);
     const [error, setError] = useState("");
@@ -71,15 +72,6 @@ export default function Settings() {
     // Load saved settings on mount
     useEffect(() => {
         const load = async () => {
-            // Restore last active provider from localStorage
-            const saved = localStorage.getItem("esillio_active_provider");
-            if (saved && PROVIDER_CONFIGS[saved]) setActiveProvider(saved);
-
-            // Load key from localStorage
-            const storedKey = localStorage.getItem(`esillio_key_${saved || "openai"}`) || "";
-            setApiKey(storedKey);
-
-            // Fetch from backend
             try {
                 const res = await client.get("/settings/ai");
                 const s = res.data.settings;
@@ -87,18 +79,17 @@ export default function Settings() {
                     setActiveProvider(s.provider);
                     setCustomUrl(s.base_url || "");
                     setCustomModel(s.model || "");
+                    setKeyPresent(Boolean(s.key_present));
                 }
             } catch {
-                // Backend offline — use localStorage only
+                setError("Could not load backend AI settings.");
             }
         };
         load();
     }, []);
 
-    // When provider changes, load the stored key for that provider
     useEffect(() => {
-        const storedKey = localStorage.getItem(`esillio_key_${activeProvider}`) || "";
-        setApiKey(storedKey);
+        setApiKey("");
         setTestResult(null);
         setError("");
         setSuccessMessage("");
@@ -118,31 +109,20 @@ export default function Settings() {
             return;
         }
 
-        // Persist key per-provider in localStorage
-        localStorage.setItem(`esillio_key_${activeProvider}`, apiKey.trim());
-        localStorage.setItem("esillio_active_provider", activeProvider);
-
-        // Also set the legacy key used by the axios interceptor
-        if (activeProvider === "openai") {
-            localStorage.setItem("esillio_openai_key", apiKey.trim());
-        } else if (activeProvider === "gemini") {
-            localStorage.setItem("esillio_gemini_key", apiKey.trim());
-        } else if (activeProvider === "custom" || activeProvider === "lightning") {
-            localStorage.setItem("esillio_local_url", customUrl);
-        }
-
         const payload = {
             provider: activeProvider,
             base_url: customUrl || cfg.baseUrl,
-            api_key: apiKey.trim() || "dummy_key_to_bypass_init",
+            api_key: apiKey.trim(),
             model: customModel || cfg.model,
+            retain_existing_key: !apiKey.trim(),
         };
 
         try {
-            await client.post("/settings/ai", payload);
+            const response = await client.post("/settings/ai", payload);
+            setKeyPresent(Boolean(response.data?.settings?.key_present));
             setSuccessMessage("Settings saved. AI runtime reloaded.");
         } catch {
-            setError("Failed to save to backend. Frontend keys are still saved.");
+            setError("Failed to save backend AI settings.");
         }
 
         setIsSaving(false);
@@ -181,7 +161,7 @@ export default function Settings() {
                         AI <span className="font-primary italic drop-shadow-sm bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Configuration</span>
                     </h1>
                     <p className="text-base md:text-lg text-text-secondary max-w-xl mx-auto leading-relaxed">
-                        Choose your AI provider. Keys are stored in your browser and synced to the Esillio backend.
+                        Choose your AI provider. Secrets stay on the backend so the browser never carries provider keys.
                     </p>
                 </div>
 
@@ -221,9 +201,9 @@ export default function Settings() {
                                 <label className="text-sm font-medium text-text-primary uppercase tracking-wider">
                                     {providerCfg.keyLabel}
                                 </label>
-                                {apiKey && (
+                                {keyPresent && !apiKey && (
                                     <span className="flex items-center gap-1 text-xs text-green-400 font-medium">
-                                        • Present
+                                        • Key on file
                                     </span>
                                 )}
                             </div>

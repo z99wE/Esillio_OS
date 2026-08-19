@@ -51,14 +51,6 @@ export default function Esiwell() {
     const [mode, setMode] = useState('orchestrate'); // 'orchestrate' | 'chat'
     const [chatMessages, setChatMessages] = useState([]);
 
-    const hasApiKey = () => {
-        const activeProvider = localStorage.getItem("esillio_active_provider") || "openai";
-        return !!localStorage.getItem(`esillio_key_${activeProvider}`) ||
-            !!localStorage.getItem("esillio_openai_key") ||
-            !!localStorage.getItem("esillio_gemini_key") ||
-            !!localStorage.getItem("esillio_local_url");
-    };
-
     const ORCHESTRATOR_SYSTEM_PROMPT = `You are an advanced health orchestration AI for Esillio with strict prompt injection guardrails. You orchestrate 3 specialised wellness agents:
 
 - EsiDiet: Nutrition, diet planning, food choices, hydration
@@ -85,22 +77,17 @@ RULES:
                 setNote('');
 
                 let reply = '';
-                if (hasApiKey()) {
-                    const res = await apiClient.post('/esiwell/chat', {
-                        message: userMsg.text,
-                        patient_context: patientContextStr,
-                        patient_id: currentPatientId,
-                    }).catch(() => null);
+                const res = await apiClient.post('/esiwell/chat', {
+                    message: userMsg.text,
+                    patient_context: patientContextStr,
+                    patient_id: currentPatientId,
+                }).catch(() => null);
 
-                    if (res?.data?.ai_response) {
-                        reply = res.data.ai_response;
-                    } else if (res?.data?.summary) {
-                        reply = res.data.summary;
-                    } else {
-                        reply = "I couldn't get a response from the AI. Please check your Settings and ensure a valid API key is configured.";
-                    }
+                if (res?.data?.ai_response) {
+                    reply = res.data.ai_response;
+                } else if (res?.data?.summary) {
+                    reply = res.data.summary;
                 } else {
-                    // Demo fallback for chat
                     await new Promise(resolve => setTimeout(resolve, 1500));
                     reply = `Based on ${demoPatient.name}'s health timeline, here is my response to your question:\n\n${note.trim()}\n\nYour timeline shows ${timelineEvents.length} health events. To get a real AI-powered answer grounded in your actual documents, please add an API key in Settings.`;
                 }
@@ -111,15 +98,12 @@ RULES:
             }
 
             // Multi-agent orchestration mode
-            let response = null;
-            if (hasApiKey()) {
-                response = await apiClient.post('/esiwell/compile', {
-                    text: note,
-                    system_prompt: ORCHESTRATOR_SYSTEM_PROMPT,
-                    patient_context: patientContextStr,
-                    patient_id: currentPatientId,
-                }).catch(() => null);
-            }
+            const response = await apiClient.post('/esiwell/compile', {
+                text: note,
+                system_prompt: ORCHESTRATOR_SYSTEM_PROMPT,
+                patient_context: patientContextStr,
+                patient_id: currentPatientId,
+            }).catch(() => null);
 
             if (response?.data?.agent_responses) {
                 setResult(response.data.agent_responses);

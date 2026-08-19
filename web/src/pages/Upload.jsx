@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { useDropzone } from "react-dropzone";
 import { useHealth } from "../context/HealthContext";
-import { uploadDocument } from "../api/upload";
+import apiClient from "../api/client";
 import { demoFiles } from "../utils/dummyData";
 
 export default function Upload() {
@@ -103,24 +103,16 @@ Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating curr
                 formData.append("file", csvFile);
                 formData.append("patient_id", currentPatientId);
 
-                const res = await fetch((import.meta.env.VITE_API_URL || "http://localhost:8000") + "/upload/csv", {
-                    method: "POST",
+                const res = await apiClient.post("/upload/csv", formData, {
                     headers: {
-                        "X-OpenAI-Key": localStorage.getItem("esillio_openai_key") || "",
-                        "X-Gemini-Key": localStorage.getItem("esillio_gemini_key") || "",
-                        "Authorization": `Bearer ${localStorage.getItem("esillio_token") || "guest-token-123"}`
+                        "Content-Type": "multipart/form-data",
                     },
-                    body: formData
                 });
-
-                if (!res.ok) {
-                    throw new Error("CSV Upload failed: " + res.statusText);
-                }
 
                 setSuccess(true);
                 await fetchTimeline();
             } catch(err) {
-                setLocalError(err.message || "Failed to upload CSV");
+                setLocalError(err.response?.data?.detail || err.message || "Failed to upload CSV");
             } finally {
                 setIsUploading(false);
             }
@@ -153,20 +145,11 @@ Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating curr
             formData.append("file", uploadPayload);
             formData.append("patient_id", currentPatientId);
 
-            const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
-            const res = await fetch(baseUrl + "/upload/", {
-                method: "POST",
+            await apiClient.post("/upload/", formData, {
                 headers: {
-                    "X-OpenAI-Key": localStorage.getItem("esillio_openai_key") || "",
-                    "X-Gemini-Key": localStorage.getItem("esillio_gemini_key") || "",
-                    "Authorization": `Bearer ${localStorage.getItem("esillio_token") || "guest-token-123"}`
+                    "Content-Type": "multipart/form-data",
                 },
-                body: formData
             });
-
-            if (!res.ok) {
-                throw new Error("Upload failed: " + res.statusText);
-            }
 
             setProgressText("Processing clinical data...");
             await new Promise(resolve => setTimeout(resolve, 1500)); 
@@ -177,7 +160,7 @@ Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating curr
             await fetchTimeline();
         } catch (err) {
             // FALLBACK: If the real backend is offline, we simulate success for Demo Mode
-            if (err.message === "Failed to fetch" || err.message.includes("Network Error") || err.name === "TypeError") {
+            if (err.message === "Failed to fetch" || err.message?.includes("Network Error") || err.name === "TypeError") {
                 console.warn("Backend offline. Simulating successful upload for Demo Mode.");
                 setProgressText("Simulating clinical processing...");
                 await new Promise(resolve => setTimeout(resolve, 1500));
@@ -187,7 +170,7 @@ Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating curr
                 setTextNote("");
             } else {
                 // If it's a real error (not just offline), display it
-                setLocalError(err.message || "Failed to upload document");
+                setLocalError(err.response?.data?.detail || err.message || "Failed to upload document");
             }
         } finally {
             setIsUploading(false);

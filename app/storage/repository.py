@@ -14,7 +14,7 @@ class SettingsRepository:
 
     ##########################################################
 
-    def get_settings(self):
+    def get_settings(self, include_sensitive: bool = False):
 
         cursor = database.connection.cursor()
 
@@ -32,16 +32,23 @@ class SettingsRepository:
 
         row = cursor.fetchone()
 
-        if row is None:
+        default_settings = {
+            "provider": "local",
+            "base_url": "https://api.openai.com/v1",
+            "api_key": "",
+            "model": "gpt-4.1",
+        }
 
-            return {
-                "provider": "local",
-                "base_url": "https://api.openai.com/v1",
-                "api_key": "",
-                "model": "gpt-4.1",
-            }
+        settings = default_settings if row is None else dict(row)
+        if include_sensitive:
+            return settings
 
-        return dict(row)
+        return {
+            "provider": settings["provider"],
+            "base_url": settings["base_url"],
+            "model": settings["model"],
+            "key_present": bool(settings.get("api_key")),
+        }
 
     ##########################################################
 
@@ -51,7 +58,14 @@ class SettingsRepository:
         base_url: str,
         api_key: str,
         model: str,
+        retain_existing_key: bool = False,
     ):
+        current = self.get_settings(include_sensitive=True)
+        effective_key = current.get("api_key", "")
+        if api_key.strip():
+            effective_key = api_key.strip()
+        elif not retain_existing_key:
+            effective_key = ""
 
         cursor = database.connection.cursor()
 
@@ -68,7 +82,7 @@ class SettingsRepository:
             (
                 provider,
                 base_url,
-                api_key,
+                effective_key,
                 model,
             ),
         )
