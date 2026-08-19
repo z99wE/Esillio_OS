@@ -38,9 +38,9 @@ Important note:
 ## Phase 2: Supabase Core Migration
 Purpose: move from local-only persistence to a real multi-tenant backend.
 
-- [ ] Replace SQLite as the primary production datastore with Supabase Postgres
-- [ ] Move authentication to Supabase Auth
-- [ ] Add Row Level Security for per-patient access control
+- [x] Replace SQLite as the primary production datastore with Supabase Postgres
+- [x] Move authentication to Supabase Auth
+- [x] Add Row Level Security for per-patient access control
 - [ ] Move document storage to Supabase Storage
 - [ ] Add audit logs for all sensitive actions
 - [ ] Add patient, clinician, and admin role separation

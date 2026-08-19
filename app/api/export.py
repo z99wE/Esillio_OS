@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from typing import Dict, Any, List
 
-from app.storage.database import database
+from app.storage.supabase_client import supabase
 from app.api.auth import get_current_user
 
 router = APIRouter(prefix="/api/export", tags=["export"])
@@ -13,18 +13,20 @@ async def get_clinician_summary(
     """
     Generate a structured clinician summary from the patient's timeline.
     """
-    cursor = database.connection.cursor()
+    if not supabase:
+        return {"error": "Supabase not configured"}
+
+    response = supabase.table("health_events").select("*").eq("patient_id", user_id).order("timestamp", desc=True).execute()
+    events = response.data
     
-    # Fetch all events ordered by date descending
-    cursor.execute(
-        """
-        SELECT * FROM health_events 
-        WHERE patient_id = ? 
-        ORDER BY timestamp DESC
-        """,
-        (user_id,)
+    # Log export action
+    from app.services.audit_service import audit_service
+    audit_service.log_action(
+        user_id=user_id,
+        action="export_clinician_summary",
+        resource_type="health_events",
+        metadata={"total_events": len(events)}
     )
-    events = cursor.fetchall()
     
     # Categorize events
     medications = []
@@ -33,7 +35,7 @@ async def get_clinician_summary(
     timeline = []
     
     for row in events:
-        event = dict(row)
+        event = row
         cat = (event.get("category") or "").lower()
         
         # Build timeline
@@ -58,7 +60,7 @@ async def get_clinician_summary(
     return {
         "patient": {
             "id": user_id,
-            "email": "user@esillio.com"
+            "email": "user@esillio.com" # Could fetch from supabase auth
         },
         "summary": {
             "active_conditions": top_conditions,

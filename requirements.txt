@@ -13,3 +13,5 @@ Pillow
 openai
 transformers
 safetensors
+supabase
+psycopg2-binary

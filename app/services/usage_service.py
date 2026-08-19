@@ -3,7 +3,7 @@ import uuid
 from datetime import datetime, timezone
 
 from app.config import settings
-from app.storage.database import database
+from app.storage.supabase_client import supabase
 
 
 class UsageService:
@@ -20,17 +20,19 @@ class UsageService:
         return settings.FREE_DAILY_CREDITS
 
     def get_usage(self, user_id: str) -> dict:
-        cursor = database.connection.cursor()
-        cursor.execute(
-            """
-            SELECT COALESCE(SUM(credits), 0) AS credits_used
-            FROM usage_ledger
-            WHERE user_id = ? AND usage_date = ? AND status = 'consumed'
-            """,
-            (user_id, self._today()),
-        )
-        row = cursor.fetchone()
-        credits_used = int(row["credits_used"] if row else 0)
+        if not supabase:
+            limit = self._limit_for(user_id)
+            return {
+                "user_id": user_id,
+                "usage_date": self._today(),
+                "credits_used": 0,
+                "credits_remaining": limit,
+                "daily_limit": limit,
+            }
+            
+        response = supabase.table("usage_ledger").select("credits").eq("user_id", user_id).eq("usage_date", self._today()).eq("status", "consumed").execute()
+        
+        credits_used = sum(row.get("credits", 0) for row in response.data)
         limit = self._limit_for(user_id)
         return {
             "user_id": user_id,
@@ -53,29 +55,22 @@ class UsageService:
                 "usage": usage,
             }
 
-        cursor = database.connection.cursor()
-        cursor.execute(
-            """
-            INSERT INTO usage_ledger
-            (id, user_id, action, credits, status, metadata, created_at, usage_date)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                str(uuid.uuid4()),
-                user_id,
-                action,
-                credits,
-                "consumed",
-                json.dumps(metadata or {}, ensure_ascii=False),
-                datetime.now(timezone.utc).isoformat(),
-                self._today(),
-            ),
-        )
-        database.connection.commit()
+        if supabase:
+            data = {
+                "id": str(uuid.uuid4()),
+                "user_id": user_id,
+                "action": action,
+                "credits": credits,
+                "status": "consumed",
+                "metadata": metadata or {},
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "usage_date": self._today()
+            }
+            supabase.table("usage_ledger").insert(data).execute()
+            
         return {
             "ok": True,
             "usage": self.get_usage(user_id),
         }
-
 
 usage_service = UsageService()

@@ -14,12 +14,25 @@ class TrendDetector:
         if len(biomarkers) < 2:
             return {"status": "insufficient_data", "trends": []}
 
+        import re
+        def sanitize_input(text: str) -> str:
+            # Remove any special instruction characters or potential prompt injection markers
+            if not isinstance(text, str):
+                text = str(text)
+            sanitized = re.sub(r'[<>{}\[\]|`\\]', '', text)
+            # Remove system prompt override phrases
+            phrases_to_block = ["ignore previous", "system prompt", "you are now", "forget all instructions"]
+            for phrase in phrases_to_block:
+                if phrase in sanitized.lower():
+                    sanitized = "[REDACTED_DUE_TO_SECURITY_POLICY]"
+            return sanitized.strip()
+
         # Format biomarkers for the LLM
         history_text = "Patient Biomarker History:\n"
         for b in sorted(biomarkers, key=lambda x: x.get("timestamp", "")):
-            date = b.get("timestamp", "Unknown Date")
-            title = b.get("title", "Unknown Marker")
-            value = b.get("value", "Unknown Value")
+            date = sanitize_input(b.get("timestamp", "Unknown Date"))
+            title = sanitize_input(b.get("title", "Unknown Marker"))
+            value = sanitize_input(b.get("value", "Unknown Value"))
             history_text += f"- {date}: {title} = {value}\n"
 
         prompt = f"""

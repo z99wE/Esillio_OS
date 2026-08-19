@@ -6,7 +6,6 @@ class Settings(BaseSettings):
     APP_NAME: str = "Esillio OS"
     VERSION: str = "0.1.0"
     DESCRIPTION: str = "The Persistence Layer for Human Biology"
-    DATABASE_URL: str = "sqlite:///./data/esillio.db"
     JWT_SECRET_KEY: str = Field(default="dev-only-change-me")
     JWT_ACCESS_TOKEN_EXPIRE_DAYS: int = 7
     ENABLE_GUEST_LOGIN: bool = True

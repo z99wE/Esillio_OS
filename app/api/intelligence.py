@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from typing import Dict, Any
 
-from app.storage.database import database
+from app.storage.supabase_client import supabase
 from app.api.auth import get_current_user
 from app.runtime.trend_detector import TrendDetector
 
@@ -15,20 +15,12 @@ async def get_health_trends(
     """
     Analyze biomarker history to detect deteriorating trends.
     """
-    cursor = database.connection.cursor()
-    
+    if not supabase:
+        return {"trends": []}
+
     # Fetch biomarkers
-    cursor.execute(
-        """
-        SELECT * FROM health_events 
-        WHERE patient_id = ? AND category = 'biomarker'
-        ORDER BY timestamp ASC
-        """,
-        (user_id,)
-    )
-    events = cursor.fetchall()
-    
-    biomarkers = [dict(row) for row in events]
+    response = supabase.table("health_events").select("*").eq("patient_id", user_id).eq("category", "biomarker").order("timestamp", desc=False).execute()
+    biomarkers = response.data
     
     # Analyze trends
     result = trend_detector.analyze_trends(biomarkers)

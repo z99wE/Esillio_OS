@@ -39,7 +39,17 @@ async def upload_document(
     ########################################################
 
     try:
-        document = service.save_document(file)
+        document = service.save_document(file, patient_id)
+        
+        # Log the upload action
+        from app.services.audit_service import audit_service
+        audit_service.log_action(
+            user_id=patient_id,
+            action="upload_document",
+            resource_type="document",
+            resource_id=document["filename"],
+            metadata={"filename": file.filename, "size": getattr(file, "size", 0)}
+        )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
 
@@ -159,29 +169,19 @@ async def upload_csv(
             if any(term in key_lower for term in ["sleep", "steps", "activity", "calorie"]):
                 category = "lifestyle"
                 
-            # Use repository to insert raw event if we had a proper model
-            from app.storage.database import database
-            cursor = database.connection.cursor()
-            
-            # Simple insert
-            cursor.execute(
-                """
-                INSERT INTO health_events (id, patient_id, title, category, description, value, timestamp)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    str(uuid.uuid4()),
-                    patient_id,
-                    key.replace("_", " ").title(),
-                    category,
-                    f"Imported from {file.filename}",
-                    str(value),
-                    date_str
-                )
-            )
-            events_created += 1
-            
-    database.connection.commit()
+            # Use supabase to insert raw event
+            from app.storage.supabase_client import supabase
+            if supabase:
+                data = {
+                    "id": str(uuid.uuid4()),
+                    "patient_id": patient_id,
+                    "title": key.replace("_", " ").title(),
+                    "category": category,
+                    "description": f"Imported from {file.filename}. Value: {str(value)}",
+                    "timestamp": date_str
+                }
+                supabase.table("health_events").insert(data).execute()
+                events_created += 1
     
     return {
         "status": "success",

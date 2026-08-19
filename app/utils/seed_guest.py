@@ -1,28 +1,21 @@
 import datetime
 import uuid
-from app.storage.database import database
+from app.storage.supabase_client import supabase
 
-def seed_guest_if_needed(guest_id: str = "usr-demo-1"):
-    cursor = database.connection.cursor()
-    
-    # Check if guest user exists
-    cursor.execute("SELECT id FROM users WHERE id = ?", (guest_id,))
-    if cursor.fetchone():
+def seed_guest_if_needed(guest_id: str = "00000000-0000-4000-a000-000000000000"):
+    if not supabase:
         return
         
-    # Create guest user
-    now = datetime.datetime.utcnow().isoformat()
-    # using a dummy hash for guest
-    dummy_hash = "guest_dummy_hash"
-    cursor.execute(
-        "INSERT INTO users (id, email, password_hash, created_at) VALUES (?, ?, ?, ?)",
-        (guest_id, "guest@esillio.local", dummy_hash, now)
-    )
-    
+    # Check if guest user already has events
+    response = supabase.table("health_events").select("id").eq("patient_id", guest_id).limit(1).execute()
+    if response.data and len(response.data) > 0:
+        return
+        
     # Seed dummy timeline events for guest
     events = [
         {
             "id": str(uuid.uuid4()),
+            "patient_id": guest_id,
             "title": "Annual Physical Checkup",
             "category": "Visit",
             "source": "Clinic A",
@@ -32,6 +25,7 @@ def seed_guest_if_needed(guest_id: str = "usr-demo-1"):
         },
         {
             "id": str(uuid.uuid4()),
+            "patient_id": guest_id,
             "title": "Lab Results: Blood Panel",
             "category": "Lab",
             "source": "LabCorp",
@@ -41,6 +35,7 @@ def seed_guest_if_needed(guest_id: str = "usr-demo-1"):
         },
         {
             "id": str(uuid.uuid4()),
+            "patient_id": guest_id,
             "title": "Prescription Refill",
             "category": "Medication",
             "source": "Pharmacy",
@@ -50,14 +45,5 @@ def seed_guest_if_needed(guest_id: str = "usr-demo-1"):
         }
     ]
     
-    for e in events:
-        cursor.execute(
-            """
-            INSERT INTO health_events 
-            (id, patient_id, title, category, source, description, timestamp, confidence)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (e["id"], guest_id, e["title"], e["category"], e["source"], e["description"], e["timestamp"], e["confidence"])
-        )
-        
-    database.connection.commit()
+    supabase.table("health_events").insert(events).execute()
+

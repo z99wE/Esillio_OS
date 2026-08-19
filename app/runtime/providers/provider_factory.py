@@ -9,7 +9,6 @@ from app.runtime.config import (
 from app.runtime.providers.local_provider import LocalProvider
 from app.runtime.providers.key_pool_provider import KeyPoolProvider
 from app.runtime.providers.openai_provider import OpenAIProvider
-from app.storage.repository import settings_repository
 
 import logging
 
@@ -37,39 +36,19 @@ def create_provider():
     model = OPENAI_MODEL or "gpt-4o"
 
     ##########################################################
-    # Override with user settings from SQLite (highest priority)
+    # Override with user settings from Supabase (highest priority)
     ##########################################################
 
     try:
-        settings = settings_repository.get_settings(include_sensitive=True)
-
-        db_provider = settings.get("provider", "").strip()
-        db_base_url = settings.get("base_url", "").strip()
-        db_api_key = settings.get("api_key", "").strip()
-        db_model = settings.get("model", "").strip()
-
-        # Only use DB values that are real (not placeholder stubs)
-        if db_provider and db_provider != "local":
-            provider = db_provider
-        if db_base_url:
-            base_url = db_base_url
-        if db_api_key and db_api_key not in ("dummy_key", "dummy_key_to_bypass_init", ""):
-            api_key = db_api_key
-        if db_model:
-            model = db_model
-
-        # Local provider: use it regardless of key
-        if db_provider == "local":
-            provider = "local"
-
-        logger.info(
-            "AI provider loaded from DB: provider=%s model=%s base_url=%s key_present=%s",
-            provider, model, base_url, bool(api_key),
-        )
+        from app.storage.supabase_client import supabase
+        if supabase:
+            # We don't have a settings table yet, but we will rely on env vars for now.
+            # You can implement Supabase settings retrieval here later if needed.
+            pass
 
     except Exception:
         logger.warning(
-            "Failed to load AI settings from DB — using env-var defaults.",
+            "Failed to load AI settings from Supabase — using env-var defaults.",
             exc_info=True,
         )
 

@@ -5,47 +5,67 @@ const AuthContext = createContext({});
 
 export const useAuth = () => useContext(AuthContext);
 
+import { supabase } from '../supabaseClient';
+
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Fetch current session on mount from localStorage
-        const token = localStorage.getItem('esillio_token');
-        const storedUser = localStorage.getItem('esillio_user');
-        
-        if (token && storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-        setLoading(false);
+        // Fetch current session from Supabase
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session?.user) {
+                const sessionUser = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    patient_id: session.user.id
+                };
+                setUser(sessionUser);
+                localStorage.setItem('esillio_token', session.access_token);
+            }
+            setLoading(false);
+        });
+
+        // Listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            if (session?.user) {
+                const sessionUser = {
+                    id: session.user.id,
+                    email: session.user.email,
+                    patient_id: session.user.id
+                };
+                setUser(sessionUser);
+                localStorage.setItem('esillio_token', session.access_token);
+            } else {
+                setUser(null);
+                localStorage.removeItem('esillio_token');
+            }
+        });
+
+        return () => subscription.unsubscribe();
     }, []);
 
     const login = async (email, password) => {
-        const response = await apiClient.post('/api/auth/login', { email, password });
-        const { token, user } = response.data;
-        localStorage.setItem('esillio_token', token);
-        localStorage.setItem('esillio_user', JSON.stringify(user));
-        setUser(user);
+        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        return data;
     };
 
     const register = async (email, password) => {
-        const response = await apiClient.post('/api/auth/register', { email, password });
-        const { token, user } = response.data;
-        localStorage.setItem('esillio_token', token);
-        localStorage.setItem('esillio_user', JSON.stringify(user));
-        setUser(user);
+        const { data, error } = await supabase.auth.signUp({ email, password });
+        if (error) throw error;
+        return data;
     };
 
-    const signOut = () => {
-        localStorage.removeItem('esillio_token');
-        localStorage.removeItem('esillio_user');
+    const signOut = async () => {
+        await supabase.auth.signOut();
         setUser(null);
+        localStorage.removeItem('esillio_token');
     };
 
     const loginAsGuest = () => {
-        const guestUser = { id: 'usr-demo-1', email: 'guest@esillio.com', patient_id: 'usr-demo-1' };
+        const guestUser = { id: '00000000-0000-4000-a000-000000000000', email: 'guest@esillio.com', patient_id: '00000000-0000-4000-a000-000000000000' };
         localStorage.setItem('esillio_token', 'guest-token-123');
-        localStorage.setItem('esillio_user', JSON.stringify(guestUser));
         setUser(guestUser);
     };
 

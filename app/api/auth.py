@@ -1,99 +1,76 @@
 import jwt
-import datetime
-import uuid
-import bcrypt
-from fastapi import APIRouter, Request, HTTPException, Security
+import logging
+from fastapi import APIRouter, HTTPException, Depends, Security
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from pydantic import BaseModel
-from app.storage.database import database
 from app.config import settings
+from app.storage.supabase_client import supabase
 
 auth_router = APIRouter()
 security = HTTPBearer()
 
+# For Supabase, the JWT_SECRET_KEY must be the JWT secret found in the Supabase Dashboard
 SECRET_KEY = settings.JWT_SECRET_KEY
-TOKEN_EXPIRE_DAYS = settings.JWT_ACCESS_TOKEN_EXPIRE_DAYS
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Security(security)):
     token = credentials.credentials
     
-    # Handle the hardcoded guest session
+    # Handle the hardcoded guest session for demo purposes
     if token == "guest-token-123" and settings.ENABLE_GUEST_LOGIN:
-        user_id = "usr-demo-1"
+        user_id = "00000000-0000-4000-a000-000000000000" # Valid UUID for Postgres
         try:
             from app.utils.seed_guest import seed_guest_if_needed
             seed_guest_if_needed(user_id)
         except Exception as e:
-            print(f"Error seeding guest: {e}")
+            logging.error(f"Error seeding guest: {e}")
         return user_id
 
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        # Supabase JWT decoding
+        # We can decode locally to save a network request to Supabase Auth servers.
+        # Ensure JWT_SECRET_KEY in .env matches the Supabase project JWT secret.
+        payload = jwt.decode(
+            token, 
+            SECRET_KEY, 
+            algorithms=["HS256"], 
+            options={"verify_aud": False} # Supabase aud is 'authenticated' usually, but safe to ignore if signature matches the strong secret
+        )
         user_id = payload.get("sub")
         if not user_id:
-            raise HTTPException(status_code=401, detail="Invalid token payload")
+            raise HTTPException(status_code=401, detail="Invalid token payload: no subject")
         return user_id
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token has expired")
     except Exception as e:
-        raise HTTPException(status_code=401, detail=f"Invalid authentication credentials: {str(e)}")
+        # Alternatively, we could do a server-side check with Supabase:
+        # response = supabase.auth.get_user(token)
+        # return response.user.id
+        raise HTTPException(status_code=401, detail=f"Invalid authentication credentials")
 
-class AuthRequest(BaseModel):
-    email: str
-    password: str
+def require_role(allowed_roles: list[str]):
+    def role_checker(user_id: str = Depends(get_current_user)):
+        if user_id == "00000000-0000-4000-a000-000000000000":
+            role = "patient" # Guests are patients
+        else:
+            if not supabase:
+                raise HTTPException(status_code=500, detail="Supabase not configured")
+            
+            try:
+                res = supabase.table("profiles").select("role").eq("id", user_id).execute()
+                if not res.data:
+                    role = "patient"
+                else:
+                    role = res.data[0].get("role", "patient")
+            except Exception as e:
+                logging.error(f"Failed to fetch user role: {e}")
+                role = "patient" # fallback
+                
+        if role not in allowed_roles:
+            raise HTTPException(status_code=403, detail="Insufficient permissions")
+        return user_id
+    return role_checker
 
-def hash_password(password: str) -> str:
-    return bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt()).decode("utf-8")
 
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    try:
-        return bcrypt.checkpw(
-            plain_password.encode("utf-8"),
-            hashed_password.encode("utf-8"),
-        )
-    except Exception:
-        return False
-
-
-def create_token(user_id: str) -> str:
-    return jwt.encode(
-        {
-            "sub": user_id,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(days=TOKEN_EXPIRE_DAYS),
-        },
-        SECRET_KEY,
-        algorithm="HS256",
-    )
-
-@auth_router.post("/register")
-def register(request: AuthRequest):
-    email = request.email.strip().lower()
-    cursor = database.connection.cursor()
-    cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
-    if cursor.fetchone():
-        raise HTTPException(status_code=400, detail="Email already registered")
-    
-    user_id = str(uuid.uuid4())
-    hashed_pw = hash_password(request.password)
-    now = datetime.datetime.utcnow().isoformat()
-    
-    cursor.execute(
-        "INSERT INTO users (id, email, password_hash, created_at) VALUES (?, ?, ?, ?)",
-        (user_id, email, hashed_pw, now)
-    )
-    database.connection.commit()
-    
-    token = create_token(user_id)
-    return {"token": token, "user": {"id": user_id, "email": email}}
-
-@auth_router.post("/login")
-def login(request: AuthRequest):
-    email = request.email.strip().lower()
-    cursor = database.connection.cursor()
-    cursor.execute("SELECT id, password_hash FROM users WHERE email = ?", (email,))
-    row = cursor.fetchone()
-    if not row or not verify_password(request.password, row["password_hash"]):
-        raise HTTPException(status_code=401, detail="Invalid email or password")
-    
-    user_id = row["id"]
-    token = create_token(user_id)
-    return {"token": token, "user": {"id": user_id, "email": email}}
+# Note: /register and /login endpoints have been removed.
+# In a frontend-first Supabase architecture, the frontend uses @supabase/supabase-js 
+# to authenticate directly with Supabase Auth. The frontend then passes the access_token
+# (JWT) in the Authorization header to this backend for verification.

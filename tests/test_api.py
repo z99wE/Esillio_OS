@@ -23,7 +23,7 @@ def test_export_clinician_unauthorized():
 
 def test_export_clinician_authorized():
     # Mock the dependency to simulate a logged-in user
-    app.dependency_overrides[get_current_user] = lambda: "demo_patient_id"
+    app.dependency_overrides[get_current_user] = lambda: "00000000-0000-0000-0000-000000000000"
     response = client.get("/api/export/clinician")
     assert response.status_code == 200
     data = response.json()
