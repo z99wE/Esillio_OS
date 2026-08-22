@@ -87,10 +87,10 @@ export default function ActionPlan() {
 
     const getTypeColor = (type) => {
         switch (type) {
-            case 'appointment_prep': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-            case 'lab_followup': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
-            case 'medication_change': return 'bg-orange-500/20 text-orange-400 border-orange-500/30';
-            case 'ask_doctor': return 'bg-green-500/20 text-green-400 border-green-500/30';
+            case 'appointment_prep': return 'bg-accent-blue/20 text-accent-blue border-accent-blue/30';
+            case 'lab_followup': return 'bg-accent-purple/20 text-accent-purple border-accent-purple/30';
+            case 'medication_change': return 'bg-brand-primary/20 text-brand-primary border-brand-primary/30';
+            case 'ask_doctor': return 'bg-accent-green/20 text-accent-green border-accent-green/30';
             default: return 'bg-white/10 text-white/70 border-white/20';
         }
     };
@@ -126,7 +126,7 @@ export default function ActionPlan() {
             )}
 
             {error && (
-                <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-red-400 text-center mb-8 font-primary">
+                <div className="bg-brand-primary/10 border border-brand-primary/20 rounded-xl p-6 text-brand-primary text-center mb-8 font-primary">
                     <p>{error}</p>
                 </div>
             )}
@@ -220,7 +220,7 @@ export default function ActionPlan() {
                                 {completedTasks.map(task => (
                                     <div key={task.id} className="p-4 rounded-xl bg-white/5 border border-white/5 flex items-center justify-between opacity-60 hover:opacity-100 transition-opacity">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center shrink-0">
+                                            <div className="w-6 h-6 rounded-full bg-accent-green/20 text-accent-green flex items-center justify-center shrink-0">
                                                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                                 </svg>

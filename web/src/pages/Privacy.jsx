@@ -11,42 +11,42 @@ export default function Privacy() {
                         Privacy <span className="font-primary italic drop-shadow-sm font-light bg-gradient-to-r from-[#FF4533] via-[#8A2BE2] to-[#00E5FF] bg-clip-text text-transparent">Policy</span>
                     </h1>
                     <blockquote className="text-xl md:text-2xl text-text-muted font-medium italic border-l-4 border-brand-primary pl-6 mx-auto max-w-3xl text-left font-primary">
-                        "Esillio OS is a local-first biological operating system that stores 100% of your data on your device, ensuring total privacy and bypassing standard cloud vulnerabilities."
+                        "At Esillio OS, your privacy is a foundational engineering principle. We store your data securely in the cloud with strict access controls, ensuring compliance with global data protection standards."
                     </blockquote>
                 </div>
 
                 <GlassCard className="p-8 md:p-12 space-y-8">
                     <section className="space-y-4">
-                        <h2 className="text-2xl font-bold text-white">1. Local-First Architecture</h2>
+                        <h2 className="text-2xl font-bold text-white">1. Secure Cloud Architecture</h2>
                         <p className="text-text-muted leading-relaxed">
-                            Unlike traditional cloud-based health applications, Esillio OS operates entirely locally on your device. We do not transmit, process, or store your personal data, biometric information, or chat histories on our servers. Your data belongs to you, and it remains physically on your machine within an encrypted SQLite/ChromaDB instance.
+                            Esillio OS securely stores your health data in our dedicated cloud infrastructure (powered by Supabase). All data is encrypted in transit using TLS/SSL and encrypted at rest. We utilize strict Row-Level Security (RLS) to guarantee that only you, and the individuals you explicitly authorize, can access your timeline and insights.
                         </p>
                     </section>
 
                     <section className="space-y-4">
-                        <h2 className="text-2xl font-bold text-white">2. No HIPAA Liability (Bring Your Own AI)</h2>
+                        <h2 className="text-2xl font-bold text-white">2. DPDP Act (India) Compliance</h2>
                         <p className="text-text-muted leading-relaxed">
-                            Because Esillio OS is a local software tool that you install on your own hardware, we do not function as a "Covered Entity" or a "Business Associate" under the Health Insurance Portability and Accountability Act (HIPAA). We never have access to your Protected Health Information (PHI). By utilizing the "Bring Your Own AI" (BYOAI) architecture, any data processed by external LLM APIs (such as OpenAI or Google) is subject to the terms of your direct relationship with those providers. Esillio OS simply acts as a local conduit.
+                            In compliance with the Digital Personal Data Protection Act (DPDP), Esillio acts as a Data Fiduciary. By using our services, you grant explicit consent for us to process your health records strictly for the purpose of generating health timelines and AI insights. You have the right to access, correct, and completely erase your personal data at any time via your account settings. We do not sell your personal data to third parties.
                         </p>
                     </section>
 
                     <section className="space-y-4">
-                        <h2 className="text-2xl font-bold text-white">3. Data Collection by Esillio</h2>
+                        <h2 className="text-2xl font-bold text-white">3. GDPR (Europe) Compliance</h2>
                         <p className="text-text-muted leading-relaxed">
-                            The only data we collect pertains to your account subscription and billing for the SaaS platform itself (e.g., your email address for account recovery, and payment processing tokens handled securely via our payment partners). We do not collect telemetric data regarding the contents of your health timeline or insights.
+                            For users in the European Union, we adhere to the General Data Protection Regulation (GDPR). You possess the "Right to be Forgotten" (complete data erasure) and the right to Data Portability (exporting your timeline in a machine-readable format). We process your health data under the legal basis of explicit consent and legitimate interest in providing the core application functionality.
                         </p>
                     </section>
 
                     <section className="space-y-4">
-                        <h2 className="text-2xl font-bold text-white">4. Your Responsibilities</h2>
+                        <h2 className="text-2xl font-bold text-white">4. Artificial Intelligence & Third Parties</h2>
                         <p className="text-text-muted leading-relaxed">
-                            Since your data is stored locally, you are solely responsible for the physical security of your device, the strength of your device passwords, and maintaining adequate backups of your local Esillio database.
+                            To generate intelligent insights, Esillio OS securely transmits isolated segments of your data to specialized Large Language Model (LLM) APIs (e.g., OpenAI). Your data is utilized strictly for inference to provide you with insights and is not used to train public foundation models.
                         </p>
                     </section>
                 </GlassCard>
 
                 <div className="text-center">
-                    <p className="text-text-muted text-sm">Last Updated: July 2026</p>
+                    <p className="text-text-muted text-sm">Last Updated: August 2026</p>
                 </div>
             </div>
         </div>

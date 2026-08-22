@@ -50,28 +50,34 @@ export default function Auth() {
                 <GlassCard className="relative p-8 md:p-12 border-white/10 w-full z-10">
                     <form onSubmit={handleAuth} className="flex flex-col gap-5 relative z-10">
                         <div>
-                            <label className="text-sm font-semibold text-text-secondary mb-1.5 block">Email</label>
+                            <label htmlFor="emailInput" className="text-sm font-semibold text-text-secondary mb-1.5 block">Email</label>
                             <input
+                                id="emailInput"
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-text focus:outline-none focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 transition-all"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-text focus:outline-none focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/50 transition-all"
                                 required
+                                aria-required="true"
+                                autoComplete="email"
                             />
                         </div>
                         <div>
-                            <label className="text-sm font-semibold text-text-secondary mb-1.5 block">Password</label>
+                            <label htmlFor="passwordInput" className="text-sm font-semibold text-text-secondary mb-1.5 block">Password</label>
                             <input
+                                id="passwordInput"
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-text focus:outline-none focus:border-brand-primary/50 focus:ring-1 focus:ring-brand-primary/50 transition-all"
+                                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3.5 text-text focus:outline-none focus:border-brand-primary/50 focus:ring-2 focus:ring-brand-primary/50 transition-all"
                                 required
+                                aria-required="true"
+                                autoComplete={isSignUp ? "new-password" : "current-password"}
                             />
                         </div>
 
                         {error && (
-                            <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-3 rounded-xl text-sm text-center">
+                            <div role="alert" aria-live="assertive" className="bg-red-500/10 border border-red-500/50 text-red-400 p-3 rounded-xl text-sm text-center">
                                 {error}
                             </div>
                         )}

@@ -26,34 +26,44 @@ class TimelineAutomationService:
         
         # 1. Detect if it's a diagnosis and generate an education card
         if event_type == "diagnosis":
-            # Check if there's already an active card for this diagnosis
-            res = supabase.table("education_cards").select("id").eq("patient_id", user_id).eq("title", f"Understanding {title}").neq("status", "stale").execute()
-            if not res.data:
-                # No active card, generate one
-                # Note: This is an internal generation, typically triggered by an automated system clinician
-                runtime = get_runtime()
+            # Check if there's already any card for this diagnosis (active or stale) to determine version
+            existing_cards_res = supabase.table("education_cards").select("id, version, status").eq("patient_id", user_id).eq("title", f"Understanding {title}").order("version", desc=True).limit(1).execute()
+            
+            new_version = 1
+            previous_version_id = None
+            
+            if existing_cards_res.data:
+                latest_card = existing_cards_res.data[0]
+                new_version = latest_card.get("version", 0) + 1
+                previous_version_id = latest_card.get("id")
                 
-                prompt = f"""
-                Create a patient education card for the condition: {title}.
-                Make it easy to understand, empathetic, and actionable. Format as Markdown.
-                """
+                # Mark old active cards as stale if they are not already
+                if latest_card.get("status") != "stale":
+                    supabase.table("education_cards").update({"status": "stale"}).eq("patient_id", user_id).eq("title", f"Understanding {title}").neq("status", "stale").execute()
+            
+            # Note: This is an internal generation, typically triggered by an automated system clinician
+            runtime = get_runtime()
+            
+            prompt = f"""
+            Create a patient education card for the condition: {title}.
+            Make it easy to understand, empathetic, and actionable. Format as Markdown.
+            """
+            
+            try:
+                response = runtime.provider.invoke(prompt)
+                content_md = response.content if hasattr(response, 'content') else str(response)
                 
-                try:
-                    response = runtime.provider.invoke(prompt)
-                    content_md = response.content if hasattr(response, 'content') else str(response)
-                    
-                    supabase.table("education_cards").insert({
-                        "patient_id": user_id,
-                        # Using system clinician ID or null
-                        "title": f"Understanding {title}",
-                        "content_md": content_md,
-                        "status": "draft"
-                    }).execute()
-                except Exception as e:
-                    logger.error(f"Failed to auto-generate education card: {e}")
-            else:
-                # We have a new diagnosis event, but an old card exists. Mark old cards as stale.
-                supabase.table("education_cards").update({"status": "stale"}).eq("patient_id", user_id).eq("title", f"Understanding {title}").neq("status", "stale").execute()
+                supabase.table("education_cards").insert({
+                    "patient_id": user_id,
+                    # Using system clinician ID or null
+                    "title": f"Understanding {title}",
+                    "content_md": content_md,
+                    "status": "draft",
+                    "version": new_version,
+                    "previous_version_id": previous_version_id
+                }).execute()
+            except Exception as e:
+                logger.error(f"Failed to auto-generate education card: {e}")
 
         # 2. Check for stale tasks
         # If this event is a lab result, we might supersede an existing 'lab_followup' task.

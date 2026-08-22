@@ -26,14 +26,14 @@ export default function Disclaimer() {
                     <section className="space-y-4">
                         <h2 className="text-2xl font-bold text-white">2. AI Hallucination & Accuracy Risk</h2>
                         <p className="text-text-muted leading-relaxed">
-                            Esillio OS leverages advanced Large Language Models (LLMs) to parse your health data. While these models are highly capable, they can hallucinate (generate false information), misinterpret context, or omit critical details from your medical records. You must verify any AI-generated insight against your original medical documents before acting upon it.
+                            Esillio OS leverages advanced Large Language Models (LLMs) via cloud APIs to parse your health data. While these models are highly capable, they can hallucinate (generate false information), misinterpret context, or omit critical details from your medical records. You must verify any AI-generated insight against your original medical documents before acting upon it.
                         </p>
                     </section>
 
                     <section className="space-y-4">
                         <h2 className="text-2xl font-bold text-white">3. Limitation of Liability</h2>
                         <p className="text-text-muted leading-relaxed">
-                            The developers of Esillio OS are not liable for any misinterpretation of data, missed diagnoses, health complications, or damages resulting from the use of this software. By using Esillio OS, you acknowledge that you are using a self-hosted intelligence tool entirely at your own risk.
+                            The developers of Esillio OS are not liable for any misinterpretation of data, missed diagnoses, health complications, or damages resulting from the use of this software. By using Esillio OS, you acknowledge that you are using a cloud-hosted AI-augmented intelligence tool entirely at your own risk.
                         </p>
                     </section>
 

@@ -11,6 +11,8 @@ import {
     addAdminKey,
     deactivateAdminKey,
 } from "../api/settings";
+import { useZeroAI } from "../hooks/useZeroAI";
+import { Link } from "react-router-dom";
 
 const PROVIDER_CONFIGS = {
     openai: {
@@ -193,6 +195,7 @@ export default function Settings() {
     const [successMessage, setSuccessMessage] = useState("");
     const [testResult, setTestResult] = useState(null);
     const [refreshUsage, setRefreshUsage] = useState(0);
+    const { isZeroAI, toggleZeroAI } = useZeroAI();
     const byokRef = useRef(null);
 
     const providerCfg = PROVIDER_CONFIGS[activeProvider] || PROVIDER_CONFIGS.openai;
@@ -316,12 +319,45 @@ export default function Settings() {
                     </p>
                 </div>
 
-                {/* ── Usage Card ─────────────────────────────────────────── */}
-                <GlassCard className="flex flex-col gap-5 w-full backdrop-blur-[50px]">
+                {/* ── Privacy Controls ───────────────────────────────────── */}
+                <GlassCard className="flex flex-col gap-5 w-full backdrop-blur-[50px] border-accent-blue/20">
                     <div className="flex items-center justify-between">
-                        <h2 className="text-base font-semibold text-text-primary uppercase tracking-wider text-sm">
-                            Today's Usage
-                        </h2>
+                        <div className="flex flex-col">
+                            <h2 className="text-base font-semibold text-text-primary uppercase tracking-wider text-sm flex items-center gap-2">
+                                Privacy Controls
+                                {isZeroAI && (
+                                    <span className="text-[10px] text-accent-blue border border-accent-blue/20 bg-accent-blue/10 px-2 py-0.5 rounded-full font-medium uppercase tracking-wider">
+                                        Zero-AI Active
+                                    </span>
+                                )}
+                            </h2>
+                            <p className="text-sm text-text-secondary mt-1 max-w-lg leading-relaxed">
+                                Enable Zero-AI Mode to completely disable all Large Language Model (LLM) features. Your data will only be used for secure storage and timeline visualization.
+                            </p>
+                            <Link to="/ice" className="text-sm text-brand-primary hover:text-brand-primary/80 mt-2 font-medium self-start flex items-center gap-1">
+                                View Emergency ICE Profile
+                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                                </svg>
+                            </Link>
+                        </div>
+                        <button
+                            onClick={() => toggleZeroAI(!isZeroAI)}
+                            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${isZeroAI ? 'bg-accent-blue' : 'bg-white/10'}`}
+                        >
+                            <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isZeroAI ? 'translate-x-6' : 'translate-x-1'}`} />
+                        </button>
+                    </div>
+                </GlassCard>
+
+                {/* ── Usage Card ─────────────────────────────────────────── */}
+                {!isZeroAI && (
+                    <>
+                        <GlassCard className="flex flex-col gap-5 w-full backdrop-blur-[50px]">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-base font-semibold text-text-primary uppercase tracking-wider text-sm">
+                                    Today's Usage
+                                </h2>
                         {byokActive && (
                             <span className="text-xs text-green-400 border border-green-500/20 bg-green-500/10 px-2.5 py-1 rounded-full font-medium">
                                 BYOK Active
@@ -418,12 +454,8 @@ export default function Settings() {
 
                         {/* Provider-specific hints */}
                         {activeProvider === "gemini" && (
-                            <div className="rounded-md bg-blue-900/20 border border-blue-500/20 px-4 py-3 text-sm text-blue-300 leading-relaxed">
-                                Get a free API key at{" "}
-                                <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="underline text-blue-400">
-                                    aistudio.google.com/apikey
-                                </a>
-                                . Uses the OpenAI-compatible endpoint — no extra setup needed.
+                            <div className="rounded-md bg-accent-blue/10 border border-accent-blue/20 px-4 py-3 text-sm text-accent-blue leading-relaxed">
+                                By providing your own key, you pay Google directly for API usage. Your key is stored securely in your browser's local storage and is never saved on our servers. You can revoke it anytime at the <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="underline text-accent-blue hover:text-white transition-colors">Google AI Studio</a>.
                             </div>
                         )}
                         {activeProvider === "lightning" && (
@@ -483,10 +515,159 @@ export default function Settings() {
                         </div>
                     </GlassCard>
                 </div>
+                </>)}
 
                 {/* ── Admin Key Pool (admin only) ─────────────────────────── */}
                 {isAdmin && <AdminKeyPool />}
+
+                {/* ── Data & Account ─────────────────────────────────────── */}
+                <DataAccountSection />
             </div>
         </main>
+    );
+}
+
+/* ─────────────────────────────────────────────────────────────────────────── */
+/*  Data & Account Panel                                                        */
+/* ─────────────────────────────────────────────────────────────────────────── */
+function DataAccountSection() {
+    const [isExporting, setIsExporting] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteConfirm, setDeleteConfirm] = useState("");
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [msg, setMsg] = useState("");
+    const [msgType, setMsgType] = useState("success");
+
+    const handleExport = async () => {
+        setIsExporting(true);
+        setMsg("");
+        try {
+            const token = localStorage.getItem("access_token");
+            const res = await fetch("/api/export/my-data", {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!res.ok) throw new Error("Export failed");
+            const blob = await res.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "esillio-my-data.json";
+            a.click();
+            window.URL.revokeObjectURL(url);
+            setMsg("Your data has been downloaded.");
+            setMsgType("success");
+        } catch {
+            setMsg("Export failed. Please try again.");
+            setMsgType("error");
+        } finally {
+            setIsExporting(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (deleteConfirm !== "DELETE") return;
+        setIsDeleting(true);
+        setMsg("");
+        try {
+            const token = localStorage.getItem("access_token");
+            const res = await fetch("/api/export/delete-account", {
+                method: "DELETE",
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (!res.ok) throw new Error("Deletion failed");
+            setMsg("Your account and all data have been permanently deleted. You will be signed out.");
+            setMsgType("success");
+            setShowDeleteModal(false);
+            setTimeout(() => {
+                localStorage.clear();
+                window.location.href = "/auth";
+            }, 3000);
+        } catch {
+            setMsg("Account deletion failed. Please contact support@esillio.com.");
+            setMsgType("error");
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    return (
+        <GlassCard className="p-6 md:p-8 border-white/10 flex flex-col gap-6">
+            <div>
+                <h2 className="text-lg font-semibold text-text-primary">Data & Account</h2>
+                <p className="text-sm text-text-secondary mt-1">Manage your personal data in compliance with GDPR / HIPAA.</p>
+            </div>
+
+            {msg && (
+                <div className={`text-sm font-medium px-4 py-3 rounded-lg border ${msgType === "success" ? "text-green-400 bg-green-500/10 border-green-500/30" : "text-red-400 bg-red-500/10 border-red-500/30"}`}>
+                    {msg}
+                </div>
+            )}
+
+            <div className="flex flex-col sm:flex-row gap-4 pt-2 border-t border-white/10">
+                {/* Export */}
+                <div className="flex-1 bg-white/[0.03] border border-white/10 rounded-xl p-5 flex flex-col gap-3">
+                    <div>
+                        <p className="text-sm font-semibold text-text-primary">Export My Data</p>
+                        <p className="text-xs text-text-secondary mt-1">Download a full copy of all health events, tasks, and profile data as JSON.</p>
+                    </div>
+                    <button
+                        onClick={handleExport}
+                        disabled={isExporting}
+                        className="mt-auto w-full py-2.5 border border-white/20 text-text-primary text-sm font-medium rounded-lg hover:bg-white/5 transition-colors disabled:opacity-50"
+                    >
+                        {isExporting ? "Exporting…" : "⬇ Download My Data"}
+                    </button>
+                </div>
+
+                {/* Delete */}
+                <div className="flex-1 bg-red-500/[0.04] border border-red-500/20 rounded-xl p-5 flex flex-col gap-3">
+                    <div>
+                        <p className="text-sm font-semibold text-red-400">Delete Account</p>
+                        <p className="text-xs text-text-secondary mt-1">Permanently erase your account and all associated health data. This cannot be undone.</p>
+                    </div>
+                    <button
+                        onClick={() => setShowDeleteModal(true)}
+                        className="mt-auto w-full py-2.5 border border-red-500/40 text-red-400 text-sm font-medium rounded-lg hover:bg-red-500/10 transition-colors"
+                    >
+                        Delete My Account
+                    </button>
+                </div>
+            </div>
+
+            {/* Delete confirmation modal */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+                    <div className="bg-[#111] border border-red-500/30 rounded-2xl p-8 max-w-md w-full flex flex-col gap-5 shadow-2xl">
+                        <h3 className="text-xl font-bold text-red-400">⚠ Permanent Account Deletion</h3>
+                        <p className="text-sm text-text-secondary">This will immediately and irreversibly delete your profile, health events, tasks, and all shared data. There is no recovery.</p>
+                        <div>
+                            <label className="block text-xs font-medium text-text-secondary mb-2">Type <span className="text-red-400 font-mono">DELETE</span> to confirm</label>
+                            <input
+                                type="text"
+                                value={deleteConfirm}
+                                onChange={e => setDeleteConfirm(e.target.value)}
+                                placeholder="DELETE"
+                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500/50"
+                            />
+                        </div>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => { setShowDeleteModal(false); setDeleteConfirm(""); }}
+                                className="flex-1 py-2.5 border border-white/20 text-text-secondary text-sm rounded-lg hover:bg-white/5 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleDelete}
+                                disabled={deleteConfirm !== "DELETE" || isDeleting}
+                                className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg transition-colors disabled:opacity-40"
+                            >
+                                {isDeleting ? "Deleting…" : "Permanently Delete"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </GlassCard>
     );
 }

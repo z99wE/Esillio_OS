@@ -34,9 +34,12 @@ export default function Landing() {
                         <br/><br/>
                         EsiWell transforms fragmented health information into a living, searchable, AI-powered health memory, helping people preserve context, uncover patterns, and make better health decisions over time.
                     </p>
-                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-4 w-full sm:w-auto px-4">
-                        <Link to="/upload" className="w-full sm:w-auto text-center inline-flex items-center justify-center px-6 py-4 rounded-sm font-medium text-base bg-brand-primary text-text-primary hover:bg-[#d63a2b] transition-all duration-300 transform hover:-translate-y-0.5 shadow-cta z-[10] border border-white/20">
+                    <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-4 w-full sm:w-auto px-4 relative z-[10]">
+                        <Link to="/upload" className="w-full sm:w-auto text-center inline-flex items-center justify-center px-6 py-4 rounded-xl font-medium text-base bg-gradient-to-r from-brand-primary to-accent-purple text-white hover:opacity-90 transition-all hover:scale-[1.02] shadow-[0_0_20px_rgba(255,69,51,0.3)]">
                             Start Building My Health Memory
+                        </Link>
+                        <Link to="/waitlist" className="w-full sm:w-auto text-center inline-flex items-center justify-center px-6 py-4 rounded-xl font-medium text-base bg-white/5 text-white border border-white/10 hover:bg-white/10 transition-all hover:scale-[1.02]">
+                            Join the Waitlist
                         </Link>
                     </div>
                 </div>
@@ -230,6 +233,11 @@ export default function Landing() {
                         <p className="mb-2">Healthcare should remember.</p>
                         <p className="mb-2">Built with privacy first.</p>
                         <p>Bring Your Own AI.</p>
+                        <div className="mt-6 flex gap-4">
+                            <Link to="/faq" className="text-text-secondary hover:text-white transition-colors">FAQ</Link>
+                            <Link to="/waitlist" className="text-text-secondary hover:text-white transition-colors">Waitlist</Link>
+                            <Link to="/auth" className="text-text-secondary hover:text-white transition-colors">Login</Link>
+                        </div>
                     </div>
                     
                     <div className="flex-1 space-y-6">

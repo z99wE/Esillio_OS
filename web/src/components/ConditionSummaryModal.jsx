@@ -28,32 +28,32 @@ export default function ConditionSummaryModal({ condition, onClose }) {
     if (!condition) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <div className="bg-neutral-surface border border-white/10 rounded-2xl w-full max-w-3xl max-h-[85vh] overflow-hidden shadow-2xl flex flex-col relative">
                 {/* Header */}
                 <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
-                    <h2 className="text-2xl font-medium text-white flex items-center gap-2">
-                        <span className="w-3 h-3 rounded-full bg-brand-primary shadow-[0_0_10px_rgba(255,69,51,0.5)]" />
+                    <h2 id="modal-title" className="text-2xl font-medium text-white flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-brand-primary shadow-[0_0_10px_rgba(255,69,51,0.5)]" aria-hidden="true" />
                         Summary: {condition}
                     </h2>
-                    <button onClick={onClose} className="text-text-secondary hover:text-white transition-colors p-2">
-                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <button onClick={onClose} aria-label="Close dialog" className="text-text-secondary hover:text-white transition-colors p-2">
+                        <svg className="w-6 h-6" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                     </button>
                 </div>
 
                 {/* Content */}
-                <div className="p-6 overflow-y-auto flex-1">
+                <div className="p-6 overflow-y-auto flex-1" aria-live="polite" aria-busy={loading}>
                     {loading && (
                         <div className="flex flex-col items-center justify-center py-12 gap-4">
-                            <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" />
+                            <div className="w-10 h-10 border-4 border-brand-primary border-t-transparent rounded-full animate-spin" aria-hidden="true" />
                             <p className="text-text-secondary">Analyzing medical history for {condition}...</p>
                         </div>
                     )}
                     
                     {error && (
-                        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl">
+                        <div role="alert" className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl">
                             {error}
                         </div>
                     )}

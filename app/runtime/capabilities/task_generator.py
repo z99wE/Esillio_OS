@@ -1,5 +1,4 @@
 from typing import Any, Dict, List
-from app.runtime.capabilities.base import BaseCapability
 from pydantic import BaseModel, Field
 
 class FollowUpTask(BaseModel):
@@ -11,10 +10,11 @@ class FollowUpTask(BaseModel):
 class TaskGeneratorOutput(BaseModel):
     tasks: List[FollowUpTask] = Field(description="The list of actionable follow-up tasks extracted from the clinical record")
 
-class TaskGeneratorCapability(BaseModel, BaseCapability):
+class TaskGeneratorCapability(BaseModel):
     """
     LLM capability to extract actionable patient follow-up tasks from a clinical timeline record.
     """
+    llm: Any = None
 
     def run(self, clinical_text: str) -> Dict[str, Any]:
         prompt = f"""
@@ -34,8 +34,12 @@ class TaskGeneratorCapability(BaseModel, BaseCapability):
         Clinical Text:
         {clinical_text}
         """
-        response = self.llm.invoke(
-            prompt,
-            response_model=TaskGeneratorOutput
-        )
-        return response.model_dump()
+        
+        # Replace this with the appropriate call if llm is set, or default
+        if hasattr(self, 'llm') and self.llm:
+            response = self.llm.invoke(
+                prompt,
+                response_model=TaskGeneratorOutput
+            )
+            return response.model_dump()
+        return {}

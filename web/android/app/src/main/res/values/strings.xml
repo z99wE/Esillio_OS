@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Esillio</string>
+    <string name="title_activity_main">Esillio</string>
+    <string name="package_name">com.esillio.app</string>
+    <string name="custom_url_scheme">com.esillio.app</string>
+</resources>

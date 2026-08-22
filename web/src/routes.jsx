@@ -15,17 +15,30 @@ import EducationCards from "./pages/EducationCards";
 import ClinicianQueue from "./pages/ClinicianQueue";
 import Sharing from "./pages/Sharing";
 import SharedPatientView from "./pages/SharedPatientView";
+import Waitlist from "./pages/Waitlist";
+import Onboarding from "./pages/Onboarding";
+import FAQ from "./pages/FAQ";
+import DemoFlow from "./pages/DemoFlow";
+import AdminConsole from "./pages/AdminConsole";
+import ClinicianWorkspace from "./pages/ClinicianWorkspace";
 
 import Auth from "./pages/Auth";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Privacy from "./pages/Privacy";
 import Disclaimer from "./pages/Disclaimer";
 import Legal from "./pages/Legal";
+import ICEProfile from "./pages/ICEProfile";
+import MedicationReminders from "./pages/MedicationReminders";
+import DoctorPacket from "./pages/DoctorPacket";
 
 export default function AppRoutes() {
     return (
         <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/waitlist" element={<Waitlist />} />
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/demo" element={<DemoFlow />} />
             <Route path="/auth" element={<Auth />} />
             <Route
                 path="/health"
@@ -60,6 +73,14 @@ export default function AppRoutes() {
                 element={<ProtectedRoute><ClinicianQueue /></ProtectedRoute>}
             />
             <Route
+                path="/clinician-workspace"
+                element={<ProtectedRoute><ClinicianWorkspace /></ProtectedRoute>}
+            />
+            <Route
+                path="/admin"
+                element={<ProtectedRoute><AdminConsole /></ProtectedRoute>}
+            />
+            <Route
                 path="/sharing"
                 element={<ProtectedRoute><Sharing /></ProtectedRoute>}
             />
@@ -70,6 +91,18 @@ export default function AppRoutes() {
             <Route
                 path="/settings"
                 element={<Settings />}
+            />
+            <Route
+                path="/ice/:id?"
+                element={<ICEProfile />}
+            />
+            <Route
+                path="/med-reminders"
+                element={<MedicationReminders />}
+            />
+            <Route
+                path="/doctor-packet"
+                element={<DoctorPacket />}
             />
             <Route
                 path="/connect"

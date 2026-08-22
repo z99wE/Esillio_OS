@@ -1,11 +1,14 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router-dom";
 import { useHealth } from "../context/HealthContext";
+import { useZeroAI } from "../hooks/useZeroAI";
 import apiClient from "../api/client";
-import { demoFiles } from "../utils/dummyData";
 
 export default function Upload() {
     const { fetchTimeline, currentPatientId } = useHealth();
+    const { isZeroAI } = useZeroAI();
+    const navigate = useNavigate();
     const [file, setFile] = useState(null);
     const [textNote, setTextNote] = useState("");
     const [isRecording, setIsRecording] = useState(false);
@@ -14,6 +17,12 @@ export default function Upload() {
     const [progressText, setProgressText] = useState("");
     const [success, setSuccess] = useState(false);
     const [localError, setLocalError] = useState(null);
+
+    useEffect(() => {
+        if (isZeroAI) {
+            navigate("/timeline", { replace: true });
+        }
+    }, [isZeroAI, navigate]);
 
     const toggleRecording = () => {
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {

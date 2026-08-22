@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { getUsage } from "../api/settings";
+import { useNetworkState } from "../hooks/useNetworkState";
+import { useZeroAI } from "../hooks/useZeroAI";
 
 const links = [
     { title: "Timeline", path: "/timeline" },
     { title: "Upload", path: "/upload" },
     { title: "Intelligence", path: "/health" },
     { title: "EsiWell", path: "/esiwell" },
+    { title: "Emergency ICE", path: "/ice" },
+    { title: "Med Reminders", path: "/med-reminders" },
+    { title: "Doctor Packet", path: "/doctor-packet" },
     { title: "Connect", path: "/connect" },
     { title: "Sharing", path: "/sharing" },
     { title: "Queue", path: "/clinician-queue" },
@@ -15,6 +20,23 @@ const links = [
 export default function Navbar() {
     const [usagePct, setUsagePct] = useState(0);
     const [byokActive, setByokActive] = useState(false);
+    const { isOnline } = useNetworkState();
+    const isOffline = !isOnline;
+    const { isZeroAI } = useZeroAI();
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+    useEffect(() => {
+        const handleBeforeInstallPrompt = (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            setDeferredPrompt(e);
+        };
+
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    }, []);
+
 
     useEffect(() => {
         const load = async () => {
@@ -38,9 +60,19 @@ export default function Navbar() {
                     <NavLink to="/" className="flex items-center gap-2">
                         <span className="font-primary text-xl tracking-wide text-text-primary">Esillio</span>
                     </NavLink>
+                    {isOffline && (
+                        <span className="text-xs px-2 py-1 bg-red-900/50 text-red-200 rounded-sm border border-red-800/50">
+                            Offline Mode
+                        </span>
+                    )}
 
                     <ul className="flex flex-col md:flex-row items-center gap-0.5 mt-6 md:mt-0 md:ml-2">
-                        {links.map((link) => (
+                        {links.filter(link => {
+                            if (isZeroAI && (link.path === "/health" || link.path === "/clinician-queue" || link.path === "/esiwell" || link.path === "/upload")) {
+                                return false;
+                            }
+                            return true;
+                        }).map((link) => (
                             <li key={link.path}>
                                 <NavLink
                                     to={link.path}
@@ -88,6 +120,21 @@ export default function Navbar() {
                             </NavLink>
                         </li>
                     </ul>
+
+                    {deferredPrompt && (
+                        <button
+                            onClick={async () => {
+                                deferredPrompt.prompt();
+                                const { outcome } = await deferredPrompt.userChoice;
+                                if (outcome === 'accepted') {
+                                    setDeferredPrompt(null);
+                                }
+                            }}
+                            className="mt-4 md:mt-0 md:ml-2 bg-text-primary text-bg-primary font-medium text-sm px-4 py-2 rounded-sm hover:bg-gray-300 transition-colors w-full md:w-auto text-center"
+                        >
+                            Install App
+                        </button>
+                    )}
 
                     <NavLink
                         to="/upload"

@@ -3,10 +3,14 @@ import { useHealth } from "../context/HealthContext";
 import GlassCard from "../components/GlassCard";
 import { dummyPatients } from "../utils/dummyData";
 import ConditionSummaryModal from "../components/ConditionSummaryModal";
+import { useZeroAI } from "../hooks/useZeroAI";
+import ReminderManager from "../components/ReminderManager";
+import { generateDoctorPacket } from "../utils/pdfGenerator";
 
 export default function Timeline() {
-    const { timeline, isLoading, error, currentPatientId, setCurrentPatientId } = useHealth();
+    const { timeline, memory, isLoading, error, currentPatientId, setCurrentPatientId } = useHealth();
     const [selectedCondition, setSelectedCondition] = useState(null);
+    const { isZeroAI } = useZeroAI();
 
     const isDemoPatient = currentPatientId.startsWith('usr-demo-');
     const demoPatient = dummyPatients.find(p => p.id === currentPatientId) || dummyPatients[0];
@@ -55,15 +59,26 @@ export default function Timeline() {
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
                     {timelineEvents.length > 0 && (
-                        <button 
-                            onClick={exportToMarkdown}
-                            className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-brand-primary text-sm font-semibold hover:bg-white/10 transition-colors flex items-center gap-2"
-                        >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                            </svg>
-                            Export to Markdown
-                        </button>
+                        <>
+                            <button 
+                                onClick={exportToMarkdown}
+                                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-brand-primary text-sm font-semibold hover:bg-white/10 transition-colors flex items-center gap-2"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                </svg>
+                                Export to Markdown
+                            </button>
+                            <button 
+                                onClick={() => generateDoctorPacket(memory, timelineEvents)}
+                                className="px-4 py-2 rounded-xl bg-accent-blue/10 border border-accent-blue/20 text-accent-blue text-sm font-semibold hover:bg-accent-blue/20 transition-colors flex items-center gap-2"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Generate Doctor Packet
+                            </button>
+                        </>
                     )}
                 </div>
             </div>
@@ -109,6 +124,10 @@ export default function Timeline() {
                 })}
             </div>
 
+            <div className="mb-12">
+                <ReminderManager />
+            </div>
+
             {isLoading && (
                 <div className="bg-neutral-surface border border-border-primary rounded-lg p-12 text-center">
                     <div className="w-8 h-8 border-4 border-brand-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
@@ -152,7 +171,7 @@ export default function Timeline() {
                                         <span className="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-text/70 backdrop-blur-md">
                                             {event.category || "Clinical Event"}
                                         </span>
-                                        {event.category?.toLowerCase() === "diagnosis" || event.category?.toLowerCase() === "condition" ? (
+                                        {(!isZeroAI && (event.category?.toLowerCase() === "diagnosis" || event.category?.toLowerCase() === "condition")) ? (
                                             <button 
                                                 onClick={() => setSelectedCondition(event.title)}
                                                 className="text-xs font-semibold uppercase tracking-wider px-3 py-1.5 rounded-full bg-brand-primary/10 border border-brand-primary/30 text-brand-primary hover:bg-brand-primary/20 transition-colors backdrop-blur-md flex items-center gap-1"

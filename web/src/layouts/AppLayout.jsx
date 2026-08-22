@@ -1,6 +1,7 @@
 import { useLocation, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Background from "../components/Background";
+import { useNetworkState } from "../hooks/useNetworkState";
 
 // Routes that should NOT show the global Navbar or footer
 // (they manage their own full-page layout entirely)
@@ -17,6 +18,8 @@ const FULL_PAGE_ROUTES = [
 
 export default function AppLayout({ children }) {
     const location = useLocation();
+    const { isOnline } = useNetworkState();
+    const isOffline = !isOnline;
     const isBare = BARE_ROUTES.includes(location.pathname);
     const isFullPage = FULL_PAGE_ROUTES.includes(location.pathname) ||
         location.pathname.startsWith("/patient/");
@@ -38,6 +41,14 @@ export default function AppLayout({ children }) {
 
             <div className="relative z-10 flex flex-col flex-1">
                 <Navbar />
+
+                {isOffline && (
+                    <div className="bg-red-900/40 border-b border-red-500/30 text-center py-2 px-4 z-40 relative">
+                        <p className="text-red-200 text-sm font-medium">
+                            You are offline. Features like uploading documents and generating AI insights are unavailable.
+                        </p>
+                    </div>
+                )}
 
                 {isFullPage ? (
                     <div className="flex-1">
