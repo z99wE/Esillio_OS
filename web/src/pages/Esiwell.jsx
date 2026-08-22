@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useHealth } from "../context/HealthContext";
 import { dummyPatients, esiwellAgentResponses } from "../utils/dummyData";
 import apiClient from '../api/client';

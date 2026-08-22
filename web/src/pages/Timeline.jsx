@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import { useState } from "react";
 import { useHealth } from "../context/HealthContext";
 import GlassCard from "../components/GlassCard";
 import { dummyPatients } from "../utils/dummyData";

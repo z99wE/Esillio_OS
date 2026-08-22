@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useMotionValueEvent } from "framer-motion";
 
 export default function ParticleLogo({ scrollProgress }) {

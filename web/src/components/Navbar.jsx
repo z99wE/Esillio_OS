@@ -19,7 +19,7 @@ const links = [
 
 export default function Navbar() {
     const [usagePct, setUsagePct] = useState(0);
-    const [byokActive, setByokActive] = useState(false);
+    const [byokActive] = useState(false);
     const { isOnline } = useNetworkState();
     const isOffline = !isOnline;
     const { isZeroAI } = useZeroAI();

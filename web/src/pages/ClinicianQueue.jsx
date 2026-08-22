@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import client from "../api/client";
 import GlassCard from "../components/GlassCard";
 import ReactMarkdown from "react-markdown";

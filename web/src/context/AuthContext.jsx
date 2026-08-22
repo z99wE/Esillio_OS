@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import apiClient from '../api/client';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../supabaseClient';
 
 const AuthContext = createContext({});
@@ -15,7 +14,7 @@ export const AuthProvider = ({ children }) => {
         const fetchRole = async (userId) => {
             if (userId === '00000000-0000-4000-a000-000000000000') return 'patient';
             try {
-                const { data, error } = await supabase.from('profiles').select('role').eq('id', userId).single();
+                const { data } = await supabase.from('profiles').select('role').eq('id', userId).single();
                 if (data && data.role) return data.role;
             } catch (e) {
                 console.error("Failed to fetch role", e);

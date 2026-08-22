@@ -27,7 +27,7 @@ export function HealthProvider({ children }) {
                 setTimeline(res.data);
             }
             setError(null);
-        } catch (err) {
+        } catch {
             console.log("Backend unavailable or timeline fetch failed, falling back to dummy data.");
             const patient = dummyPatients.find(p => p.id === currentPatientId) || dummyPatients[0];
             setTimeline(patient.timeline || []);
@@ -48,7 +48,7 @@ export function HealthProvider({ children }) {
                 setMemory(res.data);
             }
             setError(null);
-        } catch (err) {
+        } catch {
             console.log("Backend unavailable or memory fetch failed, falling back to dummy data.");
             const patient = dummyPatients.find(p => p.id === currentPatientId) || dummyPatients[0];
             setMemory(patient);

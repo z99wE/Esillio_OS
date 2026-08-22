@@ -5,6 +5,12 @@ import { useHealth } from "../context/HealthContext";
 import { useZeroAI } from "../hooks/useZeroAI";
 import apiClient from "../api/client";
 
+const demoFiles = [
+    { id: 1, name: "Clinical Notes" },
+    { id: 2, name: "Lab Report" },
+    { id: 3, name: "Medication List" },
+];
+
 export default function Upload() {
     const { fetchTimeline, currentPatientId } = useHealth();
     const { isZeroAI } = useZeroAI();
@@ -112,7 +118,7 @@ Note: Patient reports feeling well. Blood pressure is 120/80. Re-evaluating curr
                 formData.append("file", csvFile);
                 formData.append("patient_id", currentPatientId);
 
-                const res = await apiClient.post("/upload/csv", formData, {
+                await apiClient.post("/upload/csv", formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },

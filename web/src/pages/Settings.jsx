@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import GlassCard from "../components/GlassCard";
 import DNABackground from "../components/DNABackground";
 import UsageMeter from "../components/UsageMeter";

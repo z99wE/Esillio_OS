@@ -7,7 +7,7 @@ import "./styles/globals.css";
 import App from "./App";
 import { registerSW } from "virtual:pwa-register";
 
-const updateSW = registerSW({
+registerSW({
   onNeedRefresh() {
     console.log("New content available, please refresh.");
   },

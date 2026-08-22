@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence, useMotionTemplate } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useScroll, useTransform, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import Landing from "./Landing";
 import Navbar from "../components/Navbar";
 import DNABackground from "../components/DNABackground";

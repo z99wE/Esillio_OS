@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useHealth } from "../context/HealthContext";
 import client from "../api/client";
 import GlassCard from "../components/GlassCard";
 
 export default function Documents() {
-    const { timeline, currentPatientId } = useHealth();
+    const { timeline } = useHealth();
     
     // Extract unique document IDs from timeline events
     const availableDocs = Array.from(new Set(

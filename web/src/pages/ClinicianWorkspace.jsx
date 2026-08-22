@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import GlassCard from "../components/GlassCard";
 import { Link } from "react-router-dom";
-import { Users, FileText, Settings, Activity, Calendar, CheckCircle, Bell } from "lucide-react";
+import { Users, FileText, Activity, Calendar, CheckCircle, Bell } from "lucide-react";
 
 export default function ClinicianWorkspace() {
     const [patients, setPatients] = useState([]);

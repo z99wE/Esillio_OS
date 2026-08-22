@@ -152,7 +152,6 @@ export default function MedicationReminders() {
                     ) : (
                         <ul className="space-y-4">
                             {reminders.map((r, i) => {
-                                const title = r.title || "Reminder";
                                 const body = r.body || r.text || "Medication";
                                 return (
                                     <li key={i} className="flex justify-between items-center bg-black/30 border border-white/5 p-4 rounded-lg">

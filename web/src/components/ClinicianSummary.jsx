@@ -1,4 +1,3 @@
-import React from 'react';
 
 const ClinicianSummary = ({ data }) => {
   if (!data || !data.summary) return null;
