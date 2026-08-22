@@ -1,4 +1,3 @@
-import os
 import uuid
 import mimetypes
 from app.config import settings
@@ -37,7 +36,7 @@ class DocumentService:
 
         try:
             # Upload to Supabase Storage
-            response = supabase.storage.from_(BUCKET_NAME).upload(
+            _ = supabase.storage.from_(BUCKET_NAME).upload(
                 file=file_bytes,
                 path=path_in_bucket,
                 file_options={"content-type": content_type}

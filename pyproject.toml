@@ -1,0 +1,6 @@
+[tool.bandit]
+exclude_dirs = ["tests", "builder"]
+skips = ["B101"]  # assert usage in tests
+
+[tool.bandit.assert_used]
+skips = ["tests/*"]

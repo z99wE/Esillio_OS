@@ -1,7 +1,6 @@
 import logging
 from typing import Any, Dict
 
-from app.memory import clinical_memory
 
 from app.esiwell.engine import get_esiwell
 

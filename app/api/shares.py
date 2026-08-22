@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
-from typing import List, Optional
+from typing import Optional
 from datetime import datetime, timedelta
-import uuid
 
 from app.api.auth import get_current_user
 from app.storage.supabase_client import supabase
@@ -105,5 +104,5 @@ async def revoke_patient_share(share_id: str, current_user: str = Depends(get_cu
 @router.delete("/document/{share_id}")
 async def revoke_document_share(share_id: str, current_user: str = Depends(get_current_user)):
     """Revokes a document share."""
-    res = supabase.table("document_shares").delete().eq("id", share_id).execute()
+    supabase.table("document_shares").delete().eq("id", share_id).execute()
     return {"status": "success"}

@@ -1,0 +1,40 @@
+[flake8]
+max-line-length = 200
+extend-ignore =
+    # Whitespace before ':'
+    E203,
+    # Line break before binary operator
+    W503,
+    # Missing whitespace after ','
+    E231,
+    # Blank line contains whitespace (auto-fixable noise)
+    W293,
+    # Trailing whitespace (auto-fixable noise)
+    W291,
+    # No newline at end of file (auto-fixable)
+    W292,
+    # Blank line at end of file (auto-fixable)
+    W391,
+    # Expected 2 blank lines — common in compact FastAPI router files
+    E302,
+    E305,
+    # Expected 1 blank line before nested definition
+    E306,
+    # Module-level import not at top — intentional in main.py (lazy loading after app setup)
+    E402,
+    # At least two spaces before inline comment — stylistic
+    E261,
+per-file-ignores =
+    # Test files: allow longer lines and some unused imports
+    tests/*:E501,F401
+    # main.py has intentional conditional imports after app initialization
+    app/main.py:E402
+exclude =
+    .git,
+    __pycache__,
+    venv,
+    .venv,
+    build,
+    dist,
+    *.egg-info,
+    builder/

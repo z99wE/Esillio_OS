@@ -9,7 +9,6 @@ from app.services.document_parser import DocumentParser
 from app.services.clinical_pipeline import pipeline
 from app.services.usage_service import usage_service
 
-from app.storage.repository import repository
 from app.api.auth import get_current_user
 
 router = APIRouter(

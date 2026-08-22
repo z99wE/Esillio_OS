@@ -1,5 +1,4 @@
 import logging
-import asyncio
 from app.storage.supabase_client import supabase
 from app.runtime.engine import get_runtime
 from typing import Dict, Any, List
@@ -22,12 +21,20 @@ class TimelineAutomationService:
         event_id = event.get("id")
         event_type = event.get("event_type")
         title = event.get("title", "")
-        clinical_data = event.get("clinical_data", {})
+        event.get("clinical_data", {})
         
         # 1. Detect if it's a diagnosis and generate an education card
         if event_type == "diagnosis":
             # Check if there's already any card for this diagnosis (active or stale) to determine version
-            existing_cards_res = supabase.table("education_cards").select("id, version, status").eq("patient_id", user_id).eq("title", f"Understanding {title}").order("version", desc=True).limit(1).execute()
+            existing_cards_res = (
+                supabase.table("education_cards")
+                .select("id, version, status")
+                .eq("patient_id", user_id)
+                .eq("title", f"Understanding {title}")
+                .order("version", desc=True)
+                .limit(1)
+                .execute()
+            )
             
             new_version = 1
             previous_version_id = None
@@ -76,8 +83,8 @@ class TimelineAutomationService:
                     # e.g., Task "Follow up on A1C" and Event "A1C Result"
                     # In a real system, we'd use an LLM or vector search to check relevance.
                     # For now, let's use a simple text overlap check
-                    task_title = task.get("title", "").lower()
-                    evt_title = title.lower()
+                    task.get("title", "").lower()
+                    title.lower()
                     
                     # If task is lab followup and we got a lab result
                     if task.get("type") == "lab_followup" and event_type == "lab_result":

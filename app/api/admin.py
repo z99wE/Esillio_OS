@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
-from typing import List, Dict
 from app.api.auth import get_current_user
 from app.storage.supabase_client import supabase
 

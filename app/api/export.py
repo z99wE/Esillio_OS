@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
-from typing import Dict, Any, List
-import json
+from typing import Dict, Any
 import datetime
 
 from app.storage.supabase_client import supabase
@@ -136,7 +135,7 @@ async def export_my_data(
         metadata={"tables": ["profiles", "health_events", "shares", "patient_tasks"]},
     )
 
-    content = json.dumps(export_payload, indent=2, default=str)
+    # export_payload is returned directly as JSON below
     return JSONResponse(
         content=export_payload,
         headers={

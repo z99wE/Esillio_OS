@@ -1,4 +1,3 @@
-import json
 import uuid
 from datetime import datetime, timezone
 
@@ -34,7 +33,14 @@ class UsageService:
                 "downgrade": False,
             }
             
-        response = supabase.table("usage_ledger").select("credits, cost_usd, prompt_tokens, completion_tokens").eq("user_id", user_id).eq("usage_date", self._today()).eq("status", "consumed").execute()
+        response = (
+            supabase.table("usage_ledger")
+            .select("credits, cost_usd, prompt_tokens, completion_tokens")
+            .eq("user_id", user_id)
+            .eq("usage_date", self._today())
+            .eq("status", "consumed")
+            .execute()
+        )
         
         credits_used = sum(row.get("credits", 0) for row in response.data)
         cost_usd = sum(row.get("cost_usd", 0.0) for row in response.data)
@@ -62,7 +68,12 @@ class UsageService:
         usage = self.get_usage(user_id)
         return usage["credits_used"] + credits <= usage["daily_limit"]
 
-    def consume(self, user_id: str, action: str, credits: int = 1, metadata: dict | None = None, cost_usd: float = 0.0, prompt_tokens: int = 0, completion_tokens: int = 0, byok_active: bool = False) -> dict:
+    def consume(
+        self, user_id: str, action: str, credits: int = 1,
+        metadata: dict | None = None, cost_usd: float = 0.0,
+        prompt_tokens: int = 0, completion_tokens: int = 0,
+        byok_active: bool = False
+    ) -> dict:
         usage = self.get_usage(user_id)
         if not byok_active and usage["credits_used"] + credits > usage["daily_limit"]:
             return {

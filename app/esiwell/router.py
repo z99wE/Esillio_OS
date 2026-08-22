@@ -1,6 +1,5 @@
 import logging
 from pathlib import Path
-from typing import Optional
 
 from fastapi import APIRouter, Depends
 from app.api.auth import get_current_user

@@ -41,7 +41,7 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Security(securi
             raise ValueError("No local secret")
     except jwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail="Token has expired")
-    except Exception as e:
+    except Exception:
         # Fallback: Server-side check with Supabase (handles ES256/RS256 and missing local secrets securely)
         if supabase:
             try:

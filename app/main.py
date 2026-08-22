@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.responses import Response
 import logging
 import time
 from fastapi.responses import JSONResponse
