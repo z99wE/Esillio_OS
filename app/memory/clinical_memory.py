@@ -99,7 +99,6 @@ def get_memory(patient_id: str = "default") -> ClinicalMemory:
     Returns the ClinicalMemory instance for the given patient_id.
     Creates a new one if it doesn't exist yet.
     """
-    global _memory_store
     if patient_id not in _memory_store:
         _memory_store[patient_id] = ClinicalMemory(patient_id=patient_id)
     return _memory_store[patient_id]
@@ -107,7 +106,6 @@ def get_memory(patient_id: str = "default") -> ClinicalMemory:
 
 def reset_memory(patient_id: str = "default") -> None:
     """Clears the in-memory state for a specific patient."""
-    global _memory_store
     if patient_id in _memory_store:
         _memory_store[patient_id].clear()
 
