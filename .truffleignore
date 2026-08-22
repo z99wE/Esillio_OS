@@ -1,0 +1,14 @@
+# TruffleHog ignore — these are local/gitignored files that legitimately
+# contain secrets and must never be committed (handled via .gitignore).
+.env
+.env.*
+*.local
+
+# Local scratch scripts
+apply_07.py
+
+# Dependency / cache dirs (no secrets, just noise)
+node_modules/
+.venv/
+.mypy_cache/
+__pycache__/

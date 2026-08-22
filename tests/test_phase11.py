@@ -5,6 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 from app.main import app
 from app.api.auth import get_current_user
+from tests.conftest import requires_supabase
 
 client = TestClient(app)
 
@@ -27,6 +28,7 @@ def test_export_my_data_unauthenticated():
     assert response.status_code == 401
 
 
+@requires_supabase
 def test_export_my_data_authenticated():
     """Authenticated request must return a 200 JSON payload with the required keys."""
     app.dependency_overrides[get_current_user] = _auth_override
@@ -43,6 +45,7 @@ def test_export_my_data_authenticated():
         app.dependency_overrides.clear()
 
 
+@requires_supabase
 def test_export_my_data_content_disposition():
     """Response must include a Content-Disposition header for download."""
     app.dependency_overrides[get_current_user] = _auth_override
@@ -63,6 +66,7 @@ def test_delete_account_unauthenticated():
     assert response.status_code == 401
 
 
+@requires_supabase
 def test_delete_account_authenticated():
     """
     Authenticated DELETE must complete without a 5xx error.
