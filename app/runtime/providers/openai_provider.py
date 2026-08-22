@@ -47,7 +47,7 @@ class OpenAIProvider(BaseProvider):
             "completion_tokens": response.usage.completion_tokens if response.usage else 0,
         }
 
-        return response.choices[0].message.content, usage
+        return response.choices[0].message.content or "", usage
 
     ########################################################
 
@@ -95,4 +95,4 @@ class OpenAIProvider(BaseProvider):
             "completion_tokens": response.usage.completion_tokens if response.usage else 0,
         }
 
-        return response.choices[0].message.content, usage
+        return response.choices[0].message.content or "", usage

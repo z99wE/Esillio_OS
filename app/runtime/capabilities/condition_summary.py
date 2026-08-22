@@ -16,7 +16,7 @@ class ConditionSummaryOutput(BaseModel):
     summary: str = Field(description="High-level narrative summary of the condition's progression")
     timeline: List[SummaryItem] = Field(description="Chronological summary of events")
 
-class ConditionSummaryCapability(BaseModel, BaseCapability):
+class ConditionSummaryCapability(BaseCapability):
     """
     LLM capability to synthesize a chronological summary with strict citation tracking.
     """

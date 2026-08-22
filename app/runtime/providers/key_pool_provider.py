@@ -3,11 +3,12 @@ import threading
 from typing import List
 
 from app.runtime.providers.openai_provider import OpenAIProvider
+from app.runtime.providers.base_provider import BaseProvider
 
 logger = logging.getLogger(__name__)
 
 
-class KeyPoolProvider:
+class KeyPoolProvider(BaseProvider):
     """
     Round-robin provider wrapper that falls back to the next key when one fails.
     """

@@ -4,10 +4,12 @@ from typing import Optional
 
 from transformers import pipeline
 
+from app.runtime.providers.base_provider import BaseProvider
+
 logger = logging.getLogger(__name__)
 
 
-class LocalProvider:
+class LocalProvider(BaseProvider):
     """
     Local Provider
     

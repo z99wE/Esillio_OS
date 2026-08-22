@@ -14,7 +14,7 @@ class TimelineService:
         else:
             self.openai_client = None
 
-    def _get_embedding(self, text: str) -> List[float]:
+    def _get_embedding(self, text: str) -> List[float] | None:
         if not self.openai_client:
             return None
         try:
@@ -155,7 +155,7 @@ class TimelineService:
             prov_res = supabase.table("insight_provenance").select("*").in_("event_id", event_ids).execute()
             
             # Map provenance back to events
-            prov_map = {}
+            prov_map: Dict[str, List[Any]] = {}
             for prov in prov_res.data:
                 if prov["event_id"] not in prov_map:
                     prov_map[prov["event_id"]] = []

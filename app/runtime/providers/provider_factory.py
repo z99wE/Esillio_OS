@@ -9,6 +9,7 @@ from app.runtime.config import (
 from app.runtime.providers.local_provider import LocalProvider
 from app.runtime.providers.key_pool_provider import KeyPoolProvider
 from app.runtime.providers.openai_provider import OpenAIProvider
+from app.runtime.providers.base_provider import BaseProvider
 
 import logging
 
@@ -130,7 +131,7 @@ def create_provider(user_id: str | None = None):
             provider_obj = providers[0]
         else:
             provider_obj = KeyPoolProvider(providers)
-        
+
         provider_obj.byok_active = False
         return provider_obj
 
@@ -146,15 +147,15 @@ def create_provider(user_id: str | None = None):
 # Stub provider — returns empty string, never crashes
 ##########################################################
 
-class _StubProvider:
-    def generate(self, prompt: str, **kwargs) -> tuple[str, dict]:
+class _StubProvider(BaseProvider):
+    def generate(self, prompt: str, max_new_tokens: int = 1024, **kwargs) -> tuple[str, dict]:
         return (
             "No AI provider is configured. "
             "Add an API key in Settings to enable AI features.",
             {"prompt_tokens": 0, "completion_tokens": 0}
         )
 
-    def analyze_image(self, image_path: str, prompt: str, **kwargs) -> tuple[str, dict]:
+    def analyze_image(self, image_path: str, prompt: str, max_new_tokens: int = 1024, **kwargs) -> tuple[str, dict]:
         return self.generate(prompt)
 
 

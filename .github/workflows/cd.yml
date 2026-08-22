@@ -43,9 +43,7 @@ jobs:
         run: |
           pip install flake8 mypy
           flake8 app/
-          # Type-check is advisory: app/ has pre-existing type annotations that
-          # are non-runtime issues; do not block the pipeline on them.
-          mypy app/ || true
+          mypy app/
           
       - name: Frontend Lint & Build
         run: |

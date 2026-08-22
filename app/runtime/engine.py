@@ -50,7 +50,7 @@ class AIRuntime:
         provider = create_provider(user_id=user_id)
         
         if user_id and not usage_service.can_consume(user_id, credits=credits, byok_active=provider.byok_active):
-            return "Error: Daily usage limit reached. Please configure BYOK or wait until tomorrow."
+            return "Error: Daily usage limit reached. Please configure BYOK or wait until tomorrow.", {}
 
         content, usage = provider.generate(
             prompt=prompt,
@@ -87,7 +87,7 @@ class AIRuntime:
         provider = create_provider(user_id=user_id)
         
         if user_id and not usage_service.can_consume(user_id, credits=credits, byok_active=provider.byok_active):
-            return "Error: Daily usage limit reached. Please configure BYOK or wait until tomorrow."
+            return "Error: Daily usage limit reached. Please configure BYOK or wait until tomorrow.", {}
 
         content, usage = provider.analyze_image(
             image_path=image,

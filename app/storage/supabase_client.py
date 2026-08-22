@@ -1,3 +1,4 @@
+from typing import cast
 from supabase import create_client, Client
 from app.config import settings
 
@@ -12,4 +13,4 @@ try:
     supabase: Client = get_supabase_client()
 except ValueError:
     # Allow the app to start without Supabase for tests or until configured
-    supabase = None
+    supabase = cast(Client, None)

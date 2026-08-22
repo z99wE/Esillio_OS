@@ -10,7 +10,7 @@ class DiffEvent(BaseModel):
 class ClinicalDiffOutput(BaseModel):
     diffs: List[DiffEvent] = Field(description="List of clinical differences")
 
-class ClinicalDiffCapability(BaseModel, BaseCapability):
+class ClinicalDiffCapability(BaseCapability):
     """
     LLM capability to generate structured clinical diffs between two sets of events.
     """

@@ -51,10 +51,10 @@ class ClinicalPipeline:
         self,
         document_text: str,
         patient_id: str = "anonymous",
-        document_id: str = None,
+        document_id: str | None = None,
     ) -> Dict[str, Any]:
 
-        results = {}
+        results: Dict[str, Any] = {}
 
         errors = []
 

@@ -62,8 +62,9 @@ _ALLOWED_ORIGINS = [
 ]
 
 import os
-if os.getenv("FRONTEND_URL"):
-    _ALLOWED_ORIGINS.append(os.getenv("FRONTEND_URL"))
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    _ALLOWED_ORIGINS.append(frontend_url)
 
 cors_env = os.getenv("CORS_ALLOWED_ORIGINS", "")
 if cors_env:

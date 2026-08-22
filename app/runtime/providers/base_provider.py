@@ -6,6 +6,8 @@ class BaseProvider(ABC):
     Base interface for every AI provider.
     """
 
+    byok_active: bool = False
+
     @abstractmethod
     def generate(
         self,
