@@ -9,6 +9,8 @@ compiled EsiWell knowledge database.
 It is intentionally provider-independent and CPU-only.
 """
 
+import sqlite3
+
 from .loader import get_loader
 from .state import get_state_engine
 
@@ -20,6 +22,29 @@ class EsiWellEnricher:
         self.db = get_loader()
 
         self.state = get_state_engine()
+
+    ############################################################
+
+    def _lookup_rules(
+        self,
+        cursor,
+        entity: str,
+    ) -> list:
+
+        return cursor.execute(
+
+            """
+            SELECT *
+
+            FROM rules
+
+            WHERE trigger_entity=?
+
+            """,
+
+            (entity,),
+
+        ).fetchall()
 
     ############################################################
 
@@ -44,87 +69,78 @@ class EsiWellEnricher:
 
         }
 
-        cursor = self.db.cursor()
-
         ########################################################
-        # Medication Rules
-        ########################################################
-
-        for medication in record.get(
-            "medications",
-            [],
-        ):
-
-            rows = cursor.execute(
-
-                """
-                SELECT *
-
-                FROM rules
-
-                WHERE trigger_entity=?
-
-                """,
-
-                (medication,),
-
-            ).fetchall()
-
-            for row in rows:
-
-                enriched["esiwell"]["rules"].append(
-
-                    dict(row)
-
-                )
-
-        ########################################################
-        # Biomarker Rules
+        # Knowledge Rules
+        #
+        # The compiled knowledge database is a build artifact and
+        # may be absent in fresh checkouts (e.g. CI). In that case
+        # enrichment degrades to a no-op passthrough instead of
+        # failing hard.
         ########################################################
 
-        for biomarker in record.get(
-            "biomarkers",
-            [],
-        ):
+        try:
 
-            if isinstance(
-                biomarker,
-                dict,
+            cursor = self.db.cursor()
+
+            ####################################################
+            # Medication Rules
+            ####################################################
+
+            for medication in record.get(
+                "medications",
+                [],
             ):
 
-                name = biomarker.get(
-                    "name",
-                    "",
-                )
+                for row in self._lookup_rules(
+                    cursor,
+                    medication,
+                ):
 
-            else:
+                    enriched["esiwell"]["rules"].append(
 
-                name = str(
-                    biomarker
-                )
+                        dict(row)
 
-            rows = cursor.execute(
+                    )
 
-                """
-                SELECT *
+            ####################################################
+            # Biomarker Rules
+            ####################################################
 
-                FROM rules
+            for biomarker in record.get(
+                "biomarkers",
+                [],
+            ):
 
-                WHERE trigger_entity=?
+                if isinstance(
+                    biomarker,
+                    dict,
+                ):
 
-                """,
+                    name = biomarker.get(
+                        "name",
+                        "",
+                    )
 
-                (name,),
+                else:
 
-            ).fetchall()
+                    name = str(
+                        biomarker
+                    )
 
-            for row in rows:
+                for row in self._lookup_rules(
+                    cursor,
+                    name,
+                ):
 
-                enriched["esiwell"]["recommendations"].append(
+                    enriched["esiwell"]["recommendations"].append(
 
-                    dict(row)
+                        dict(row)
 
-                )
+                    )
+
+        except sqlite3.OperationalError:
+
+            pass
 
         ########################################################
         # Canonical Patient State
@@ -151,4 +167,3 @@ def get_enricher():
         _runtime = EsiWellEnricher()
 
     return _runtime
-

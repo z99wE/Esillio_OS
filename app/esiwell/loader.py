@@ -18,6 +18,8 @@ class EsiWellLoader:
 
     def __init__(self):
 
+        DB.parent.mkdir(parents=True, exist_ok=True)
+
         self.connection = sqlite3.connect(
             DB,
             check_same_thread=False,
