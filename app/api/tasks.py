@@ -23,11 +23,11 @@ async def get_tasks(user=Depends(get_current_user)):
     """
     try:
         # 1. Fetch all timeline events for this user
-        events_res = supabase.table("timeline_events").select("id, title, clinical_data").eq("patient_id", user["id"]).execute()
+        events_res = supabase.table("timeline_events").select("id, title, clinical_data").eq("patient_id", user).execute()
         events = events_res.data or []
         
         # 2. Fetch all source_record_ids from tasks for this user
-        tasks_res = supabase.table("tasks").select("source_record_id").eq("user_id", user["id"]).execute()
+        tasks_res = supabase.table("tasks").select("source_record_id").eq("user_id", user).execute()
         existing_source_ids = {t["source_record_id"] for t in (tasks_res.data or []) if t.get("source_record_id")}
         
         # 3. Find events that don't have tasks generated yet
@@ -52,7 +52,7 @@ async def get_tasks(user=Depends(get_current_user)):
                             task_type = 'general'
                             
                         task_data = {
-                            "user_id": user["id"],
+                            "user_id": user,
                             "source_record_id": event["id"],
                             "title": task.get("title", "Follow-up Task"),
                             "description": task.get("description", ""),
@@ -65,7 +65,7 @@ async def get_tasks(user=Depends(get_current_user)):
                     print(f"Lazy generation failed for event {event['id']}: {e}")
 
         # 4. Return all tasks
-        response = supabase.table("tasks").select("*").eq("user_id", user["id"]).order("created_at", desc=True).execute()
+        response = supabase.table("tasks").select("*").eq("user_id", user).order("created_at", desc=True).execute()
         return response.data
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -77,7 +77,7 @@ async def generate_tasks(req: TaskGenerateRequest, user=Depends(get_current_user
     """
     try:
         # 1. Fetch the timeline record
-        record_res = supabase.table("timeline_events").select("title, clinical_data").eq("id", req.source_record_id).eq("patient_id", user["id"]).execute()
+        record_res = supabase.table("timeline_events").select("title, clinical_data").eq("id", req.source_record_id).eq("patient_id", user).execute()
         
         if not record_res.data:
             raise HTTPException(status_code=404, detail="Timeline record not found")
@@ -104,7 +104,7 @@ async def generate_tasks(req: TaskGenerateRequest, user=Depends(get_current_user
                 task_type = 'general'
                 
             task_data = {
-                "user_id": user["id"],
+                "user_id": user,
                 "source_record_id": req.source_record_id,
                 "title": task.get("title", "Follow-up Task"),
                 "description": task.get("description", ""),
@@ -117,7 +117,9 @@ async def generate_tasks(req: TaskGenerateRequest, user=Depends(get_current_user
                 inserted_tasks.extend(res.data)
                 
         return {"status": "success", "generated_tasks": inserted_tasks}
-        
+
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -138,11 +140,13 @@ async def update_task(task_id: str, update_data: TaskUpdate, user=Depends(get_cu
         if not data_to_update:
             return {"status": "no changes"}
             
-        res = supabase.table("tasks").update(data_to_update).eq("id", task_id).eq("user_id", user["id"]).execute()
+        res = supabase.table("tasks").update(data_to_update).eq("id", task_id).eq("user_id", user).execute()
         
         if not res.data:
             raise HTTPException(status_code=404, detail="Task not found or update failed")
             
         return res.data[0]
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
