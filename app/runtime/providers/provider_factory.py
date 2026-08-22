@@ -70,7 +70,9 @@ def create_provider(user_id: str | None = None):
                     for key in key_pool
                 ]
 
-                provider_obj = providers[0] if len(providers) == 1 else KeyPoolProvider(providers)
+                provider_obj: BaseProvider = (
+                    providers[0] if len(providers) == 1 else KeyPoolProvider(providers)
+                )
                 provider_obj.byok_active = byok_active
                 return provider_obj
 
